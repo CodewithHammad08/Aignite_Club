@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, Brain, Code, Cpu, Globe, Sparkles, Users, Zap, ChevronRight } from '../Icons';
 import logo from '../assets/logo.png';
+import useScrollAnimate from '../hooks/useScrollAnimate';
 
 const STATS = [
   { value: '120+', label: 'Members',     icon: Users },
@@ -17,8 +18,9 @@ const DOMAINS = [
 ];
 
 export default function Home({ go }) {
+  const ref = useScrollAnimate();
   return (
-    <>
+    <div ref={ref}>
       {/* ─── HERO ─── */}
       <section className="relative min-h-[92vh] flex flex-col items-center justify-center text-center px-6 overflow-hidden scanline">
         
@@ -27,7 +29,7 @@ export default function Home({ go }) {
         <div className="absolute bottom-20 right-[5%] w-80 h-80 bg-cyan-500/10 rounded-full blur-[120px] animate-pulse-glow pointer-events-none" style={{ animationDelay: '2s' }}></div>
 
         {/* Floating Logo */}
-        <div className="animate-float mb-4">
+        <div className="animate-float mb-4" data-animate="zoom-in">
           <div className="relative w-28 h-28 rounded-[2rem] bg-gradient-to-br from-blue-500 to-cyan-400 p-[2px] shadow-[0_0_60px_rgba(59,130,246,0.4)]">
             <div className="w-full h-full bg-deep rounded-[calc(2rem-2px)] flex items-center justify-center overflow-hidden">
               <img src={logo} alt="Aignite" className="w-20 h-20 object-contain drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]" />
@@ -47,7 +49,7 @@ export default function Home({ go }) {
         </div>
 
         {/* Title */}
-        <h1 className="relative z-10 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-display tracking-tight text-white leading-[1.1] mb-6 max-w-5xl"
+        <h1 data-animate="fade-up" data-delay="200" className="relative z-10 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-display tracking-tight text-white leading-[1.1] mb-6 max-w-5xl"
           style={{ textShadow: '0 4px 40px rgba(59,130,246,0.15)' }}>
           Where <span className="grad-text">Innovation</span><br />
           Meets Intelligence
@@ -72,9 +74,9 @@ export default function Home({ go }) {
         </div>
 
         {/* Stats */}
-        <div className="relative z-10 w-full max-w-3xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="relative z-10 w-full max-w-3xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4" data-animate="stagger-up" data-delay="100">
           {STATS.map((s, i) => (
-            <div key={i} className="glass rounded-2xl px-6 py-5 text-center hover:bg-blue-500/[0.06] transition-all group glow-border">
+            <div key={i} data-stagger-child className="glass rounded-2xl px-6 py-5 text-center hover:bg-blue-500/[0.06] transition-all group glow-border">
               <s.icon size={18} className="mx-auto mb-2 text-blue-400/50 group-hover:text-blue-400 transition-colors" />
               <div className="text-2xl font-black text-white font-display mb-0.5">{s.value}</div>
               <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{s.label}</div>
@@ -86,7 +88,7 @@ export default function Home({ go }) {
       {/* ─── DOMAINS ─── */}
       <section className="py-28 px-6 relative dot-grid">
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16" data-animate="fade-up">
             <p className="text-blue-400 text-xs font-bold uppercase tracking-[0.3em] mb-3">Our Verticals</p>
             <h2 className="text-3xl md:text-5xl font-black text-white font-display tracking-tight mb-4">
               What We <span className="grad-text">Build</span>
@@ -96,7 +98,7 @@ export default function Home({ go }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {DOMAINS.map((d, i) => (
-              <div key={i} className="group glass rounded-3xl p-8 hover:bg-white/[0.05] transition-all duration-400 hover:-translate-y-1 glow-border cursor-default">
+              <div key={i} data-animate="fade-up" data-delay={i * 100} className="group glass rounded-3xl p-8 hover:bg-white/[0.05] transition-all duration-400 hover:-translate-y-1 glow-border cursor-default">
                 <div className="flex items-start gap-5">
                   <div className={`flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br ${d.gradient} flex items-center justify-center shadow-xl ${d.shadow} group-hover:scale-110 transition-transform duration-300`}>
                     <d.icon size={24} className="text-white" />
@@ -114,6 +116,6 @@ export default function Home({ go }) {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }
