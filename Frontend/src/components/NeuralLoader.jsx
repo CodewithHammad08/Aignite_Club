@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import logo from '../assets/logo.png';
 
 export default function NeuralLoader({ onFinish }) {
   const canvasRef = useRef(null);
   const overlayRef = useRef(null);
-  const [showReveal, setShowReveal] = useState(false);
+  const [showText, setShowText] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -20,191 +19,182 @@ export default function NeuralLoader({ onFinish }) {
     resize();
     window.addEventListener('resize', resize);
 
-    // ─── Orbital rings ───
-    const rings = [
-      { r: 80,  speed: 0.3,  dots: 6,  dotSize: 2.5, alpha: 0.6 },
-      { r: 130, speed: -0.2, dots: 8,  dotSize: 2,   alpha: 0.4 },
-      { r: 190, speed: 0.15, dots: 12, dotSize: 1.5, alpha: 0.3 },
-      { r: 260, speed: -0.1, dots: 16, dotSize: 1.2, alpha: 0.2 },
-    ];
-
-    // ─── Floating particles ───
-    const particles = Array.from({ length: 80 }, () => {
+    // ─── Particles: form a brain-like cluster ───
+    const NUM = 200;
+    const pts = Array.from({ length: NUM }, (_, i) => {
       const angle = Math.random() * Math.PI * 2;
-      const dist = 50 + Math.random() * 350;
+      const r = 20 + Math.pow(Math.random(), 0.6) * 280;
       return {
-        x: 0, y: 0,
-        angle,
-        dist,
-        speed: (Math.random() - 0.5) * 0.004,
-        drift: Math.random() * 0.002,
-        size: 0.5 + Math.random() * 2,
-        alpha: 0.1 + Math.random() * 0.4,
-        pulse: Math.random() * Math.PI * 2,
+        x: Math.cos(angle) * r,
+        y: Math.sin(angle) * r * 0.7, // slight vertical squash
+        ox: Math.cos(angle) * r,
+        oy: Math.sin(angle) * r * 0.7,
+        vx: 0, vy: 0,
+        size: 0.8 + Math.random() * 2.2,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.3 + Math.random() * 0.7,
       };
     });
 
-    // ─── Connection lines between close particles ───
-    const drawConnections = () => {
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
+    // ─── Hexagonal grid (background texture) ───
+    const hexes = [];
+    const hexSize = 30;
+    for (let row = -10; row < 20; row++) {
+      for (let col = -10; col < 30; col++) {
+        const x = col * hexSize * 1.5;
+        const y = row * hexSize * Math.sqrt(3) + (col % 2 ? hexSize * Math.sqrt(3) / 2 : 0);
+        hexes.push({ x: x - W * 0.3, y: y - H * 0.3 });
+      }
+    }
+
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      time += 0.012;
+
+      // ─── Hex grid background ───
+      hexes.forEach(h => {
+        const dx = (cx + h.x) - cx;
+        const dy = (cy + h.y) - cy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const maxDist = Math.max(W, H) * 0.6;
+        const wave = Math.sin(time * 0.8 - dist * 0.005) * 0.5 + 0.5;
+        const alpha = Math.max(0, (1 - dist / maxDist) * 0.04 * wave);
+
+        if (alpha > 0.002) {
+          ctx.beginPath();
+          for (let i = 0; i < 6; i++) {
+            const a = (Math.PI / 3) * i - Math.PI / 6;
+            const px = cx + h.x + Math.cos(a) * 12;
+            const py = cy + h.y + Math.sin(a) * 12;
+            i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.strokeStyle = `rgba(59, 130, 246, ${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      });
+
+      // ─── Update & draw particles ───
+      pts.forEach(p => {
+        // Gentle orbital drift
+        p.x = p.ox + Math.sin(time * p.speed + p.phase) * 15;
+        p.y = p.oy + Math.cos(time * p.speed * 0.7 + p.phase) * 12;
+      });
+
+      // ─── Draw connections ───
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
-            const alpha = (1 - dist / 100) * 0.08;
+          if (dist < 70) {
+            const alpha = (1 - dist / 70) * 0.12;
             ctx.beginPath();
-            ctx.moveTo(cx + particles[i].x, cy + particles[i].y);
-            ctx.lineTo(cx + particles[j].x, cy + particles[j].y);
+            ctx.moveTo(cx + pts[i].x, cy + pts[i].y);
+            ctx.lineTo(cx + pts[j].x, cy + pts[j].y);
             ctx.strokeStyle = `rgba(96, 165, 250, ${alpha})`;
-            ctx.lineWidth = 0.5;
+            ctx.lineWidth = 0.6;
             ctx.stroke();
           }
         }
       }
-    };
 
-    const draw = () => {
-      ctx.clearRect(0, 0, W, H);
-      time += 0.016;
+      // ─── Draw particle dots ───
+      pts.forEach(p => {
+        const distFromCenter = Math.sqrt(p.x * p.x + p.y * p.y);
+        const brightness = Math.max(0.3, 1 - distFromCenter / 300);
+        const pulse = 0.7 + 0.3 * Math.sin(time * 3 + p.phase);
 
-      // ─── Central pulsing core ───
-      const coreSize = 30 + Math.sin(time * 1.5) * 8;
-      
-      // Outer halo
-      const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreSize * 6);
-      halo.addColorStop(0, `rgba(59, 130, 246, ${0.12 + Math.sin(time) * 0.04})`);
-      halo.addColorStop(0.5, 'rgba(59, 130, 246, 0.03)');
-      halo.addColorStop(1, 'rgba(59, 130, 246, 0)');
-      ctx.beginPath();
-      ctx.arc(cx, cy, coreSize * 6, 0, Math.PI * 2);
-      ctx.fillStyle = halo;
-      ctx.fill();
-
-      // Inner glow
-      const inner = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreSize * 2);
-      inner.addColorStop(0, `rgba(147, 197, 253, ${0.25 + Math.sin(time * 2) * 0.1})`);
-      inner.addColorStop(0.6, 'rgba(96, 165, 250, 0.08)');
-      inner.addColorStop(1, 'rgba(59, 130, 246, 0)');
-      ctx.beginPath();
-      ctx.arc(cx, cy, coreSize * 2, 0, Math.PI * 2);
-      ctx.fillStyle = inner;
-      ctx.fill();
-
-      // Core
-      const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreSize);
-      core.addColorStop(0, 'rgba(219, 234, 254, 0.9)');
-      core.addColorStop(0.4, 'rgba(147, 197, 253, 0.5)');
-      core.addColorStop(1, 'rgba(96, 165, 250, 0)');
-      ctx.beginPath();
-      ctx.arc(cx, cy, coreSize, 0, Math.PI * 2);
-      ctx.fillStyle = core;
-      ctx.fill();
-
-      // ─── Orbital rings ───
-      rings.forEach(ring => {
-        // Ring path (faint circle)
+        // Glow
+        const g = ctx.createRadialGradient(cx + p.x, cy + p.y, 0, cx + p.x, cy + p.y, p.size * 4);
+        g.addColorStop(0, `rgba(96, 165, 250, ${brightness * pulse * 0.25})`);
+        g.addColorStop(1, 'rgba(96, 165, 250, 0)');
         ctx.beginPath();
-        ctx.arc(cx, cy, ring.r, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(59, 130, 246, ${ring.alpha * 0.15})`;
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
+        ctx.arc(cx + p.x, cy + p.y, p.size * 4, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
 
-        // Dots along ring
-        for (let i = 0; i < ring.dots; i++) {
-          const a = (i / ring.dots) * Math.PI * 2 + time * ring.speed;
-          const x = cx + Math.cos(a) * ring.r;
-          const y = cy + Math.sin(a) * ring.r;
-          const pulse = 0.5 + 0.5 * Math.sin(time * 3 + i);
-
-          // Dot glow
-          const dg = ctx.createRadialGradient(x, y, 0, x, y, ring.dotSize * 6);
-          dg.addColorStop(0, `rgba(96, 165, 250, ${ring.alpha * pulse * 0.5})`);
-          dg.addColorStop(1, 'rgba(96, 165, 250, 0)');
-          ctx.beginPath();
-          ctx.arc(x, y, ring.dotSize * 6, 0, Math.PI * 2);
-          ctx.fillStyle = dg;
-          ctx.fill();
-
-          // Dot core
-          ctx.beginPath();
-          ctx.arc(x, y, ring.dotSize, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(191, 219, 254, ${ring.alpha + pulse * 0.3})`;
-          ctx.fill();
-        }
-
-        // Arc segment (sweeping highlight)
-        const sweepStart = time * ring.speed * 2;
-        ctx.beginPath();
-        ctx.arc(cx, cy, ring.r, sweepStart, sweepStart + 0.8);
-        ctx.strokeStyle = `rgba(96, 165, 250, ${ring.alpha * 0.6})`;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      });
-
-      // ─── Particles ───
-      particles.forEach(p => {
-        p.angle += p.speed;
-        p.dist += Math.sin(time + p.pulse) * 0.3;
-        p.x = Math.cos(p.angle) * p.dist;
-        p.y = Math.sin(p.angle) * p.dist;
-        const flicker = 0.6 + 0.4 * Math.sin(time * 2 + p.pulse);
-
+        // Core
         ctx.beginPath();
         ctx.arc(cx + p.x, cy + p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(147, 197, 253, ${p.alpha * flicker})`;
+        ctx.fillStyle = `rgba(191, 219, 254, ${brightness * pulse})`;
         ctx.fill();
       });
 
-      // ─── Particle connections ───
-      drawConnections();
+      // ─── Central glow ───
+      const pulse = 0.6 + 0.4 * Math.sin(time * 1.5);
+      const cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 120);
+      cg.addColorStop(0, `rgba(96, 165, 250, ${0.15 * pulse})`);
+      cg.addColorStop(0.5, `rgba(59, 130, 246, ${0.05 * pulse})`);
+      cg.addColorStop(1, 'rgba(59, 130, 246, 0)');
+      ctx.beginPath();
+      ctx.arc(cx, cy, 120, 0, Math.PI * 2);
+      ctx.fillStyle = cg;
+      ctx.fill();
 
       animId = requestAnimationFrame(draw);
     };
 
     draw();
 
-    // ─── Anime.js reveal after 2s ───
+    // ─── Text reveal with anime.js ───
     const timer = setTimeout(() => {
-      setShowReveal(true);
+      setShowText(true);
 
       requestAnimationFrame(() => {
         const tl = window.anime.timeline({ easing: 'easeOutExpo' });
 
+        // Stagger each letter of AIGNITE
         tl.add({
-          targets: '.ai-loader-logo',
-          scale: [0.3, 1],
+          targets: '.ldr-letter',
+          translateY: [80, 0],
           opacity: [0, 1],
-          duration: 1000,
+          duration: 900,
+          delay: window.anime.stagger(60),
         })
         .add({
-          targets: '.ai-loader-name span',
-          translateY: [40, 0],
+          targets: '.ldr-tagline',
+          translateY: [20, 0],
           opacity: [0, 1],
           duration: 700,
-          delay: window.anime.stagger(80),
         }, '-=400')
         .add({
-          targets: '.ai-loader-tagline',
-          translateY: [15, 0],
+          targets: '.ldr-line-left',
+          scaleX: [0, 1],
           opacity: [0, 1],
-          duration: 600,
-        }, '-=300')
+          duration: 800,
+          easing: 'easeInOutQuart',
+        }, '-=600')
         .add({
-          targets: '.ai-loader-bar-inner',
+          targets: '.ldr-line-right',
+          scaleX: [0, 1],
+          opacity: [0, 1],
+          duration: 800,
+          easing: 'easeInOutQuart',
+        }, '-=800')
+        .add({
+          targets: '.ldr-dot',
+          scale: [0, 1],
+          opacity: [0, 1],
+          duration: 400,
+        }, '-=400')
+        .add({
+          targets: '.ldr-bar-fill',
           scaleX: [0, 1],
           duration: 1400,
           easing: 'easeInOutQuart',
         }, '-=200')
+        // Hold, then fade out
         .add({
           targets: overlayRef.current,
           opacity: 0,
-          duration: 600,
-          easing: 'easeInQuad',
+          duration: 800,
+          easing: 'easeInCubic',
           complete: () => onFinish(),
-        }, '+=500');
+        }, '+=400');
       });
-    }, 2000);
+    }, 1800);
 
     return () => {
       clearTimeout(timer);
@@ -213,30 +203,39 @@ export default function NeuralLoader({ onFinish }) {
     };
   }, [onFinish]);
 
-  // Split "AIGNITE" into individual letter spans
   const letters = 'AIGNITE'.split('');
 
   return (
     <div ref={overlayRef} className="fixed inset-0 z-[100] bg-deep flex items-center justify-center">
       <canvas ref={canvasRef} className="absolute inset-0" />
 
-      {showReveal && (
+      {showText && (
         <div className="relative z-10 flex flex-col items-center">
-          <img
-            src={logo}
-            alt="Aignite"
-            className="ai-loader-logo w-20 h-20 object-contain mb-6 opacity-0 drop-shadow-[0_0_40px_rgba(59,130,246,0.7)]"
-          />
-          <h2 className="ai-loader-name text-4xl md:text-5xl font-black font-display text-white tracking-widest flex overflow-hidden">
+          {/* Letter reveal */}
+          <div className="flex items-center gap-0 overflow-hidden mb-4">
             {letters.map((l, i) => (
-              <span key={i} className="inline-block opacity-0">{l}</span>
+              <span key={i} className="ldr-letter inline-block text-5xl md:text-7xl font-black font-display text-white tracking-[0.2em] opacity-0"
+                style={{ textShadow: '0 0 40px rgba(59,130,246,0.5), 0 0 80px rgba(59,130,246,0.2)' }}>
+                {l}
+              </span>
             ))}
-          </h2>
-          <p className="ai-loader-tagline text-xs text-blue-300/60 font-bold mt-3 tracking-[0.3em] uppercase opacity-0">
-            Artificial Intelligence & Technology Club
+          </div>
+
+          {/* Decorative lines flanking a dot */}
+          <div className="flex items-center gap-3 mb-4">
+            <div className="ldr-line-left w-16 h-[1px] bg-gradient-to-r from-transparent to-blue-400/60 origin-right opacity-0"></div>
+            <div className="ldr-dot w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_12px_rgba(96,165,250,0.8)] opacity-0"></div>
+            <div className="ldr-line-right w-16 h-[1px] bg-gradient-to-l from-transparent to-blue-400/60 origin-left opacity-0"></div>
+          </div>
+
+          {/* Tagline */}
+          <p className="ldr-tagline text-[10px] md:text-xs text-blue-300/50 font-bold tracking-[0.4em] uppercase opacity-0">
+            AI & Technology Club
           </p>
-          <div className="mt-8 w-40 h-[3px] bg-white/10 rounded-full overflow-hidden">
-            <div className="ai-loader-bar-inner h-full w-full origin-left bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-500 rounded-full" style={{ transform: 'scaleX(0)' }}></div>
+
+          {/* Progress bar */}
+          <div className="mt-8 w-48 h-[3px] bg-white/10 rounded-full overflow-hidden">
+            <div className="ldr-bar-fill h-full w-full origin-left bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-500 rounded-full" style={{ transform: 'scaleX(0)' }}></div>
           </div>
         </div>
       )}
