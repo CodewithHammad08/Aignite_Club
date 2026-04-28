@@ -20,10 +20,12 @@
             display: ['"Space Grotesk"', 'sans-serif'],
           },
           colors: {
-            deep: '#020817',
-            surface: '#0a1628',
-            card: '#0d1f3c',
-            glow: '#3b82f6',
+            deep:    '#32292F',
+            surface: '#3d3340',
+            aqua:    '#99E1D9',
+            cream:   '#F0F7F4',
+            teal:    '#70ABAF',
+            taupe:   '#705D56',
           },
           animation: {
             'float': 'float 6s ease-in-out infinite',
@@ -31,25 +33,16 @@
             'gradient': 'gradient 8s ease infinite',
           },
           keyframes: {
-            float: {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-20px)' },
-            },
-            'pulse-glow': {
-              '0%, 100%': { opacity: '0.4' },
-              '50%': { opacity: '0.8' },
-            },
-            gradient: {
-              '0%, 100%': { backgroundPosition: '0% 50%' },
-              '50%': { backgroundPosition: '100% 50%' },
-            },
+            float: { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-20px)' } },
+            'pulse-glow': { '0%, 100%': { opacity: '0.4' }, '50%': { opacity: '0.8' } },
+            gradient: { '0%, 100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } },
           }
         }
       }
     }
   </script>
 </head>
-<body class="bg-[#020817]">
+<body class="bg-[#32292F]">
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>
