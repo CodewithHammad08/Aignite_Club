@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Brain, Code, Cpu, Globe, Sparkles, Users, Zap, ChevronRight, Star, Trophy, Rocket } from '../Icons';
+import { ArrowRight, Brain, Code, Cpu, Globe, Sparkles, Users, Zap, ChevronRight, Star, Trophy, Rocket, Target } from '../Icons';
 import logo from '../assets/logo.png';
 import useScrollAnimate from '../hooks/useScrollAnimate';
 import HeroRobot from '../components/HeroRobot';
@@ -117,7 +117,7 @@ function ParticleField() {
 /* ─── Data ─── */
 const STATS = [
   { value: '25+', label: 'Active Members', icon: Users },
-  { value: '3+',  label: 'Events Hosted',  icon: Zap },
+  { value: '4+',  label: 'Events Hosted',  icon: Zap },
   // { value: '',  label: 'Projects Built', icon: Code },
   { value: '2025', label: 'Year Founded',   icon: Sparkles },
 ];
@@ -129,10 +129,11 @@ const DOMAINS = [
   { icon: Code,  title: 'Open Source & DevOps', desc: 'OSS contributions, CI/CD pipelines, cloud infra.', tag: 'Scale', accent: '#34D399', glow: 'rgba(52,211,153,0.12)' },
 ];
 
-const HIGHLIGHTS = [
-  { icon: Trophy, title: 'Neural Hack 1.0', desc: '120+ students competed in our flagship 24-hour AI hackathon — real problems, real solutions.', stat: '120+ Participants', accent: '#3B82F6' },
-  { icon: Rocket, title: 'Industry Mentors', desc: 'Direct mentorship from professionals at Google, Microsoft, and top startups.', stat: '10+ Mentors', accent: '#22D3EE' },
-  { icon: Star,   title: 'Community First', desc: 'Weekly meetups, study groups, project squads — nobody learns alone at Aignite.', stat: 'Every Week', accent: '#818CF8' },
+const RECENT_EVENTS = [
+  { icon: Star, title: 'Club Founded & Inaugural', desc: 'The official launch of Aignite, establishing a new era of technical excellence.', stat: '2025', accent: '#3B82F6' },
+  { icon: Brain, title: 'Hands-on ML Workshop', desc: 'An intensive session on Machine Learning fundamentals and practical AI implementation.', stat: '2026', accent: '#22D3EE' },
+  { icon: Code, title: 'Practical Linux Workshop', desc: 'From Command to Automation: A deep dive into Linux systems and shell scripting.', stat: '2026', accent: '#818CF8' },
+  { icon: Target, title: 'Tableau Visualization', desc: 'Mastering the art of transforming raw data into high-impact interactive dashboards.', stat: '2026', accent: '#F472B6' },
 ];
 
 export default function Home({ go }) {
@@ -176,7 +177,7 @@ export default function Home({ go }) {
             </h1>
 
             <p data-speed="-0.015" data-animate="fade-up" data-delay="250" className="text-lg md:text-xl max-w-lg mb-10 leading-relaxed text-muted">
-              The official AI & Tech club of BVDU — empowering 120+ students to build, ship, and innovate.
+              A student-led AI and technology club built for students who want to create, innovate, and lead through technology.
             </p>
 
             <div data-speed="-0.01" className="flex flex-col sm:flex-row gap-4 mb-10" data-animate="fade-up" data-delay="400">
@@ -300,14 +301,14 @@ export default function Home({ go }) {
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16" data-animate="fade-up">
-            <p className="text-xs font-bold font-mono uppercase tracking-[0.3em] mb-3" style={{ color: '#60A5FA' }}>{'// why_aignite'}</p>
+            <p className="text-xs font-bold font-mono uppercase tracking-[0.3em] mb-3" style={{ color: '#60A5FA' }}>{'// our_events'}</p>
             <h2 className="text-3xl md:text-5xl font-black font-display tracking-tight" style={{ color: '#E5E7EB' }}>
               Not just a club.<br /><span className="grad-text">A launchpad.</span>
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {HIGHLIGHTS.map((h, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {RECENT_EVENTS.map((h, i) => (
               <div key={i} data-animate="fade-up" data-delay={i * 150}
                 className="relative depth-card rounded-3xl p-8 group overflow-hidden">
                 {/* Hover gradient */}
