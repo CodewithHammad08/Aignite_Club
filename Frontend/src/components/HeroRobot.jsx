@@ -1,10 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-/**
- * Professional holographic wireframe robot.
- * Drawn on canvas — clean geometric lines, glowing joints, HUD overlay.
- * Scroll-driven: walks, head tracks, arms swing, core pulses.
- */
+
 export default function HeroRobot() {
   const canvasRef = useRef(null);
   const wrapRef = useRef(null);
