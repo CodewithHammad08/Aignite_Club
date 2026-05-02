@@ -50,12 +50,45 @@ export default function App() {
             <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: '#22D3EE', boxShadow: '0 0 8px rgba(34,211,238,0.5)' }}></span>
             Applications Open
           </div>
-          <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight mb-6 leading-tight" style={{ color: '#E5E7EB' }}>
-            Stop learning alone.<br /><span className="grad-text">Build with us.</span>
-          </h2>
-          <p className="text-lg mb-10 max-w-lg mx-auto text-muted leading-relaxed">
-            Join <strong style={{ color: '#E5E7EB' }}>120+ builders</strong> shaping the future of AI and technology. Your next project, your next team, your next breakthrough starts here.
-          </p>
+          
+          {page === 'about' ? (
+            <>
+              <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight mb-6 leading-tight" style={{ color: '#E5E7EB' }}>
+                From learner to builder<br /><span className="grad-text">— begin here.</span>
+              </h2>
+              <p className="text-lg mb-10 max-w-lg mx-auto text-muted leading-relaxed">
+                Start your journey with Aignite. Join <strong style={{ color: '#E5E7EB' }}>120+ builders</strong> and turn your ideas into reality.
+              </p>
+            </>
+          ) : page === 'team' ? (
+            <>
+              <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight mb-6 leading-tight" style={{ color: '#E5E7EB' }}>
+                Ready to join the<br /><span className="grad-text">Core Team?</span>
+              </h2>
+              <p className="text-lg mb-10 max-w-lg mx-auto text-muted leading-relaxed">
+                We are always looking for passionate builders and leaders. Apply to join a department and shape the future of Aignite.
+              </p>
+            </>
+          ) : page === 'events' ? (
+            <>
+              <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight mb-6 leading-tight" style={{ color: '#E5E7EB' }}>
+                Don't just watch.<br /><span className="grad-text">Participate.</span>
+              </h2>
+              <p className="text-lg mb-10 max-w-lg mx-auto text-muted leading-relaxed">
+                Register for our next hackathon, workshop, or speaker session. The best way to learn is to show up.
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight mb-6 leading-tight" style={{ color: '#E5E7EB' }}>
+                Stop learning alone.<br /><span className="grad-text">Build with us.</span>
+              </h2>
+              <p className="text-lg mb-10 max-w-lg mx-auto text-muted leading-relaxed">
+                Join <strong style={{ color: '#E5E7EB' }}>120+ builders</strong> shaping the future of AI and technology. Your next project, your next team, your next breakthrough starts here.
+              </p>
+            </>
+          )}
+
           <a href="https://forms.google.com" target="_blank" rel="noreferrer"
             className="btn-glow group inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg text-white"
             style={{ backgroundColor: '#3B82F6', boxShadow: '0 0 40px rgba(59,130,246,0.3)' }}>

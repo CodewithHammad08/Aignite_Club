@@ -116,9 +116,9 @@ function ParticleField() {
 
 /* ─── Data ─── */
 const STATS = [
-  { value: '120+', label: 'Active Members', icon: Users },
-  { value: '25+',  label: 'Events Hosted',  icon: Zap },
-  { value: '10+',  label: 'Projects Built', icon: Code },
+  { value: '25+', label: 'Active Members', icon: Users },
+  { value: '3+',  label: 'Events Hosted',  icon: Zap },
+  // { value: '',  label: 'Projects Built', icon: Code },
   { value: '2025', label: 'Year Founded',   icon: Sparkles },
 ];
 

@@ -1,59 +1,121 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ============================================================
+   AIGNITE CLUB – Global Styles (Tailwind CSS v4 + Custom CSS)
+   ============================================================
+   How it works:
+   1. "@import tailwindcss" loads all of Tailwind's utility classes.
+   2. "@theme" lets us customise Tailwind's design tokens (fonts, colors…).
+   3. "@layer base" sets sensible defaults for every page.
+   4. "@layer utilities" adds our own reusable helper classes.
+   ============================================================ */
 
-@layer base {
-  html { scroll-behavior: smooth; }
-  body { @apply antialiased font-sans; background-color: #060910; color: #E5E7EB; }
-  ::selection { background: rgba(59,130,246,0.3); color: #fff; }
+/* Step 1 ─ Load Tailwind CSS */
+@import "tailwindcss";
+
+/* Step 2 ─ Customise the design tokens (replaces tailwind.config.js) */
+@theme {
+  --font-sans: "Outfit", sans-serif;
 }
 
+
+/* ──────────────────────────────────────────────────────────── */
+/*  BASE STYLES – applied to every page automatically          */
+/* ──────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;  /* smooth‑scroll when clicking anchor links */
+  }
+
+  body {
+    @apply antialiased font-sans;   /* smooth text + Outfit font */
+    background-color: #060910;      /* very dark navy background */
+    color: #E5E7EB;                 /* light grey text */
+  }
+
+  /* highlight colour when user selects text */
+  ::selection {
+    background: rgba(59, 130, 246, 0.3);  /* blue tint */
+    color: #fff;
+  }
+}
+
+
+/* ──────────────────────────────────────────────────────────── */
+/*  CUSTOM UTILITY CLASSES                                     */
+/*  Use these like Tailwind classes:  className="glass"        */
+/* ──────────────────────────────────────────────────────────── */
 @layer utilities {
-  /* ── DEPTH SYSTEM ── */
-  /* Level 0: page bg */
-  .bg-level-0 { background-color: #060910; }
-  /* Level 1: section bg */
-  .bg-level-1 { background-color: #0B0F1A; }
-  /* Level 2: card surfaces */
-  .bg-level-2 { background-color: #111827; }
-  /* Level 3: elevated/hover */
-  .bg-level-3 { background-color: #1A2332; }
+
+  /* ── DEPTH SYSTEM ──
+     4 background levels to create visual depth on the page.
+     Level 0 is the deepest (page bg), Level 3 is most elevated. */
+
+  .bg-level-0 { background-color: #060910; }   /* page background       */
+  .bg-level-1 { background-color: #0B0F1A; }   /* section background    */
+  .bg-level-2 { background-color: #111827; }   /* card surface          */
+  .bg-level-3 { background-color: #1A2332; }   /* elevated / hover      */
+
+
+  /* ── MESH GRADIENT ──
+     Subtle coloured blobs that sit behind page content. */
 
   .mesh {
     background-color: #060910;
     background-image:
-      radial-gradient(at 20% 10%, rgba(59,130,246,0.07) 0, transparent 50%),
-      radial-gradient(at 80% 5%,  rgba(34,211,238,0.05) 0, transparent 50%),
-      radial-gradient(at 50% 90%, rgba(96,165,250,0.04) 0, transparent 50%);
-    background-attachment: fixed;
+      radial-gradient(at 20% 10%, rgba(59, 130, 246, 0.07) 0, transparent 50%),
+      radial-gradient(at 80% 5%,  rgba(34, 211, 238, 0.05) 0, transparent 50%),
+      radial-gradient(at 50% 90%, rgba(96, 165, 250, 0.04) 0, transparent 50%);
+    background-attachment: fixed;  /* gradient stays in place while scrolling */
   }
+
+
+  /* ── GLASSMORPHISM CARD ──
+     Frosted‑glass look with blur + semi‑transparent background. */
 
   .glass {
     @apply backdrop-blur-xl;
     background: rgba(17, 24, 39, 0.7);
-    border: 1px solid rgba(59,130,246,0.1);
-    box-shadow: 0 4px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.02);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    box-shadow:
+      0 4px 30px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.02);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .glass:hover {
     background: rgba(26, 35, 50, 0.8);
-    border-color: rgba(59,130,246,0.2);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(59,130,246,0.08), inset 0 1px 0 rgba(255,255,255,0.03);
+    border-color: rgba(59, 130, 246, 0.2);
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.5),
+      0 0 20px rgba(59, 130, 246, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.03);
   }
 
-  /* Cards with depth */
+
+  /* ── DEPTH CARD ──
+     A card with a subtle gradient background that lifts on hover. */
+
   .depth-card {
     background: linear-gradient(145deg, #111827, #0D1321);
-    border: 1px solid rgba(59,130,246,0.07);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02);
+    border: 1px solid rgba(59, 130, 246, 0.07);
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.02);
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .depth-card:hover {
     background: linear-gradient(145deg, #182240, #111827);
-    border-color: rgba(59,130,246,0.25);
-    box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 35px rgba(59,130,246,0.12), inset 0 1px 0 rgba(255,255,255,0.04);
-    transform: translateY(-8px);
+    border-color: rgba(59, 130, 246, 0.25);
+    box-shadow:
+      0 25px 60px rgba(0, 0, 0, 0.5),
+      0 0 35px rgba(59, 130, 246, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    transform: translateY(-8px);   /* card floats up on hover */
   }
+
+
+  /* ── GRADIENT TEXT ──
+     Makes text show an animated blue‑to‑cyan gradient. */
 
   .grad-text {
     @apply text-transparent bg-clip-text;
@@ -61,79 +123,160 @@
     background-size: 200% 200%;
     animation: gradient 8s ease infinite;
   }
+
   @keyframes gradient {
     0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    50%      { background-position: 100% 50%; }
   }
 
-  /* Glow border on hover */
-  .glow-border { position: relative; overflow: hidden; }
+
+  /* ── GLOW BORDER ──
+     A glowing blue/cyan border that fades in on hover.
+     Uses a pseudo‑element (::before) with mask trickery. */
+
+  .glow-border {
+    position: relative;
+    overflow: hidden;
+  }
+
   .glow-border::before {
-    content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-    background: linear-gradient(135deg, rgba(59,130,246,0.4), transparent 40%, transparent 60%, rgba(34,211,238,0.3));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude;
-    opacity: 0; transition: opacity 0.5s;
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.4),
+      transparent 40%,
+      transparent 60%,
+      rgba(34, 211, 238, 0.3)
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.5s;
   }
-  .glow-border:hover::before { opacity: 1; }
 
-  /* Icon box with hover glow */
+  .glow-border:hover::before {
+    opacity: 1;
+  }
+
+
+  /* ── ICON BOX ──
+     Container for icons inside cards.
+     Scales up + tilts slightly when its parent ".group" is hovered. */
+
   .icon-box {
     @apply flex items-center justify-center rounded-2xl;
     background: linear-gradient(145deg, #0F172A, #0B1120);
-    border: 1px solid rgba(59,130,246,0.12);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    border: 1px solid rgba(59, 130, 246, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
     transition: all 0.4s ease;
   }
+
   .group:hover .icon-box {
-    border-color: rgba(59,130,246,0.35);
-    box-shadow: 0 0 25px rgba(59,130,246,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+    border-color: rgba(59, 130, 246, 0.35);
+    box-shadow:
+      0 0 25px rgba(59, 130, 246, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
     transform: scale(1.1) rotate(-3deg);
   }
 
-  /* Button glow */
+
+  /* ── BUTTON GLOW ──
+     Adds a soft blue glow behind buttons on hover. */
+
   .btn-glow {
-    position: relative; overflow: hidden;
+    position: relative;
+    overflow: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .btn-glow::after {
-    content: ''; position: absolute; inset: -3px;
-    background: linear-gradient(135deg, rgba(59,130,246,0.5), rgba(34,211,238,0.4));
-    border-radius: inherit; z-index: -1; filter: blur(15px);
-    opacity: 0; transition: opacity 0.4s;
-  }
-  .btn-glow:hover::after { opacity: 1; }
-  .btn-glow:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 12px 40px rgba(59,130,246,0.25); }
 
+  .btn-glow::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(34, 211, 238, 0.4));
+    border-radius: inherit;
+    z-index: -1;
+    filter: blur(15px);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .btn-glow:hover::after {
+    opacity: 1;
+  }
+
+  .btn-glow:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 40px rgba(59, 130, 246, 0.25);
+  }
+
+
+  /* ── BACKGROUND PATTERNS ── */
+
+  /* A subtle dot grid overlay */
   .dot-grid {
-    background-image: radial-gradient(circle, rgba(59,130,246,0.04) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
     background-size: 28px 28px;
   }
+
+  /* Faint horizontal scan‑lines (retro monitor effect) */
   .scanline::after {
-    content: ''; position: absolute; inset: 0;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(59,130,246,0.008) 2px, rgba(59,130,246,0.008) 4px);
-    pointer-events: none;
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(59, 130, 246, 0.008) 2px,
+      rgba(59, 130, 246, 0.008) 4px
+    );
+    pointer-events: none;   /* clicks pass through */
   }
 
-  /* Animated floating */
+
+  /* ── ANIMATIONS ── */
+
+  /* Gentle up‑and‑down floating motion */
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
+
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    50%      { transform: translateY(-20px); }
   }
+
+  /* Pulsing opacity (glow in / glow out) */
   .animate-pulse-glow {
     animation: pulse-glow 4s ease-in-out infinite;
   }
+
   @keyframes pulse-glow {
     0%, 100% { opacity: 0.4; }
-    50% { opacity: 0.8; }
+    50%      { opacity: 0.8; }
   }
 
-  /* Section divider glow */
+
+  /* ── SECTION DIVIDER ──
+     A horizontal glowing line to separate page sections. */
+
   .glow-divider {
     height: 1px;
-    background: linear-gradient(to right, transparent, rgba(59,130,246,0.3), rgba(34,211,238,0.2), rgba(59,130,246,0.3), transparent);
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(59, 130, 246, 0.3),
+      rgba(34, 211, 238, 0.2),
+      rgba(59, 130, 246, 0.3),
+      transparent
+    );
   }
 }

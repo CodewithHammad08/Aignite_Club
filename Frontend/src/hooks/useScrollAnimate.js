@@ -1,13 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-/**
- * Hook that triggers anime.js animations when elements scroll into view.
- * Add `data-animate` attribute to elements you want to animate.
- * 
- * Supported values:
- *   fade-up, fade-down, fade-left, fade-right,
- *   zoom-in, stagger-up
- */
+
 export default function useScrollAnimate() {
   const containerRef = useRef(null);
 
