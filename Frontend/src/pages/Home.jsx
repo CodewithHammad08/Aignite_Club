@@ -36,80 +36,98 @@ function ParticleField() {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    let raf, time = 0;
-    const dpr = window.devicePixelRatio || 1;
-    const resize = () => { canvas.width = window.innerWidth * dpr; canvas.height = window.innerHeight * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
-    resize(); window.addEventListener('resize', resize);
+    let raf;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2); // cap at 2x for perf
+    const resize = () => {
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    window.addEventListener('resize', resize);
 
-    const pts = Array.from({ length: 100 }, () => ({
+    // 35 particles instead of 100 — O(n²) connections = 35²/2 = 595 checks vs 4950
+    const pts = Array.from({ length: 35 }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      r: 0.8 + Math.random() * 2,
-      pulse: Math.random() * Math.PI * 2,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: 1 + Math.random() * 1.5,
     }));
 
     let mx = -999, my = -999;
     const onM = (e) => { mx = e.clientX; my = e.clientY; };
     window.addEventListener('mousemove', onM);
 
+    const CONN_DIST = 130;
+    const MOUSE_DIST = 180;
+
     const draw = () => {
       const w = window.innerWidth, h = window.innerHeight;
       ctx.clearRect(0, 0, w, h);
-      time += 0.008;
 
-      pts.forEach(p => {
+      // Move particles
+      for (const p of pts) {
         p.x += p.vx; p.y += p.vy;
         if (p.x < 0 || p.x > w) p.vx *= -1;
         if (p.y < 0 || p.y > h) p.vy *= -1;
-        // Mouse repulsion
-        const dx = p.x - mx, dy = p.y - my, dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 150 && dist > 0) { p.x += (dx / dist) * 2; p.y += (dy / dist) * 2; }
-
-        const pulse = 0.5 + 0.5 * Math.sin(time * 2 + p.pulse);
-        // Glow
-        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
-        g.addColorStop(0, `rgba(59,130,246,${0.08 * pulse})`);
-        g.addColorStop(1, 'rgba(59,130,246,0)');
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 5, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
-        // Dot
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(96,165,250,${0.2 + 0.2 * pulse})`;
-        ctx.fill();
-      });
-
-      // Connections
-      for (let i = 0; i < pts.length; i++) {
-        for (let j = i + 1; j < pts.length; j++) {
-          const d = Math.sqrt((pts[i].x - pts[j].x) ** 2 + (pts[i].y - pts[j].y) ** 2);
-          if (d < 140) {
-            ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.strokeStyle = `rgba(59,130,246,${(1 - d / 140) * 0.08})`;
-            ctx.lineWidth = 0.6; ctx.stroke();
-          }
-        }
-        // Mouse lines — brighter
-        const md = Math.sqrt((pts[i].x - mx) ** 2 + (pts[i].y - my) ** 2);
-        if (md < 200) {
-          ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(mx, my);
-          ctx.strokeStyle = `rgba(34,211,238,${(1 - md / 200) * 0.2})`;
-          ctx.lineWidth = 0.8; ctx.stroke();
+        // Soft mouse repulsion
+        const dx = p.x - mx, dy = p.y - my;
+        const dist2 = dx * dx + dy * dy;
+        if (dist2 < 150 * 150 && dist2 > 0) {
+          const dist = Math.sqrt(dist2);
+          p.x += (dx / dist) * 1.5;
+          p.y += (dy / dist) * 1.5;
         }
       }
 
-      // Mouse glow
+      // Draw dots — single fillStyle for all, one path per dot
+      ctx.fillStyle = 'rgba(96,165,250,0.35)';
+      for (const p of pts) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Batch all connection lines into ONE path — single stroke() call
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(59,130,246,0.06)';
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          if (dx * dx + dy * dy < CONN_DIST * CONN_DIST) {
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+          }
+        }
+      }
+      ctx.stroke(); // ONE call instead of 4950
+
+      // Mouse lines — separate path, slightly brighter
       if (mx > 0) {
-        const mg = ctx.createRadialGradient(mx, my, 0, mx, my, 80);
-        mg.addColorStop(0, 'rgba(34,211,238,0.06)');
-        mg.addColorStop(1, 'rgba(34,211,238,0)');
-        ctx.beginPath(); ctx.arc(mx, my, 80, 0, Math.PI * 2); ctx.fillStyle = mg; ctx.fill();
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(34,211,238,0.12)';
+        ctx.lineWidth = 0.7;
+        for (const p of pts) {
+          const dx = p.x - mx, dy = p.y - my;
+          if (dx * dx + dy * dy < MOUSE_DIST * MOUSE_DIST) {
+            ctx.moveTo(p.x, p.y); ctx.lineTo(mx, my);
+          }
+        }
+        ctx.stroke();
       }
 
       raf = requestAnimationFrame(draw);
     };
     draw();
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize); window.removeEventListener('mousemove', onM); };
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', onM);
+    };
   }, []);
   return <canvas ref={canvasRef} className="absolute inset-0 z-0" />;
 }
@@ -155,7 +173,7 @@ export default function Home({ go }) {
   return (
     <div ref={ref}>
       {/* ═══════ HERO ═══════ */}
-      <section ref={parallaxRef} className="relative min-h-screen flex items-center px-6 overflow-hidden">
+      <section ref={parallaxRef} className="relative min-h-screen flex items-start lg:items-center pt-20 pb-12 md:pt-28 md:pb-20 px-6 overflow-hidden">
         <ParticleField />
         <div className="absolute inset-0 scanline"></div>
         {/* Bottom fade to create depth between hero and next section */}

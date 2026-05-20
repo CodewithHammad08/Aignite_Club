@@ -43,3 +43,5 @@ export const ChevronRight = ({ size = 24, className = "" }) => I(<polyline point
 export const Menu = ({ size = 24, className = "" }) => I(<><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></>, size, className);
 
 export const X = ({ size = 24, className = "" }) => I(<><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>, size, className);
+
+export const CheckCircle = ({ size = 24, className = "" }) => I(<><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></>, size, className);

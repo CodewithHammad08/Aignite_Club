@@ -1,54 +1,76 @@
 import React, { useState } from 'react';
 import { Github, Linkedin, Users, Code, Calendar, Sparkles, Globe, Cpu } from '../Icons';
 import useScrollAnimate from '../hooks/useScrollAnimate';
-import sanskritImg from '../assets/sanskriti.jpg';
-import osmanImg from '../assets/osman.jpg';
+import TechTeam, { TeamCard, EventTeam, PRTeam, DesignTeam, ContentTeam } from '../components/TeamCard';
 
 const LEADS = [
-  { name: 'Sanskriti Singh', role: 'President', code: '01', img: sanskritImg, linkedin: '#', github: '#' },
-  { name: 'Osman Sanjar', role: 'Vice President', code: '02', img: osmanImg, linkedin: '#', github: '#' },
+  {
+    id: '01',
+    name: 'Sanskriti Singh',
+    initials: 'SS',
+    role: 'PRESIDENT',
+    nationality: 'INDIAN',
+    tagline: 'Leading Aignite to new horizons',
+    photo_body: null,
+    stats: [
+      { label: 'DOMAIN',   value: 'Management' },
+      { label: 'STACK',    value: 'Strategy' },
+      { label: 'PROJECTS', value: '12' },
+    ],
+    linkedin: '#',
+    github: '#',
+  },
+  {
+    id: '02',
+    name: 'Osman Sanjar',
+    initials: 'OS',
+    role: 'VICE PRESIDENT',
+    nationality: 'INDIAN',
+    tagline: 'Operations and community leader',
+    photo_body: null,
+    stats: [
+      { label: 'DOMAIN',   value: 'Operations' },
+      { label: 'STACK',    value: 'Planning' },
+      { label: 'PROJECTS', value: '10' },
+    ],
+    linkedin: '#',
+    github: '#',
+  },
 ];
 
 const DEPARTMENTS = [
-  { id: 'tech', label: 'Tech', icon: Code, head: { name: 'Tech Head', title: 'Head', code: '03', img: null }, cohead: { name: 'Tech Co-Head', title: 'Co-Head', code: '04', img: null }, members: [{ name: 'Member 1', title: 'Full Stack', code: '05' },{ name: 'Member 2', title: 'Backend', code: '06' },{ name: 'Member 3', title: 'ML Engineer', code: '07' },{ name: 'Member 4', title: 'Frontend', code: '08' },{ name: 'Member 5', title: 'DevOps', code: '09' }] },
+  { id: 'tech', label: 'Tech', icon: Code, head: { name: 'Prathamesh Khaire', title: 'Head', code: '03', img: null }, cohead: { name: 'Parth', title: 'Co-Head', code: '04', img: null }, members: [{ name: 'Hammad Dalvi', title: 'Full Stack', code: '05' },{ name: 'Ramanan D.', title: 'Backend', code: '06' },{ name: 'Ushank Shirke', title: 'App Dev', code: '07' },{ name: 'Soham', title: 'Developer', code: '08' },{ name: 'Manogya', title: 'AI Engineer', code: '09' },{ name: 'Tejas Gunjal', title: 'Frontend', code: '10' }] },
   { id: 'event', label: 'Events', icon: Calendar, head: { name: 'Event Head', title: 'Head', code: '10', img: null }, cohead: { name: 'Event Co-Head', title: 'Co-Head', code: '11', img: null }, members: [{ name: 'Member 1', title: 'Coordinator', code: '12' },{ name: 'Member 2', title: 'Logistics', code: '13' },{ name: 'Member 3', title: 'Coordinator', code: '14' },{ name: 'Member 4', title: 'Outreach', code: '15' },{ name: 'Member 5', title: 'Coordinator', code: '16' }] },
   { id: 'pr', label: 'PR', icon: Globe, head: { name: 'PR Head', title: 'Head', code: '17', img: null }, cohead: { name: 'PR Co-Head', title: 'Co-Head', code: '18', img: null }, members: [{ name: 'Member 1', title: 'Outreach', code: '19' },{ name: 'Member 2', title: 'Partnerships', code: '20' },{ name: 'Member 3', title: 'Sponsorships', code: '21' },{ name: 'Member 4', title: 'Communications', code: '22' },{ name: 'Member 5', title: 'Social Media', code: '23' }] },
   { id: 'design', label: 'Design', icon: Sparkles, head: { name: 'Design Head', title: 'Head', code: '24', img: null }, cohead: { name: 'Design Co-Head', title: 'Co-Head', code: '25', img: null }, members: [{ name: 'Member 1', title: 'UI/UX', code: '26' },{ name: 'Member 2', title: 'Graphics', code: '27' },{ name: 'Member 3', title: 'Motion', code: '28' },{ name: 'Member 4', title: 'Brand', code: '29' },{ name: 'Member 5', title: 'Illustration', code: '30' },{ name: 'Member 6', title: 'Visual', code: '31' }] },
   { id: 'content', label: 'Content', icon: Cpu, head: { name: 'Content Head', title: 'Head', code: '32', img: null }, cohead: { name: 'Content Co-Head', title: 'Co-Head', code: '33', img: null }, members: [{ name: 'Member 1', title: 'Photography', code: '34' },{ name: 'Member 2', title: 'Videography', code: '35' },{ name: 'Member 3', title: 'Copywriter', code: '36' },{ name: 'Member 4', title: 'Strategy', code: '37' },{ name: 'Member 5', title: 'Reels', code: '38' },{ name: 'Member 6', title: 'Blogs', code: '39' }] },
 ];
 
-function PlayerCard({ name, title, code, img, size = 'md', accent = false }) {
-  const firstName = name.split(' ')[0];
-  const lastName = name.split(' ').slice(1).join(' ');
-  const h = { lg: 'min-h-[380px]', md: 'min-h-[300px]', sm: 'min-h-[260px]' }[size];
-  const numSize = { lg: 'text-[10rem]', md: 'text-[7rem]', sm: 'text-[5rem]' }[size];
-  const imgH = { lg: 'h-60', md: 'h-48', sm: 'h-40' }[size];
-  const nameSize = { lg: 'text-2xl', md: 'text-lg', sm: 'text-base' }[size];
-  const initSize = { lg: 'text-7xl', md: 'text-5xl', sm: 'text-4xl' }[size];
+const FACULTY = [
+  {
+    code: 'FC',
+    title: 'FACULTY COORDINATOR',
+    name: 'Vishwayogita Savalkar',
+    role: 'FACULTY COORDINATOR',
+    tagline: 'Empowering students through technical leadership, project coordination, and structured academic mentorship.',
+  },
+  {
+    code: 'FC',
+    title: 'FACULTY COORDINATOR',
+    name: 'Sanam Kazi',
+    role: 'FACULTY COORDINATOR',
+    tagline: 'Fostering academic engagement, supporting student development programs, and driving growth in technical research.',
+  },
+  {
+    code: 'HD',
+    title: 'AIML HOD',
+    name: 'Supriya Khaitan',
+    role: 'AIML HOD',
+    tagline: 'Leading the department towards innovation, research excellence, and pioneering next-generation machine learning projects.',
+  },
+];
 
-  return (
-    <div className={`group relative ${h} rounded-2xl overflow-hidden cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.6)]`}
-      style={{ backgroundColor: '#0F172A', border: '1px solid rgba(59,130,246,0.08)' }}>
-      {accent && <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: '#3B82F6' }}></div>}
-      <div className={`absolute top-0 right-3 ${numSize} font-black leading-none font-display select-none pointer-events-none`} style={{ color: 'rgba(59,130,246,0.04)' }}>{code}</div>
-      <div className={`relative z-10 flex items-end justify-center ${imgH} pt-4 px-4`}>
-        {img ? (
-          <img src={img} alt={name} className="h-full w-auto max-w-full object-contain object-bottom drop-shadow-[0_8px_25px_rgba(0,0,0,0.6)] group-hover:scale-[1.03] transition-transform duration-500" />
-        ) : (
-          <span className={`${initSize} font-black font-display mb-8 select-none`} style={{ color: 'rgba(59,130,246,0.06)' }}>
-            {name.split(' ').map(n => n[0]).join('')}
-          </span>
-        )}
-      </div>
-      <div className="relative z-10 p-4 pt-3">
-        <div className="text-[10px] font-bold font-mono uppercase tracking-[0.15em] mb-1" style={{ color: 'rgba(96,165,250,0.5)' }}>{code} · {title}</div>
-        <h3 className={`${nameSize} font-black font-display uppercase tracking-tight leading-[1.15] text-offwhite`}>
-          {firstName}{lastName ? <><br /><span className="text-muted">{lastName}</span></> : null}
-        </h3>
-      </div>
-    </div>
-  );
-}
+
 
 export default function Team() {
   const [activeDept, setActiveDept] = useState('tech');
@@ -58,18 +80,18 @@ export default function Team() {
   return (
     <div ref={ref}>
       <section className="pt-12 pb-6 px-6">
-        <div className="max-w-5xl mx-auto" data-animate="fade-up">
+        <div className="max-w-6xl mx-auto" data-animate="fade-up">
           <h1 className="text-4xl md:text-6xl font-black font-display tracking-tight mb-4 text-offwhite">
             The people behind <span className="grad-text">Aignite</span>
           </h1>
           <p className="text-lg max-w-xl leading-relaxed text-muted">A diverse crew of builders, thinkers, and doers.</p>
         </div>
       </section>
-      <section className="px-6 pb-12">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="px-3 md:px-6 pb-12">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 gap-3">
           {LEADS.map((l, i) => (
             <div key={i} data-animate={i === 0 ? 'fade-right' : 'fade-left'} data-delay={i * 150}>
-              <PlayerCard name={l.name} title={l.role} code={l.code} img={l.img} size="lg" accent />
+              <TeamCard member={l} heightClass="h-[260px] md:h-[380px]" />
               <div className="flex gap-3 mt-3 px-1">
                 <a href={l.linkedin} className="text-muted hover:text-neon transition-colors"><Linkedin size={18} /></a>
                 <a href={l.github} className="text-muted hover:text-offwhite transition-colors"><Github size={18} /></a>
@@ -79,9 +101,9 @@ export default function Team() {
         </div>
       </section>
       <section className="px-6 pb-24">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold font-display mb-8 text-offwhite" data-animate="fade-up">Departments</h2>
-          <div className="flex gap-2 mb-10 overflow-x-auto pb-2" data-animate="fade-up" data-delay="100">
+          <div className="flex flex-wrap gap-2.5 mb-10 justify-start" data-animate="fade-up" data-delay="100">
             {DEPARTMENTS.map(d => {
               const isActive = activeDept === d.id;
               return (
@@ -95,19 +117,76 @@ export default function Team() {
           </div>
           {dept && (
             <div>
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                {[dept.head, dept.cohead].map((person, i) => (
-                  <PlayerCard key={i} name={person.name} title={`${person.title} · ${dept.label}`} code={person.code} img={person.img} size="md" accent />
-                ))}
-              </div>
-              <p className="text-[10px] font-bold font-mono uppercase tracking-[0.2em] mb-4 text-muted">Core Members</p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {dept.members.map((m, i) => (
-                  <PlayerCard key={i} name={m.name} title={m.title} code={m.code} img={null} size="sm" />
-                ))}
-              </div>
+              {activeDept === 'tech' && <TechTeam />}
+              {activeDept === 'event' && <EventTeam />}
+              {activeDept === 'pr' && <PRTeam />}
+              {activeDept === 'design' && <DesignTeam />}
+              {activeDept === 'content' && <ContentTeam />}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* ── HONORABLE MEMENTO (Faculty & Teachers) ── */}
+      <section className="px-6 pb-24 border-t border-white/5 pt-16">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-black font-display mb-2 text-offwhite text-center uppercase tracking-tight" data-animate="fade-up">
+            Honorable Memento
+          </h2>
+          <p className="text-sm font-mono text-muted text-center uppercase tracking-[0.2em] mb-12" data-animate="fade-up" data-delay="100">
+            The faculty heads and teachers behind us
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {FACULTY.map((f, i) => (
+              <div
+                key={i}
+                className="group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(232,160,32,0.15)]"
+                style={{
+                  background: '#0d1526',
+                  border: '1px solid rgba(232, 160, 32, 0.15)', // Distinguished gold/amber border hint
+                }}
+                data-animate="fade-up"
+                data-delay={i * 150}
+              >
+                {/* Gold glowing top accent */}
+                <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-500 to-yellow-500 opacity-60"></div>
+
+                {/* Background Large Initials watermark */}
+                <div
+                  className="absolute top-0 right-4 text-[7rem] md:text-[8rem] font-black leading-none font-display select-none pointer-events-none opacity-[0.02] text-amber-500"
+                >
+                  {f.code}
+                </div>
+
+                <div className="relative z-10 flex flex-col h-full justify-between min-h-[220px]">
+                  <div>
+                    {/* Role Title */}
+                    <div
+                      className="text-[9px] font-bold font-mono tracking-[0.2em] uppercase text-amber-500/80 mb-2"
+                    >
+                      {f.title}
+                    </div>
+
+                    {/* Name */}
+                    <h3 className="text-xl md:text-2xl font-black font-display text-offwhite uppercase tracking-tight mb-1">
+                      {f.name}
+                    </h3>
+
+                    {/* Designation */}
+                    <div className="text-[11px] font-mono text-white/50 uppercase mb-4">
+                      {f.role}
+                    </div>
+                  </div>
+
+                  {/* Tagline / Memento */}
+                  <p className="text-xs md:text-sm text-white/70 italic leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                    "{f.tagline}"
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>
