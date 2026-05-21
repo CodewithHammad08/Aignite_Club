@@ -274,7 +274,7 @@ export default function Events() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               {displayed.map((e, i) => {
                 const typeColor = TYPE_COLORS[e.type] || '#00d4ff';
                 return (

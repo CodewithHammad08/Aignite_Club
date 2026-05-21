@@ -66,6 +66,10 @@ function ParticleField() {
       const w = window.innerWidth, h = window.innerHeight;
       ctx.clearRect(0, 0, w, h);
 
+      // Mouse parallax shift
+      const targetParallaxX = mx !== -999 ? (mx - w / 2) * -0.04 : 0;
+      const targetParallaxY = my !== -999 ? (my - h / 2) * -0.04 : 0;
+
       // Move particles
       for (const p of pts) {
         p.x += p.vx; p.y += p.vy;
@@ -81,15 +85,17 @@ function ParticleField() {
         }
       }
 
-      // Draw dots — single fillStyle for all, one path per dot
+      // Draw dots — single fillStyle for all, one path per dot (with mouse parallax offset)
       ctx.fillStyle = 'rgba(96,165,250,0.35)';
       for (const p of pts) {
+        const dx = p.x + targetParallaxX;
+        const dy = p.y + targetParallaxY;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.arc(dx, dy, p.r, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Batch all connection lines into ONE path — single stroke() call
+      // Batch all connection lines into ONE path (with mouse parallax offset)
       ctx.beginPath();
       ctx.strokeStyle = 'rgba(59,130,246,0.06)';
       ctx.lineWidth = 0.5;
@@ -98,22 +104,24 @@ function ParticleField() {
           const dx = pts[i].x - pts[j].x;
           const dy = pts[i].y - pts[j].y;
           if (dx * dx + dy * dy < CONN_DIST * CONN_DIST) {
-            ctx.moveTo(pts[i].x, pts[i].y);
-            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.moveTo(pts[i].x + targetParallaxX, pts[i].y + targetParallaxY);
+            ctx.lineTo(pts[j].x + targetParallaxX, pts[j].y + targetParallaxY);
           }
         }
       }
       ctx.stroke(); // ONE call instead of 4950
 
-      // Mouse lines — separate path, slightly brighter
+      // Mouse lines (with mouse parallax offset)
       if (mx > 0) {
         ctx.beginPath();
         ctx.strokeStyle = 'rgba(34,211,238,0.12)';
         ctx.lineWidth = 0.7;
         for (const p of pts) {
-          const dx = p.x - mx, dy = p.y - my;
+          const px = p.x + targetParallaxX;
+          const py = p.y + targetParallaxY;
+          const dx = px - mx, dy = py - my;
           if (dx * dx + dy * dy < MOUSE_DIST * MOUSE_DIST) {
-            ctx.moveTo(p.x, p.y); ctx.lineTo(mx, my);
+            ctx.moveTo(px, py); ctx.lineTo(mx, my);
           }
         }
         ctx.stroke();
@@ -176,6 +184,8 @@ export default function Home({ go }) {
       <section ref={parallaxRef} className="relative min-h-screen flex items-start lg:items-center pt-20 pb-12 md:pt-28 md:pb-20 px-6 overflow-hidden">
         <ParticleField />
         <div className="absolute inset-0 scanline"></div>
+        {/* Top glow transition between navbar and hero */}
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[rgba(5,13,26,0.9)] via-[rgba(34,211,238,0.04)] to-transparent pointer-events-none z-[2]"></div>
         {/* Bottom fade to create depth between hero and next section */}
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#060910] to-transparent pointer-events-none z-[2]"></div>
 
@@ -221,17 +231,6 @@ export default function Home({ go }) {
           {/* Right: Neural Network + AI tech pills */}
           <div className="order-1 lg:order-2 relative flex justify-center lg:justify-end" data-animate="zoom-in">
             <HeroRobot />
-            {[
-              { label: 'Transformer',  color: '#22D3EE', top: '4%',   right: '-2%',  delay: '0s'   },
-              { label: 'Backprop',     color: '#818CF8', top: '36%',  left: '-4%',   delay: '0.9s' },
-              { label: 'CNN',          color: '#34D399', bottom: '30%',left: '-2%',  delay: '1.8s' },
-              { label: 'LLM',          color: '#F472B6', bottom: '6%', right: '2%',  delay: '2.5s' },
-            ].map((pill, i) => (
-              <div key={i} className="absolute px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold animate-float depth-card"
-                style={{ color: pill.color, animationDelay: pill.delay, top: pill.top, bottom: pill.bottom, left: pill.left, right: pill.right, borderColor: `${pill.color}25`, boxShadow: `0 0 12px ${pill.color}15` }}>
-                {pill.label}
-              </div>
-            ))}
           </div>
 
         </div>

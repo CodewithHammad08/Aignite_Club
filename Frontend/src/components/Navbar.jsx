@@ -89,9 +89,16 @@ export default function Navbar({ page, go }) {
                 backgroundColor: 'rgba(5,13,26,0.85)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
-                borderBottom: '1px solid rgba(0,212,255,0.07)',
+                borderBottom: '1px solid rgba(0,212,255,0.08)',
+                boxShadow: '0 4px 20px rgba(0,212,255,0.04)',
               }
-            : { backgroundColor: 'transparent' }
+            : {
+                backgroundColor: 'rgba(5,13,26,0.22)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                borderBottom: '1px solid rgba(0,212,255,0.04)',
+                boxShadow: '0 2px 10px rgba(0,212,255,0.02)',
+              }
         }
       >
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-center md:justify-between">
