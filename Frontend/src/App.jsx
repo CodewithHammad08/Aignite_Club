@@ -42,7 +42,7 @@ const CTA_CONTENT = {
 
 export default function App() {
   const [loading, setLoading] = useState(true);
-  const [page, setPage]       = useState('home');
+  const [page, setPage] = useState('home');
 
   // Activate custom cursor globally (desktop only, respects reduced-motion)
   useCursorEffect();
@@ -58,11 +58,11 @@ export default function App() {
 
   const Page = () => {
     switch (page) {
-      case 'home':   return <Home go={go} />;
-      case 'about':  return <About />;
+      case 'home': return <Home go={go} />;
+      case 'about': return <About />;
       case 'events': return <Events />;
-      case 'team':   return <Team />;
-      default:       return <Home go={go} />;
+      case 'team': return <Team />;
+      default: return <Home go={go} />;
     }
   };
 

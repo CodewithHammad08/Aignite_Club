@@ -1,315 +1,564 @@
 import React, { useEffect, useRef } from 'react';
 
+/* ═══════════════════════════════════════════════════════════════
+   AIGNITE HERO — Arc Reactor  +  Neural Brain Network  (enhanced)
+   ─ 5 orbital rings with comet particle trails
+   ─ Sweeping scan wedge
+   ─ Outer tick-mark dial
+   ─ Radial circuit spokes
+   ─ Inner-node to core connections
+   ─ Richer core bloom (extra gradient layers)
+   ─ Ambient floating dust
+   ─ HUD sparkline waveform
+   ─ Double-pass bright neural connections
+   ═══════════════════════════════════════════════════════════════ */
+
+const C = '#22D3EE';   // cyan
+const B = '#3B82F6';   // blue
+const W = '#ffffff';
+const P = '#818CF8';   // indigo
+const G = '#34D399';   // green
+const A = '#F59E0B';   // amber accent
+
+const lerp = (a, b, t) => a + (b - a) * t;
+const rnd  = (lo, hi)  => Math.random() * (hi - lo) + lo;
+
+/* ── Rounded rect helper ── */
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
 
 export default function HeroRobot() {
   const canvasRef = useRef(null);
-  const wrapRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let raf, time = 0;
+    const ctx    = canvas.getContext('2d');
+    let raf, t = 0;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    const dpr = window.devicePixelRatio || 1;
     const resize = () => {
-      const rect = canvas.parentElement.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      canvas.width  = canvas.offsetWidth  * dpr;
+      canvas.height = canvas.offsetHeight * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     resize();
     window.addEventListener('resize', resize);
 
-    const W = () => canvas.width / dpr;
-    const H = () => canvas.height / dpr;
+    const CW = () => canvas.width  / dpr;
+    const CH = () => canvas.height / dpr;
 
-    // Colors
-    const BLUE = '#3B82F6';
-    const NEON = '#60A5FA';
-    const CYAN = '#22D3EE';
+    /* ══════════ NEURAL NODES ══════════ */
+    const buildNodes = () => {
+      const cx = CW() / 2, cy = CH() / 2;
+      const nodes = [];
 
-    const drawLine = (x1, y1, x2, y2, color, alpha, width = 1) => {
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.strokeStyle = color;
-      ctx.globalAlpha = alpha;
-      ctx.lineWidth = width;
-      ctx.stroke();
-      ctx.globalAlpha = 1;
-    };
-
-    const drawJoint = (x, y, r, pulse = 0) => {
-      // Outer glow
-      const g = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
-      g.addColorStop(0, `rgba(59,130,246,${0.15 + pulse * 0.15})`);
-      g.addColorStop(1, 'rgba(59,130,246,0)');
-      ctx.beginPath();
-      ctx.arc(x, y, r * 3, 0, Math.PI * 2);
-      ctx.fillStyle = g;
-      ctx.fill();
-      // Ring
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.strokeStyle = NEON;
-      ctx.globalAlpha = 0.5 + pulse * 0.5;
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-      // Core
-      ctx.beginPath();
-      ctx.arc(x, y, r * 0.4, 0, Math.PI * 2);
-      ctx.fillStyle = CYAN;
-      ctx.globalAlpha = 0.6 + pulse * 0.4;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-    };
-
-    const drawHexagonPlate = (cx, cy, size, rotation = 0) => {
-      ctx.beginPath();
-      for (let i = 0; i < 6; i++) {
-        const a = (Math.PI / 3) * i + rotation;
-        const x = cx + Math.cos(a) * size;
-        const y = cy + Math.sin(a) * size;
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      // Outer brain-oval (28 nodes)
+      for (let i = 0; i < 28; i++) {
+        const angle   = (i / 28) * Math.PI * 2 + rnd(-0.12, 0.12);
+        const radiusX = CW() * 0.37 + rnd(-18, 18);
+        const radiusY = CH() * 0.31 + rnd(-14, 14);
+        const bumpY   = Math.sin(angle * 2) * 20;
+        nodes.push({
+          x:     cx + Math.cos(angle) * radiusX,
+          y:     cy + Math.sin(angle) * radiusY + bumpY,
+          r:     rnd(2.8, 5.5),
+          color: [C, B, P, G][Math.floor(rnd(0, 4))],
+          phase: rnd(0, Math.PI * 2),
+          speed: rnd(0.6, 1.4),
+          inner: false,
+        });
       }
-      ctx.closePath();
-      ctx.strokeStyle = BLUE;
-      ctx.globalAlpha = 0.15;
-      ctx.lineWidth = 0.8;
-      ctx.stroke();
-      ctx.globalAlpha = 1;
-    };
-
-    let scrollT = 0;
-    const onScroll = () => {
-      const vh = window.innerHeight;
-      const total = document.body.scrollHeight - vh;
-      scrollT = Math.min(window.scrollY / Math.max(total, 1), 1);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    const draw = () => {
-      time += 0.015;
-      const w = W(), h = H();
-      ctx.clearRect(0, 0, w, h);
-
-      const cx = w / 2;
-      const baseY = h * 0.42;
-      const t = scrollT;
-      const walkCycle = Math.sin(t * Math.PI * 6);
-      const breathe = Math.sin(time * 1.5) * 2;
-
-      // Scroll drift - whole robot moves down
-      const driftY = t * 60;
-
-      // ─── Background hex grid ───
-      for (let i = 0; i < 12; i++) {
-        const hx = cx + Math.cos(i * 0.5 + time * 0.2) * (60 + i * 15);
-        const hy = baseY + driftY + Math.sin(i * 0.7 + time * 0.15) * (40 + i * 10);
-        drawHexagonPlate(hx, hy, 15 + i * 3, time * 0.1 + i);
+      // Inner cluster (8 nodes closer to core)
+      for (let i = 0; i < 8; i++) {
+        const a = rnd(0, Math.PI * 2);
+        const d = rnd(55, 115);
+        nodes.push({
+          x:     cx + Math.cos(a) * d,
+          y:     cy + Math.sin(a) * d,
+          r:     rnd(2, 3.8),
+          color: [C, B, P][Math.floor(rnd(0, 3))],
+          phase: rnd(0, Math.PI * 2),
+          speed: rnd(0.8, 1.7),
+          inner: true,
+        });
       }
+      return nodes;
+    };
 
-      // ─── ROBOT SKELETON ───
-      const headY = baseY - 65 + breathe + driftY;
-      const headTilt = Math.sin(t * Math.PI * 3) * 6;
+    let nodes = buildNodes();
 
-      // Spine
-      const spineTop = baseY - 30 + driftY;
-      const spineBot = baseY + 55 + driftY;
-      drawLine(cx, spineTop + breathe, cx, spineBot, BLUE, 0.25, 1.5);
-
-      // ── HEAD ──
-      ctx.save();
-      ctx.translate(cx, headY);
-      ctx.rotate((headTilt * Math.PI) / 180);
-
-      // Head shape — angular polygon
-      ctx.beginPath();
-      ctx.moveTo(0, -22);
-      ctx.lineTo(18, -12);
-      ctx.lineTo(20, 8);
-      ctx.lineTo(12, 18);
-      ctx.lineTo(-12, 18);
-      ctx.lineTo(-20, 8);
-      ctx.lineTo(-18, -12);
-      ctx.closePath();
-      ctx.strokeStyle = NEON;
-      ctx.globalAlpha = 0.5;
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-      ctx.fillStyle = 'rgba(15,23,42,0.4)';
-      ctx.globalAlpha = 0.6;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-
-      // Visor — horizontal slit
-      const visorH = 3 + Math.abs(Math.sin(t * Math.PI * 5)) * 5;
-      ctx.fillStyle = CYAN;
-      ctx.globalAlpha = 0.7 + Math.sin(time * 3) * 0.3;
-      ctx.fillRect(-14, -4, 28, visorH);
-      // Visor glow
-      const vg = ctx.createRadialGradient(0, 0, 0, 0, 0, 30);
-      vg.addColorStop(0, `rgba(34,211,238,${0.15 + Math.sin(time * 3) * 0.1})`);
-      vg.addColorStop(1, 'rgba(34,211,238,0)');
-      ctx.fillStyle = vg;
-      ctx.fillRect(-30, -15, 60, 30);
-      ctx.globalAlpha = 1;
-
-      // Chin line
-      drawLine(-8, 14, 8, 14, BLUE, 0.2, 0.5);
-
-      ctx.restore();
-
-      // ── SHOULDERS ──
-      const shoulderY = baseY - 22 + breathe + driftY;
-      const shoulderW = 45;
-      drawLine(cx - shoulderW, shoulderY, cx + shoulderW, shoulderY, NEON, 0.3, 1.5);
-      drawJoint(cx - shoulderW, shoulderY, 4, Math.abs(walkCycle) * 0.5);
-      drawJoint(cx + shoulderW, shoulderY, 4, Math.abs(walkCycle) * 0.5);
-
-      // ── CHEST PLATE ──
-      ctx.beginPath();
-      ctx.moveTo(cx - 30, shoulderY + 5);
-      ctx.lineTo(cx + 30, shoulderY + 5);
-      ctx.lineTo(cx + 25, shoulderY + 50);
-      ctx.lineTo(cx - 25, shoulderY + 50);
-      ctx.closePath();
-      ctx.strokeStyle = BLUE;
-      ctx.globalAlpha = 0.2;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      ctx.globalAlpha = 1;
-
-      // Core reactor
-      const coreY = shoulderY + 28;
-      const corePulse = 0.5 + Math.abs(Math.sin(t * Math.PI * 8 + time)) * 0.5;
-      const cg = ctx.createRadialGradient(cx, coreY, 0, cx, coreY, 20);
-      cg.addColorStop(0, `rgba(34,211,238,${0.3 * corePulse})`);
-      cg.addColorStop(0.5, `rgba(59,130,246,${0.1 * corePulse})`);
-      cg.addColorStop(1, 'rgba(59,130,246,0)');
-      ctx.beginPath();
-      ctx.arc(cx, coreY, 20, 0, Math.PI * 2);
-      ctx.fillStyle = cg;
-      ctx.fill();
-      // Core ring
-      ctx.beginPath();
-      ctx.arc(cx, coreY, 8, 0, Math.PI * 2);
-      ctx.strokeStyle = CYAN;
-      ctx.globalAlpha = 0.4 + corePulse * 0.4;
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(cx, coreY, 3, 0, Math.PI * 2);
-      ctx.fillStyle = CYAN;
-      ctx.globalAlpha = corePulse;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-
-      // ── ARMS ──
-      const armSwing = walkCycle * 20;
-
-      // Left arm
-      const laElbowX = cx - shoulderW - 8 + Math.sin(armSwing * 0.02) * 5;
-      const laElbowY = shoulderY + 35 + Math.abs(Math.sin(armSwing * 0.03)) * 5;
-      const laHandX = laElbowX - 3 + Math.sin(armSwing * 0.02) * 8;
-      const laHandY = laElbowY + 30;
-      drawLine(cx - shoulderW, shoulderY, laElbowX, laElbowY, NEON, 0.3, 1.2);
-      drawLine(laElbowX, laElbowY, laHandX, laHandY, NEON, 0.25, 1);
-      drawJoint(laElbowX, laElbowY, 3, 0.3);
-      drawJoint(laHandX, laHandY, 2.5, 0.2);
-
-      // Right arm
-      const raElbowX = cx + shoulderW + 8 - Math.sin(armSwing * 0.02) * 5;
-      const raElbowY = shoulderY + 35 + Math.abs(Math.cos(armSwing * 0.03)) * 5;
-      const raHandX = raElbowX + 3 - Math.sin(armSwing * 0.02) * 8;
-      const raHandY = raElbowY + 30;
-      drawLine(cx + shoulderW, shoulderY, raElbowX, raElbowY, NEON, 0.3, 1.2);
-      drawLine(raElbowX, raElbowY, raHandX, raHandY, NEON, 0.25, 1);
-      drawJoint(raElbowX, raElbowY, 3, 0.3);
-      drawJoint(raHandX, raHandY, 2.5, 0.2);
-
-      // ── HIPS ──
-      const hipY = spineBot;
-      drawLine(cx - 20, hipY, cx + 20, hipY, BLUE, 0.25, 1.2);
-      drawJoint(cx - 20, hipY, 3, 0.2);
-      drawJoint(cx + 20, hipY, 3, 0.2);
-
-      // ── LEGS ──
-      const legSwing = walkCycle * 12;
-
-      // Left leg
-      const llKneeX = cx - 22 + Math.sin(legSwing * 0.015) * 3;
-      const llKneeY = hipY + 35 + Math.abs(walkCycle) * 3;
-      const llFootX = llKneeX - 3;
-      const llFootY = llKneeY + 30;
-      drawLine(cx - 20, hipY, llKneeX, llKneeY, BLUE, 0.25, 1.2);
-      drawLine(llKneeX, llKneeY, llFootX, llFootY, BLUE, 0.2, 1);
-      drawJoint(llKneeX, llKneeY, 3, 0.2);
-      drawJoint(llFootX, llFootY, 2.5, 0.15);
-      // Foot plate
-      drawLine(llFootX - 8, llFootY, llFootX + 6, llFootY, NEON, 0.2, 1.5);
-
-      // Right leg
-      const rlKneeX = cx + 22 - Math.sin(legSwing * 0.015) * 3;
-      const rlKneeY = hipY + 35 + Math.abs(-walkCycle) * 3;
-      const rlFootX = rlKneeX + 3;
-      const rlFootY = rlKneeY + 30;
-      drawLine(cx + 20, hipY, rlKneeX, rlKneeY, BLUE, 0.25, 1.2);
-      drawLine(rlKneeX, rlKneeY, rlFootX, rlFootY, BLUE, 0.2, 1);
-      drawJoint(rlKneeX, rlKneeY, 3, 0.2);
-      drawJoint(rlFootX, rlFootY, 2.5, 0.15);
-      drawLine(rlFootX - 6, rlFootY, rlFootX + 8, rlFootY, NEON, 0.2, 1.5);
-
-      // ── HUD ELEMENTS ──
-      // Data readouts near head
-      ctx.font = '500 7px "JetBrains Mono", monospace';
-      ctx.fillStyle = NEON;
-      ctx.globalAlpha = 0.2 + Math.abs(Math.sin(time * 2)) * 0.15;
-      ctx.textAlign = 'left';
-      ctx.fillText(`STATUS: ONLINE`, cx + 30, headY - 15);
-      ctx.fillText(`SCROLL: ${Math.round(t * 100)}%`, cx + 30, headY - 5);
-      ctx.fillText(`CORE: ${Math.round(corePulse * 100)}%`, cx + 30, headY + 5);
-      // Corner brackets
-      ctx.strokeStyle = BLUE;
-      ctx.globalAlpha = 0.15;
-      ctx.lineWidth = 0.8;
-      // Top-left bracket
-      ctx.beginPath(); ctx.moveTo(cx + 26, headY - 20); ctx.lineTo(cx + 26, headY - 22); ctx.lineTo(cx + 30, headY - 22); ctx.stroke();
-      // Bottom-right bracket
-      ctx.beginPath(); ctx.moveTo(cx + 76, headY + 8); ctx.lineTo(cx + 76, headY + 10); ctx.lineTo(cx + 72, headY + 10); ctx.stroke();
-      ctx.globalAlpha = 1;
-
-      // Scanning ring around head
-      ctx.beginPath();
-      ctx.arc(cx, headY, 32, time % (Math.PI * 2), (time % (Math.PI * 2)) + Math.PI * 0.4);
-      ctx.strokeStyle = CYAN;
-      ctx.globalAlpha = 0.08;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      ctx.globalAlpha = 1;
-
-      // Particle sparks at joints
-      if (Math.random() > 0.92) {
-        const sparkJoints = [[cx - shoulderW, shoulderY], [cx + shoulderW, shoulderY], [cx, coreY]];
-        const sj = sparkJoints[Math.floor(Math.random() * sparkJoints.length)];
-        ctx.beginPath();
-        ctx.arc(sj[0] + (Math.random() - 0.5) * 10, sj[1] + (Math.random() - 0.5) * 10, 1, 0, Math.PI * 2);
-        ctx.fillStyle = CYAN;
-        ctx.globalAlpha = 0.5;
-        ctx.fill();
+    /* ══════════ SYNAPTIC PULSES ══════════ */
+    class Pulse {
+      constructor(a, b) {
+        this.a = a; this.b = b;
+        this.p     = 0;
+        this.speed = rnd(0.007, 0.017);
+        this.color = [C, B, P, G, '#F472B6'][Math.floor(rnd(0, 5))];
+        this.size  = rnd(2.2, 4.5);
+        this.done  = false;
+      }
+      update() { this.p += this.speed; if (this.p >= 1) this.done = true; }
+      draw(ctx) {
+        const x = lerp(this.a.x, this.b.x, this.p);
+        const y = lerp(this.a.y, this.b.y, this.p);
+        // Wide glow
+        const g = ctx.createRadialGradient(x, y, 0, x, y, this.size * 7);
+        g.addColorStop(0, this.color + 'bb'); g.addColorStop(1, this.color + '00');
+        ctx.beginPath(); ctx.arc(x, y, this.size * 7, 0, Math.PI * 2);
+        ctx.fillStyle = g; ctx.fill();
+        // Hard core
+        ctx.beginPath(); ctx.arc(x, y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = W; ctx.globalAlpha = 0.97; ctx.fill();
         ctx.globalAlpha = 1;
       }
+    }
+    let pulses = [], pulseTimer = 0;
+
+    /* ══════════ AMBIENT DUST PARTICLES ══════════ */
+    const DUST_COUNT = 40;
+    const dust = Array.from({ length: DUST_COUNT }, () => ({
+      x: rnd(0, 1), y: rnd(0, 1),
+      vx: rnd(-0.0003, 0.0003), vy: rnd(-0.0006, -0.0002),
+      life: rnd(0, 1), maxLife: rnd(0.006, 0.014),
+      r: rnd(0.6, 1.4),
+      color: [C, B, P, G][Math.floor(rnd(0, 4))],
+    }));
+
+    /* ══════════ 5 ORBITAL RINGS ══════════ */
+    const orbits = [
+      { r: 160, speed:  0.55, count: 3, color: C,  offset: 0             },
+      { r: 185, speed: -0.30, count: 5, color: B,  offset: Math.PI / 5   },
+      { r: 208, speed:  0.20, count: 4, color: P,  offset: Math.PI / 8   },
+      { r: 232, speed: -0.14, count: 6, color: G,  offset: Math.PI / 3   },
+      { r: 258, speed:  0.10, count: 8, color: A,  offset: Math.PI / 6   },
+    ];
+
+    /* ══════════ DRAW HELPERS ══════════ */
+    const drawRing = (cx, cy, radius, width, color, alpha, dashLen = 0, gap = 0, rotation = 0) => {
+      ctx.save();
+      ctx.translate(cx, cy); ctx.rotate(rotation);
+      ctx.beginPath(); ctx.arc(0, 0, radius, 0, Math.PI * 2);
+      if (dashLen > 0) ctx.setLineDash([dashLen, gap]); else ctx.setLineDash([]);
+      ctx.strokeStyle = color; ctx.globalAlpha = alpha;
+      ctx.lineWidth = width; ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1; ctx.restore();
+    };
+
+    const drawLattice = (cx, cy, radius, rotation) => {
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(rotation);
+      for (let ring = 1; ring <= 3; ring++) {
+        const r = radius * (ring / 3);
+        ctx.beginPath();
+        for (let i = 0; i <= 3; i++) {
+          const a = (Math.PI * 2 * i / 3) - Math.PI / 2;
+          i === 0 ? ctx.moveTo(Math.cos(a)*r, Math.sin(a)*r)
+                  : ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = C; ctx.globalAlpha = 0.13 + ring * 0.04;
+        ctx.lineWidth = 0.8; ctx.stroke();
+        for (let i = 0; i < 3; i++) {
+          const a = (Math.PI * 2 * i / 3) - Math.PI / 2;
+          ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+          ctx.strokeStyle = C; ctx.globalAlpha = 0.07; ctx.lineWidth = 0.5; ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+      }
+      ctx.restore();
+    };
+
+    /* ══════════ MAIN DRAW LOOP ══════════ */
+    const draw = () => {
+      t += 0.012;
+      const w = CW(), h = CH();
+      const cx = w / 2, cy = h / 2;
+      const breathe = 0.5 + Math.sin(t * 0.7) * 0.25;
+      ctx.clearRect(0, 0, w, h);
+
+      /* ── 1. DEEP AMBIENT BLOOM (3 layers) ── */
+      [[280, 0.11, C], [230, 0.07, B], [160, 0.04, P]].forEach(([r, a, col]) => {
+        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        g.addColorStop(0,   col.replace('#', 'rgba(') + `,${a * breathe})`); // hack-free below:
+        const rgb = col === C ? '34,211,238' : col === B ? '59,130,246' : '129,140,248';
+        const bg2 = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        bg2.addColorStop(0,   `rgba(${rgb},${a * breathe})`);
+        bg2.addColorStop(0.5, `rgba(${rgb},${a * 0.4 * breathe})`);
+        bg2.addColorStop(1,   `rgba(${rgb},0)`);
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fillStyle = bg2; ctx.fill();
+      });
+
+      /* ── 2. OUTER TICK DIAL ── */
+      const outerR = Math.min(w, h) * 0.46;
+      // Faint outer circle
+      ctx.beginPath(); ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+      ctx.strokeStyle = C; ctx.globalAlpha = 0.07; ctx.lineWidth = 0.5; ctx.stroke();
+      ctx.globalAlpha = 1;
+      // Tick marks (slowly rotating)
+      const tickRot = t * 0.018;
+      for (let i = 0; i < 60; i++) {
+        const a   = (Math.PI * 2 * i / 60) + tickRot;
+        const major = i % 5 === 0;
+        const tLen  = major ? 9 : 4;
+        const tAlpha= major ? 0.22 : 0.07;
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(a) * outerR, cy + Math.sin(a) * outerR);
+        ctx.lineTo(cx + Math.cos(a) * (outerR - tLen), cy + Math.sin(a) * (outerR - tLen));
+        ctx.strokeStyle = major ? C : B;
+        ctx.globalAlpha = tAlpha; ctx.lineWidth = major ? 1 : 0.5; ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      /* ── 3. RADIAL CIRCUIT SPOKES ── */
+      const spokeCount = 12;
+      for (let i = 0; i < spokeCount; i++) {
+        const a = (Math.PI * 2 * i / spokeCount) + t * 0.025;
+        const innerR = 60, outerSpoke = outerR * 0.88;
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(a) * innerR, cy + Math.sin(a) * innerR);
+        ctx.lineTo(cx + Math.cos(a) * outerSpoke, cy + Math.sin(a) * outerSpoke);
+        ctx.strokeStyle = i % 3 === 0 ? C : B;
+        ctx.globalAlpha = 0.04; ctx.lineWidth = 0.5; ctx.stroke();
+        ctx.globalAlpha = 1;
+        // Small node at spoke end
+        if (i % 3 === 0) {
+          ctx.beginPath();
+          ctx.arc(cx + Math.cos(a)*outerSpoke, cy + Math.sin(a)*outerSpoke, 1.5, 0, Math.PI*2);
+          ctx.fillStyle = C; ctx.globalAlpha = 0.12; ctx.fill(); ctx.globalAlpha = 1;
+        }
+      }
+
+      /* ── 4. AMBIENT DUST ── */
+      dust.forEach(d => {
+        d.x += d.vx; d.y += d.vy; d.life += d.maxLife;
+        if (d.life >= 1 || d.y < 0) {
+          d.x = rnd(0.1, 0.9); d.y = rnd(0.7, 1.0);
+          d.life = 0;
+        }
+        const alpha = Math.sin(d.life * Math.PI) * 0.45;
+        ctx.beginPath();
+        ctx.arc(d.x * w, d.y * h, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = d.color; ctx.globalAlpha = alpha; ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+
+      /* ── 5. SCANNING WEDGE ── */
+      const scanSpeed = 0.38;
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(t * scanSpeed);
+      const sweepR = outerR * 0.92;
+      const sweepA = Math.PI / 22; // narrow wedge
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, sweepR, 0, sweepA);
+      ctx.closePath();
+      const sweepG = ctx.createRadialGradient(0, 0, 0, 0, 0, sweepR);
+      sweepG.addColorStop(0,   `rgba(34,211,238,${0.18 * breathe})`);
+      sweepG.addColorStop(0.6, `rgba(34,211,238,${0.07 * breathe})`);
+      sweepG.addColorStop(1,    'rgba(34,211,238,0)');
+      ctx.fillStyle = sweepG; ctx.fill();
+      // Leading edge bright line
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(sweepR, 0);
+      ctx.strokeStyle = C; ctx.globalAlpha = 0.30; ctx.lineWidth = 0.8; ctx.stroke();
+      ctx.globalAlpha = 1; ctx.restore();
+
+      /* ── 6. NEURAL CONNECTIONS (double pass for glow) ── */
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist > 175) continue;
+          const str = 1 - dist / 175;
+          // Pass 1 — wide soft glow
+          ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = nodes[i].color; ctx.globalAlpha = str * 0.07;
+          ctx.lineWidth = 3; ctx.stroke(); ctx.globalAlpha = 1;
+          // Pass 2 — crisp thin line
+          ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = nodes[i].color; ctx.globalAlpha = str * 0.13;
+          ctx.lineWidth = 0.7; ctx.stroke(); ctx.globalAlpha = 1;
+        }
+      }
+
+      /* ── 7. INNER NODE → CORE SPOKES ── */
+      nodes.filter(n => n.inner).forEach(n => {
+        const a = 0.05 + 0.04 * Math.sin(t * 1.2 + n.phase);
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(n.x, n.y);
+        ctx.strokeStyle = n.color; ctx.globalAlpha = a;
+        ctx.lineWidth = 0.6; ctx.stroke(); ctx.globalAlpha = 1;
+      });
+
+      /* ── 8. PULSES ── */
+      pulseTimer++;
+      if (pulseTimer >= 10) {
+        pulseTimer = 0;
+        const a = nodes[Math.floor(rnd(0, nodes.length))];
+        const b = nodes[Math.floor(rnd(0, nodes.length))];
+        const dx = a.x-b.x, dy = a.y-b.y;
+        if (Math.sqrt(dx*dx+dy*dy) < 175) pulses.push(new Pulse(a, b));
+      }
+      pulses = pulses.filter(p => !p.done);
+      pulses.forEach(p => { p.update(); p.draw(ctx); });
+
+      /* ── 9. NEURAL NODES ── */
+      nodes.forEach(n => {
+        const pulse = 0.5 + Math.sin(t * n.speed + n.phase) * 0.35;
+        const r = n.r * (0.85 + pulse * 0.3);
+        // Wide halo
+        const g2 = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 6);
+        g2.addColorStop(0, n.color + '55'); g2.addColorStop(1, n.color + '00');
+        ctx.beginPath(); ctx.arc(n.x, n.y, r*6, 0, Math.PI*2); ctx.fillStyle=g2; ctx.fill();
+        // Ring
+        ctx.beginPath(); ctx.arc(n.x, n.y, r+2.5, 0, Math.PI*2);
+        ctx.strokeStyle=n.color; ctx.globalAlpha=0.35+pulse*0.28; ctx.lineWidth=0.9;
+        ctx.stroke(); ctx.globalAlpha=1;
+        // Core
+        const ng = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r);
+        ng.addColorStop(0, W); ng.addColorStop(0.4, n.color); ng.addColorStop(1, n.color+'70');
+        ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI*2);
+        ctx.fillStyle=ng; ctx.globalAlpha=0.72+pulse*0.25; ctx.fill(); ctx.globalAlpha=1;
+      });
+
+      /* ══════════ ARC REACTOR ══════════ */
+
+      /* ── 10. OUTER REACTOR RINGS ── */
+      drawRing(cx, cy, 195, 0.5, A, 0.07, 4, 18, t * 0.05);   // amber outer
+      drawRing(cx, cy, 178, 0.6, P, 0.11, 6, 12, t * 0.08);
+      drawRing(cx, cy, 158, 0.8, B, 0.18, 18, 8, -t * 0.15);
+      drawRing(cx, cy, 135, 1.4, C, 0.32, 25, 10, t * 0.30);
+      drawRing(cx, cy, 135, 7,   C, 0.05, 0,  0,  t * 0.30);  // glow ring
+
+      /* Fast arc with tip flare */
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(-t * 0.55);
+      ctx.beginPath(); ctx.arc(0, 0, 110, 0, Math.PI * 1.5);
+      ctx.strokeStyle = C; ctx.globalAlpha = 0.52; ctx.lineWidth = 1.6; ctx.stroke();
+      ctx.globalAlpha = 1;
+      const tipX = Math.cos(Math.PI*1.5)*110, tipY = Math.sin(Math.PI*1.5)*110;
+      const tf = ctx.createRadialGradient(tipX, tipY, 0, tipX, tipY, 14);
+      tf.addColorStop(0, C+'dd'); tf.addColorStop(1, C+'00');
+      ctx.beginPath(); ctx.arc(tipX, tipY, 14, 0, Math.PI*2);
+      ctx.fillStyle=tf; ctx.fill(); ctx.restore();
+
+      /* Very fast short arc */
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(t * 1.12);
+      ctx.beginPath(); ctx.arc(0, 0, 90, 0, Math.PI * 0.6);
+      ctx.strokeStyle = B; ctx.globalAlpha = 0.58; ctx.lineWidth = 2.2; ctx.stroke();
+      ctx.globalAlpha = 1; ctx.restore();
+
+      /* Counter-rotating medium arc (new) */
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(-t * 0.75);
+      ctx.beginPath(); ctx.arc(0, 0, 72, 0, Math.PI * 0.9);
+      ctx.strokeStyle = P; ctx.globalAlpha = 0.35; ctx.lineWidth = 1.2; ctx.stroke();
+      ctx.globalAlpha = 1; ctx.restore();
+
+      /* ── 11. INNER LATTICE ── */
+      drawLattice(cx, cy, 72, t * 0.20);
+      drawLattice(cx, cy, 72, -t * 0.36);
+
+      /* ── 12. SPINNING HEX ── */
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(t * 0.62);
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const a = (Math.PI/3)*i;
+        i===0 ? ctx.moveTo(Math.cos(a)*40, Math.sin(a)*40)
+              : ctx.lineTo(Math.cos(a)*40, Math.sin(a)*40);
+      }
+      ctx.closePath();
+      ctx.strokeStyle=C; ctx.globalAlpha=0.38; ctx.lineWidth=1.3; ctx.stroke();
+      ctx.globalAlpha=1; ctx.restore();
+
+      /* Smaller counter-rotating hex */
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(-t * 1.0);
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const a = (Math.PI/3)*i + Math.PI/6;
+        i===0 ? ctx.moveTo(Math.cos(a)*25, Math.sin(a)*25)
+              : ctx.lineTo(Math.cos(a)*25, Math.sin(a)*25);
+      }
+      ctx.closePath();
+      ctx.strokeStyle=B; ctx.globalAlpha=0.25; ctx.lineWidth=0.9; ctx.stroke();
+      ctx.globalAlpha=1; ctx.restore();
+
+      /* ── 13. CORE BLOOM (4 layers) ── */
+      [[70, 0.16, '34,211,238'], [50, 0.22, '34,211,238'], [35, 0.18, '59,130,246'], [18, 0.14, '200,245,255']].forEach(([r, a, rgb]) => {
+        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        g.addColorStop(0,   `rgba(${rgb},${a * breathe})`);
+        g.addColorStop(0.5, `rgba(${rgb},${a * 0.4 * breathe})`);
+        g.addColorStop(1,   `rgba(${rgb},0)`);
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fillStyle=g; ctx.fill();
+      });
+
+      /* Core solid ring */
+      ctx.beginPath(); ctx.arc(cx, cy, 55, 0, Math.PI*2);
+      ctx.strokeStyle=C; ctx.globalAlpha=0.58; ctx.lineWidth=1.6; ctx.stroke();
+      drawRing(cx, cy, 55, 9, C, 0.05);
+      ctx.globalAlpha=1;
+
+      /* Core radial gradient fill */
+      const cc = ctx.createRadialGradient(cx, cy, 0, cx, cy, 32);
+      cc.addColorStop(0,   'rgba(255,255,255,0.97)');
+      cc.addColorStop(0.25,'rgba(210,250,255,0.92)');
+      cc.addColorStop(0.6, 'rgba(34,211,238,0.55)');
+      cc.addColorStop(1,   'rgba(34,211,238,0)');
+      ctx.beginPath(); ctx.arc(cx, cy, 32, 0, Math.PI*2); ctx.fillStyle=cc; ctx.fill();
+
+      /* Hard dot + shadow glow */
+      ctx.shadowBlur = 22; ctx.shadowColor = W;
+      ctx.beginPath(); ctx.arc(cx, cy, 7.5, 0, Math.PI*2);
+      ctx.fillStyle=W; ctx.globalAlpha=0.99; ctx.fill();
+      ctx.shadowBlur=0; ctx.globalAlpha=1;
+
+      /* ── 14. PULSE RINGS (3 rings, staggered) ── */
+      for (let ring = 0; ring < 3; ring++) {
+        const phase = (t * 0.52 + ring * (Math.PI*2/3)) % (Math.PI*2);
+        const pr  = 55 + (phase / (Math.PI*2)) * 195;
+        const pa  = (1 - phase / (Math.PI*2)) * 0.28;
+        ctx.beginPath(); ctx.arc(cx, cy, pr, 0, Math.PI*2);
+        ctx.strokeStyle = C; ctx.globalAlpha = pa; ctx.lineWidth = 1; ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      /* ── 15. ORBITAL PARTICLES with comet trails ── */
+      orbits.forEach(orb => {
+        for (let i = 0; i < orb.count; i++) {
+          const baseAngle = (Math.PI*2*i/orb.count) + t*orb.speed + orb.offset;
+
+          // Comet trail (5 ghost dots behind)
+          for (let tr = 5; tr >= 1; tr--) {
+            const trailAngle = baseAngle - tr * 0.065 * Math.sign(orb.speed);
+            const tx = cx + Math.cos(trailAngle) * orb.r;
+            const ty = cy + Math.sin(trailAngle) * orb.r;
+            const ta = (1 - tr / 6) * 0.35;
+            const ts = (1 - tr / 6) * 3.5;
+            ctx.beginPath(); ctx.arc(tx, ty, ts, 0, Math.PI*2);
+            ctx.fillStyle = orb.color; ctx.globalAlpha = ta; ctx.fill();
+            ctx.globalAlpha = 1;
+          }
+
+          // Head particle
+          const px = cx + Math.cos(baseAngle) * orb.r;
+          const py = cy + Math.sin(baseAngle) * orb.r;
+          const pf = 0.5 + Math.sin(t*2.2 + i)*0.5;
+          const og = ctx.createRadialGradient(px, py, 0, px, py, 12);
+          og.addColorStop(0, orb.color+'bb'); og.addColorStop(1, orb.color+'00');
+          ctx.beginPath(); ctx.arc(px, py, 12, 0, Math.PI*2); ctx.fillStyle=og; ctx.fill();
+          ctx.beginPath(); ctx.arc(px, py, 2.8+pf*0.6, 0, Math.PI*2);
+          ctx.fillStyle=W; ctx.globalAlpha=0.88+pf*0.12; ctx.fill(); ctx.globalAlpha=1;
+        }
+      });
+
+      /* ══════════ HUD PANELS ══════════ */
+
+      /* ── Right HUD ── */
+      const hx = cx + 222, hy = cy - 62;
+      ctx.save();
+      ctx.fillStyle='rgba(5,13,26,0.78)'; ctx.strokeStyle=C;
+      ctx.globalAlpha=0.52+Math.sin(t*0.9)*0.04; ctx.lineWidth=0.5;
+      roundRect(ctx, hx, hy, 104, 72, 4); ctx.fill(); ctx.stroke();
+      ctx.fillStyle=C; ctx.globalAlpha=0.42;
+      roundRect(ctx, hx, hy, 104, 2, 1); ctx.fill(); ctx.globalAlpha=1;
+
+      ctx.font='700 7px "JetBrains Mono",monospace'; ctx.textAlign='left';
+      ctx.fillStyle=C; ctx.globalAlpha=0.75; ctx.fillText('STATUS', hx+8, hy+15);
+      ctx.fillStyle=G; ctx.globalAlpha=0.90;
+      ctx.fillText('ONLINE', hx+52, hy+15);
+
+      // Blinking green dot
+      ctx.beginPath(); ctx.arc(hx+48, hy+11, 2, 0, Math.PI*2);
+      ctx.fillStyle=G; ctx.globalAlpha=0.7+Math.sin(t*3)*0.3; ctx.fill();
+
+      ctx.font='600 6.5px "JetBrains Mono",monospace';
+      ctx.fillStyle=W; ctx.globalAlpha=0.50;
+      ctx.fillText('CORE  AI v2.1', hx+8, hy+26);
+
+      // Power bar
+      const barW=88, barFill=0.85+Math.sin(t*0.9)*0.09;
+      ctx.fillStyle='rgba(34,211,238,0.10)'; ctx.globalAlpha=1;
+      roundRect(ctx, hx+8, hy+33, barW, 5, 2); ctx.fill();
+      const bg2=ctx.createLinearGradient(hx+8,0,hx+8+barW*barFill,0);
+      bg2.addColorStop(0,C); bg2.addColorStop(1,B);
+      ctx.fillStyle=bg2; roundRect(ctx, hx+8, hy+33, barW*barFill, 5, 2); ctx.fill();
+      ctx.fillStyle=W; ctx.globalAlpha=0.35; ctx.font='600 5.5px "JetBrains Mono",monospace';
+      ctx.fillText(`PWR ${Math.round(barFill*100)}%`, hx+8, hy+46);
+
+      // Sparkline waveform
+      ctx.beginPath();
+      for (let px2 = 0; px2 < barW; px2++) {
+        const sy = Math.sin(px2 / barW * 7 + t * 2.2) * 5
+                 + Math.sin(px2 / barW * 13 + t * 3.5) * 2.5;
+        const sx = hx + 8 + px2;
+        const sY = hy + 60 + sy;
+        px2 === 0 ? ctx.moveTo(sx, sY) : ctx.lineTo(sx, sY);
+      }
+      ctx.strokeStyle=C; ctx.globalAlpha=0.40; ctx.lineWidth=0.8; ctx.stroke();
+      ctx.globalAlpha=1; ctx.restore();
+
+      // Connector line
+      ctx.setLineDash([3,5]);
+      ctx.strokeStyle=C; ctx.globalAlpha=0.12; ctx.lineWidth=0.6;
+      ctx.beginPath(); ctx.moveTo(hx, hy+36); ctx.lineTo(cx+58, cy-12); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha=1;
+
+      /* ── Left HUD ── */
+      const lx = cx - 326, ly = cy + 20;
+      ctx.save();
+      ctx.fillStyle='rgba(5,13,26,0.75)'; ctx.strokeStyle=P;
+      ctx.globalAlpha=0.48+Math.sin(t*1.1)*0.04; ctx.lineWidth=0.5;
+      roundRect(ctx, lx, ly, 92, 56, 4); ctx.fill(); ctx.stroke();
+      ctx.fillStyle=P; ctx.globalAlpha=0.36;
+      roundRect(ctx, lx, ly, 92, 2, 1); ctx.fill(); ctx.globalAlpha=1;
+
+      ctx.font='700 7px "JetBrains Mono",monospace'; ctx.textAlign='left';
+      ctx.fillStyle=P; ctx.globalAlpha=0.80; ctx.fillText('NEURAL SYNC', lx+8, ly+16);
+      ctx.font='600 6.5px "JetBrains Mono",monospace';
+      ctx.fillStyle=W; ctx.globalAlpha=0.55;
+      ctx.fillText(`${(97.4+Math.sin(t*1.5)*0.7).toFixed(1)}%  STABLE`, lx+8, ly+28);
+      ctx.fillStyle=G; ctx.globalAlpha=0.60;
+      ctx.fillText('LATENCY  <2ms', lx+8, ly+39);
+
+      // Mini bar (neural load)
+      [0.82, 0.91, 0.74, 0.95, 0.66, 0.88].forEach((v, i) => {
+        const bx = lx + 8 + i * 13, bH = (v + Math.sin(t*2+i)*0.06) * 12;
+        ctx.fillStyle = [C,B,P,G,C,B][i];
+        ctx.globalAlpha = 0.50;
+        ctx.fillRect(bx, ly + 48 - bH, 9, bH);
+      });
+      ctx.globalAlpha=1; ctx.restore();
+
+      // Connector line
+      ctx.setLineDash([3,5]);
+      ctx.strokeStyle=P; ctx.globalAlpha=0.12; ctx.lineWidth=0.6;
+      ctx.beginPath(); ctx.moveTo(lx+92, ly+28); ctx.lineTo(cx-58, cy+8); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha=1;
+
+      /* ── Watermark label ── */
+      ctx.save();
+      ctx.font='700 8.5px "JetBrains Mono",monospace'; ctx.textAlign='center';
+      ctx.fillStyle=C; ctx.globalAlpha=0.18;
+      ctx.fillText('AIGNITE · AI CORE', cx, cy + outerR + 16);
+      ctx.restore();
 
       raf = requestAnimationFrame(draw);
     };
 
     draw();
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', resize); };
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize); };
   }, []);
 
   return (
-    <div ref={wrapRef} className="relative w-full max-w-[420px] aspect-[3/4] select-none pointer-events-none">
-      <canvas ref={canvasRef} className="w-full h-full" />
+    <div className="relative w-full select-none" style={{ aspectRatio: '1 / 0.90', maxWidth: 580 }}>
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 70% 55% at 50% 50%, rgba(34,211,238,0.07) 0%, rgba(59,130,246,0.04) 45%, transparent 70%)' }} />
+      <canvas ref={canvasRef} className="w-full h-full" style={{ display: 'block' }} />
     </div>
   );
 }

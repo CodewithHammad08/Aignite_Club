@@ -218,21 +218,22 @@ export default function Home({ go }) {
             </div>
           </div>
 
-          {/* Right: Robot + tech pills */}
+          {/* Right: Neural Network + AI tech pills */}
           <div className="order-1 lg:order-2 relative flex justify-center lg:justify-end" data-animate="zoom-in">
             <HeroRobot />
             {[
-              { label: 'TensorFlow', color: '#FF6F00', top: '8%', right: '5%', delay: '0s' },
-              { label: 'PyTorch', color: '#EE4C2C', bottom: '22%', left: '3%', delay: '1.5s' },
-              { label: 'React', color: '#61DAFB', top: '38%', left: '-2%', delay: '0.8s' },
-              { label: 'Node.js', color: '#68A063', bottom: '8%', right: '8%', delay: '2.2s' },
+              { label: 'Transformer',  color: '#22D3EE', top: '4%',   right: '-2%',  delay: '0s'   },
+              { label: 'Backprop',     color: '#818CF8', top: '36%',  left: '-4%',   delay: '0.9s' },
+              { label: 'CNN',          color: '#34D399', bottom: '30%',left: '-2%',  delay: '1.8s' },
+              { label: 'LLM',          color: '#F472B6', bottom: '6%', right: '2%',  delay: '2.5s' },
             ].map((pill, i) => (
               <div key={i} className="absolute px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold animate-float depth-card"
-                style={{ color: pill.color, animationDelay: pill.delay, top: pill.top, bottom: pill.bottom, left: pill.left, right: pill.right, borderColor: `${pill.color}20` }}>
+                style={{ color: pill.color, animationDelay: pill.delay, top: pill.top, bottom: pill.bottom, left: pill.left, right: pill.right, borderColor: `${pill.color}25`, boxShadow: `0 0 12px ${pill.color}15` }}>
                 {pill.label}
               </div>
             ))}
           </div>
+
         </div>
 
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10" data-animate="fade-up" data-delay="900">
