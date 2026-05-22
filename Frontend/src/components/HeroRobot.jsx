@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 /* ═══════════════════════════════════════════════════════════════
    AIGNITE HERO — Supercharged 3D Arc Reactor + Neural Network
@@ -38,6 +38,13 @@ function roundRect(ctx, x, y, w, h, r) {
 
 export default function HeroRobot() {
   const canvasRef = useRef(null);
+  const [dimensions, setDimensions] = useState({ width: 600, height: 500, baseScale: 0.85 });
+  const [telemetry, setTelemetry] = useState({
+    stable: '97.4',
+    temp: '1024.0',
+    mag: '98.20',
+    pwr: 85
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -45,13 +52,33 @@ export default function HeroRobot() {
     let raf, t = 0;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
+    let baseScale = 1.0;
     const resize = () => {
-      canvas.width  = canvas.offsetWidth  * dpr;
-      canvas.height = canvas.offsetHeight * dpr;
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      canvas.width  = w * dpr;
+      canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const divisor = w < 640 ? 380 : 590;
+      baseScale = Math.min(w, h) / divisor;
+      setDimensions({
+        width: w,
+        height: h,
+        baseScale: baseScale
+      });
     };
     resize();
     window.addEventListener('resize', resize);
+
+    const telInterval = setInterval(() => {
+      const curT = performance.now() * 0.001;
+      setTelemetry({
+        stable: (97.4 + Math.sin(curT * 1.5) * 0.7).toFixed(1),
+        temp: (1024 + Math.sin(curT * 1.2) * 12).toFixed(1),
+        mag: (98.2 + Math.cos(curT * 0.8) * 0.4).toFixed(2),
+        pwr: Math.round(85 + Math.sin(curT * 0.9) * 9)
+      });
+    }, 150);
 
     const CW = () => canvas.width  / dpr;
     const CH = () => canvas.height / dpr;
@@ -74,18 +101,25 @@ export default function HeroRobot() {
     };
     window.addEventListener('mousemove', onMouseMove);
 
+    // Fixed standard zoom factor
+    const currentZoom = 1.0;
+
     /* ─── 3D Projection Engine ─── */
     const project = (x, y, z, cx, cy) => {
+      const xs = x * baseScale;
+      const ys = y * baseScale;
+      const zs = z * baseScale;
+
       // 1. Rotate around Y axis (swing)
-      let x1 = x * Math.cos(angleY) - z * Math.sin(angleY);
-      let z1 = x * Math.sin(angleY) + z * Math.cos(angleY);
+      let x1 = xs * Math.cos(angleY) - zs * Math.sin(angleY);
+      let z1 = xs * Math.sin(angleY) + zs * Math.cos(angleY);
 
       // 2. Rotate around X axis (tilt)
-      let y2 = y * Math.cos(angleX) - z1 * Math.sin(angleX);
-      let z2 = y * Math.sin(angleX) + z1 * Math.cos(angleX);
+      let y2 = ys * Math.cos(angleX) - z1 * Math.sin(angleX);
+      let z2 = ys * Math.sin(angleX) + z1 * Math.cos(angleX);
 
-      // 3. Perspective divide
-      const scale = FOV / (FOV + z2);
+      // 3. Perspective divide with dynamic zoom factor
+      const scale = (FOV * currentZoom) / (FOV + z2);
       return {
         x: cx + x1 * scale,
         y: cy + y2 * scale,
@@ -336,7 +370,7 @@ export default function HeroRobot() {
       });
 
       /* ── 2. OUTER TICK DIAL (Front Bezel Ticks at Z = 20) ── */
-      const outerR = Math.min(w, h) * 0.46;
+      const outerR = 276;
       add3DRing(outerR, 20, 48, C, 0.5, 0.07);
 
       const tickRot = t * 0.018;
@@ -1049,81 +1083,83 @@ export default function HeroRobot() {
 
 
       /* ── 11. 3D PROJECTED FLOATING LABELS ── */
-      labelsData.forEach((label, idx) => {
-        const yOffset = Math.sin(t * 1.5 + idx * 1.6) * 10;
-        const pLabel = project(label.base3d.x, label.base3d.y + yOffset, label.base3d.z, cx, cy);
+      if (w >= 640) {
+        labelsData.forEach((label, idx) => {
+          const yOffset = Math.sin(t * 1.5 + idx * 1.6) * 10;
+          const pLabel = project(label.base3d.x, label.base3d.y + yOffset, label.base3d.z, cx, cy);
 
-        // Target connection node
-        const node = nodes[label.targetNodeIdx];
-        let pTarget = null;
-        if (node) {
-          pTarget = { x: node.x, y: node.y, scale: node.scale, z: node.z };
-        }
-
-        primitives.push({
-          z: pLabel.z,
-          draw: (ctx) => {
-            const sc = pLabel.scale;
-            
-            // Draw pointer connection line if target node exists (made more ambient)
-            if (pTarget) {
-              ctx.beginPath();
-              ctx.moveTo(pLabel.x, pLabel.y);
-              ctx.lineTo(pTarget.x, pTarget.y);
-              ctx.strokeStyle = label.color;
-              ctx.globalAlpha = 0.04 * sc;
-              ctx.lineWidth = 0.5 * sc;
-              ctx.setLineDash([3, 3]);
-              ctx.stroke();
-              ctx.setLineDash([]);
-              
-              // Draw target dot at the node
-              ctx.beginPath();
-              ctx.arc(pTarget.x, pTarget.y, 2 * pTarget.scale, 0, Math.PI * 2);
-              ctx.fillStyle = label.color;
-              ctx.globalAlpha = 0.15 * pTarget.scale;
-              ctx.fill();
-            }
-
-            // Draw glassmorphic neon text capsule
-            const txt = label.label;
-            const fontSize = Math.max(7.5, 9.5 * sc);
-            ctx.font = `700 ${fontSize}px "JetBrains Mono", monospace`;
-            const txtWidth = ctx.measureText(txt).width;
-            
-            const padX = 8 * sc;
-            const padY = 5.5 * sc;
-            const capW = txtWidth + padX * 2;
-            const capH = fontSize + padY * 2;
-            const capX = pLabel.x - capW / 2;
-            const capY = pLabel.y - capH / 2;
-            const capR = Math.max(2, 5 * sc);
-
-            // Background fill (reduced opacity for ambient look)
-            ctx.beginPath();
-            roundRect(ctx, capX, capY, capW, capH, capR);
-            ctx.fillStyle = 'rgba(5, 13, 26, 0.40)';
-            ctx.strokeStyle = label.color;
-            ctx.lineWidth = 0.8 * sc;
-            ctx.globalAlpha = 0.20 * sc;
-            ctx.fill();
-
-            // Neon border glow (reduced border stroke opacity and shadow blur for ambient look)
-            ctx.shadowBlur = 2 * sc;
-            ctx.shadowColor = label.color;
-            ctx.stroke();
-            ctx.shadowBlur = 0; // reset shadow immediately
-
-            // Label text (reduced opacity to make it ambient)
-            ctx.fillStyle = label.color;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.globalAlpha = 0.35 * sc;
-            ctx.fillText(txt, pLabel.x, pLabel.y);
-            ctx.globalAlpha = 1;
+          // Target connection node
+          const node = nodes[label.targetNodeIdx];
+          let pTarget = null;
+          if (node) {
+            pTarget = { x: node.x, y: node.y, scale: node.scale, z: node.z };
           }
+
+          primitives.push({
+            z: pLabel.z,
+            draw: (ctx) => {
+              const sc = pLabel.scale;
+              
+              // Draw pointer connection line if target node exists (made more ambient)
+              if (pTarget) {
+                ctx.beginPath();
+                ctx.moveTo(pLabel.x, pLabel.y);
+                ctx.lineTo(pTarget.x, pTarget.y);
+                ctx.strokeStyle = label.color;
+                ctx.globalAlpha = 0.04 * sc;
+                ctx.lineWidth = 0.5 * sc;
+                ctx.setLineDash([3, 3]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                // Draw target dot at the node
+                ctx.beginPath();
+                ctx.arc(pTarget.x, pTarget.y, 2 * pTarget.scale, 0, Math.PI * 2);
+                ctx.fillStyle = label.color;
+                ctx.globalAlpha = 0.15 * pTarget.scale;
+                ctx.fill();
+              }
+
+              // Draw glassmorphic neon text capsule
+              const txt = label.label;
+              const fontSize = Math.max(7.5, 9.5 * sc);
+              ctx.font = `700 ${fontSize}px "JetBrains Mono", monospace`;
+              const txtWidth = ctx.measureText(txt).width;
+              
+              const padX = 8 * sc;
+              const padY = 5.5 * sc;
+              const capW = txtWidth + padX * 2;
+              const capH = fontSize + padY * 2;
+              const capX = pLabel.x - capW / 2;
+              const capY = pLabel.y - capH / 2;
+              const capR = Math.max(2, 5 * sc);
+
+              // Background fill (reduced opacity for ambient look)
+              ctx.beginPath();
+              roundRect(ctx, capX, capY, capW, capH, capR);
+              ctx.fillStyle = 'rgba(5, 13, 26, 0.40)';
+              ctx.strokeStyle = label.color;
+              ctx.lineWidth = 0.8 * sc;
+              ctx.globalAlpha = 0.20 * sc;
+              ctx.fill();
+
+              // Neon border glow (reduced border stroke opacity and shadow blur for ambient look)
+              ctx.shadowBlur = 2 * sc;
+              ctx.shadowColor = label.color;
+              ctx.stroke();
+              ctx.shadowBlur = 0; // reset shadow immediately
+
+              // Label text (reduced opacity to make it ambient)
+              ctx.fillStyle = label.color;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.globalAlpha = 0.35 * sc;
+              ctx.fillText(txt, pLabel.x, pLabel.y);
+              ctx.globalAlpha = 1;
+            }
+          });
         });
-      });
+      }
 
       // Draw 3D diagnostic target brackets on a couple of nodes (Stark J.A.R.V.I.S. tracking reticles)
       [0, 5].forEach((nIdx) => {
@@ -1191,101 +1227,43 @@ export default function HeroRobot() {
 
       // ══════════ HUD PANELS (2D Screen Overlays drawn last on top) ══════════
 
-      /* ── Right HUD ── */
-      const hx = cx + 222, hy = cy - 62;
-      ctx.save();
-      ctx.fillStyle='rgba(5,13,26,0.78)'; ctx.strokeStyle=C;
-      ctx.globalAlpha=0.52+Math.sin(t*0.9)*0.04; ctx.lineWidth=0.5;
-      roundRect(ctx, hx, hy, 104, 88, 4); ctx.fill(); ctx.stroke();
-      ctx.fillStyle=C; ctx.globalAlpha=0.42;
-      roundRect(ctx, hx, hy, 104, 2, 1); ctx.fill(); ctx.globalAlpha=1;
+      // Clamped HUD positions for Canvas Connectors
+      const paddingVal = 12;
+      const leftHUD_W = 140;
+      const rightHUD_W = 150;
+      
+      const leftX_canvas = Math.max(paddingVal, Math.min(cx - 100, cx - 296 * baseScale));
+      const LeftY_canvas = Math.max(cy + 10, Math.min(h - 100, cy + 20 * baseScale));
+      
+      const rightX_canvas = Math.max(cx + 20, Math.min(w - rightHUD_W - paddingVal, cx + 200 * baseScale));
+      const RightY_canvas = Math.max(12, Math.min(cy - 60, cy - 62 * baseScale));
 
-      ctx.font='700 7px "JetBrains Mono",monospace'; ctx.textAlign='left';
-      ctx.fillStyle=C; ctx.globalAlpha=0.75; ctx.fillText('STATUS', hx+8, hy+15);
-      ctx.fillStyle=G; ctx.globalAlpha=0.90;
-      ctx.fillText('ONLINE', hx+52, hy+15);
+      // Interactive 3D Target Connectors (Only drawn when HUD overlays are visible)
+      if (w >= 640) {
+        const pRightHUDConnect = project(135 * Math.cos(-t * 0.3), 135 * Math.sin(-t * 0.3), 15, cx, cy);
+        ctx.setLineDash([3,5]);
+        ctx.strokeStyle=C; ctx.globalAlpha=0.12; ctx.lineWidth=0.6;
+        ctx.beginPath(); 
+        ctx.moveTo(rightX_canvas, RightY_canvas + 25); 
+        ctx.lineTo(pRightHUDConnect.x, pRightHUDConnect.y); 
+        ctx.stroke();
+        ctx.setLineDash([]); ctx.globalAlpha=1;
 
-      // Blinking online dot
-      ctx.beginPath(); ctx.arc(hx+48, hy+11, 2, 0, Math.PI*2);
-      ctx.fillStyle=G; ctx.globalAlpha=0.7+Math.sin(t*3)*0.3; ctx.fill();
-
-      ctx.font='600 6.5px "JetBrains Mono",monospace';
-      ctx.fillStyle=W; ctx.globalAlpha=0.50;
-      ctx.fillText('CORE  AI v2.1', hx+8, hy+26);
-
-      const barW=88, barFill=0.85+Math.sin(t*0.9)*0.09;
-      ctx.fillStyle='rgba(34,211,238,0.10)'; ctx.globalAlpha=1;
-      roundRect(ctx, hx+8, hy+33, barW, 5, 2); ctx.fill();
-      const pGrad=ctx.createLinearGradient(hx+8,0,hx+8+barW*barFill,0);
-      pGrad.addColorStop(0,C); pGrad.addColorStop(1,B);
-      ctx.fillStyle=pGrad; roundRect(ctx, hx+8, hy+33, barW*barFill, 5, 2); ctx.fill();
-      ctx.fillStyle=W; ctx.globalAlpha=0.35; ctx.font='600 5.5px "JetBrains Mono",monospace';
-      ctx.fillText(`PWR ${Math.round(barFill*100)}%`, hx+8, hy+46);
-
-      // Diagnostic text readings (Jarvis style)
-      ctx.font='600 5.5px "JetBrains Mono",monospace';
-      ctx.fillStyle=C; ctx.globalAlpha=0.45;
-      ctx.fillText(`T_COIL: ${(1024 + Math.sin(t*1.2)*12).toFixed(1)}K`, hx+8, hy+55);
-      ctx.fillStyle=P;
-      ctx.fillText(`MAG_STB: ${(98.2 + Math.cos(t*0.8)*0.4).toFixed(2)}%`, hx+8, hy+63);
-
-      // Sparkline
-      ctx.beginPath();
-      for (let px2 = 0; px2 < barW; px2++) {
-        const sy = Math.sin(px2 / barW * 7 + t * 2.2) * 5
-                 + Math.sin(px2 / barW * 13 + t * 3.5) * 2.5;
-        const sx = hx + 8 + px2;
-        const sY = hy + 76 + sy;
-        px2 === 0 ? ctx.moveTo(sx, sY) : ctx.lineTo(sx, sY);
+        const pLeftHUDConnect = project(135 * Math.cos(Math.PI - t * 0.3), 135 * Math.sin(Math.PI - t * 0.3), 15, cx, cy);
+        ctx.setLineDash([3,5]);
+        ctx.strokeStyle=P; ctx.globalAlpha=0.12; ctx.lineWidth=0.6;
+        ctx.beginPath(); 
+        ctx.moveTo(leftX_canvas + leftHUD_W, LeftY_canvas + 20); 
+        ctx.lineTo(pLeftHUDConnect.x, pLeftHUDConnect.y); 
+        ctx.stroke();
+        ctx.setLineDash([]); ctx.globalAlpha=1;
       }
-      ctx.strokeStyle=C; ctx.globalAlpha=0.40; ctx.lineWidth=0.8; ctx.stroke();
-      ctx.globalAlpha=1; ctx.restore();
-
-      // Interactive 3D Target Connector (Locks onto projected rotating core outer ring node)
-      const pRightHUDConnect = project(135 * Math.cos(-t * 0.3), 135 * Math.sin(-t * 0.3), 15, cx, cy);
-      ctx.setLineDash([3,5]);
-      ctx.strokeStyle=C; ctx.globalAlpha=0.12; ctx.lineWidth=0.6;
-      ctx.beginPath(); ctx.moveTo(hx, hy+44); ctx.lineTo(pRightHUDConnect.x, pRightHUDConnect.y); ctx.stroke();
-      ctx.setLineDash([]); ctx.globalAlpha=1;
-
-      /* ── Left HUD ── */
-      const lx = cx - 326, ly = cy + 20;
-      ctx.save();
-      ctx.fillStyle='rgba(5,13,26,0.75)'; ctx.strokeStyle=P;
-      ctx.globalAlpha=0.48+Math.sin(t*1.1)*0.04; ctx.lineWidth=0.5;
-      roundRect(ctx, lx, ly, 92, 56, 4); ctx.fill(); ctx.stroke();
-      ctx.fillStyle=P; ctx.globalAlpha=0.36;
-      roundRect(ctx, lx, ly, 92, 2, 1); ctx.fill(); ctx.globalAlpha=1;
-
-      ctx.font='700 7px "JetBrains Mono",monospace'; ctx.textAlign='left';
-      ctx.fillStyle=P; ctx.globalAlpha=0.80; ctx.fillText('NEURAL SYNC', lx+8, ly+16);
-      ctx.font='600 6.5px "JetBrains Mono",monospace';
-      ctx.fillStyle=W; ctx.globalAlpha=0.55;
-      ctx.fillText(`${(97.4+Math.sin(t*1.5)*0.7).toFixed(1)}%  STABLE`, lx+8, ly+28);
-      ctx.fillStyle=G; ctx.globalAlpha=0.60;
-      ctx.fillText('LATENCY  <2ms', lx+8, ly+39);
-
-      // Mini bars
-      [0.82, 0.91, 0.74, 0.95, 0.66, 0.88].forEach((v, i) => {
-        const bx = lx + 8 + i * 13, bH = (v + Math.sin(t*2+i)*0.06) * 12;
-        ctx.fillStyle = [C,B,P,G,C,B][i];
-        ctx.globalAlpha = 0.50;
-        ctx.fillRect(bx, ly + 48 - bH, 9, bH);
-      });
-      ctx.globalAlpha=1; ctx.restore();
-
-      // Interactive 3D Target Connector (Locks onto opposite rotating outer ring node)
-      const pLeftHUDConnect = project(135 * Math.cos(Math.PI - t * 0.3), 135 * Math.sin(Math.PI - t * 0.3), 15, cx, cy);
-      ctx.setLineDash([3,5]);
-      ctx.strokeStyle=P; ctx.globalAlpha=0.12; ctx.lineWidth=0.6;
-      ctx.beginPath(); ctx.moveTo(lx+92, ly+28); ctx.lineTo(pLeftHUDConnect.x, pLeftHUDConnect.y); ctx.stroke();
-      ctx.setLineDash([]); ctx.globalAlpha=1;
 
       /* ── Watermark label ── */
       ctx.save();
-      ctx.font='700 8.5px "JetBrains Mono",monospace'; ctx.textAlign='center';
+      ctx.font=`700 ${8.5 * baseScale}px "JetBrains Mono",monospace`; ctx.textAlign='center';
       ctx.fillStyle=C; ctx.globalAlpha=0.18;
-      ctx.fillText('AIGNITE · AI CORE 3D', cx, cy + outerR + 16);
+      ctx.fillText('AIGNITE · AI CORE 3D', cx, cy + (outerR * baseScale) + 16 * baseScale);
       ctx.restore();
 
       raf = requestAnimationFrame(draw);
@@ -1295,16 +1273,181 @@ export default function HeroRobot() {
 
     return () => {
       cancelAnimationFrame(raf);
+      clearInterval(telInterval);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
     };
   }, []);
 
+  const { width, height, baseScale } = dimensions;
+  const cx = width / 2;
+  const cy = height / 2;
+
+  const leftX = Math.max(12, Math.min(cx - 100, cx - 296 * baseScale));
+  const LeftY = Math.max(cy + 10, Math.min(height - 100, cy + 20 * baseScale));
+
+  const rightX = Math.max(cx + 20, Math.min(width - 150 - 12, cx + 200 * baseScale));
+  const RightY = Math.max(12, Math.min(cy - 60, cy - 62 * baseScale));
+
   return (
-    <div className="relative w-full select-none" style={{ aspectRatio: '1 / 0.90', maxWidth: 580 }}>
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 70% 55% at 50% 50%, rgba(34,211,238,0.07) 0%, rgba(59,130,246,0.04) 45%, transparent 70%)' }} />
-      <canvas ref={canvasRef} className="w-full h-full" style={{ display: 'block' }} />
+    <div className="relative w-full select-none mx-auto animate-zoom-in" style={{ maxWidth: 800 }}>
+      <style>{`
+        @keyframes scrollWave {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @keyframes bounceBar {
+          0% { transform: scaleY(0.25); }
+          100% { transform: scaleY(1.0); }
+        }
+      `}</style>
+      
+      {/* Aspect-ratio wrapper container */}
+      <div className="relative w-full aspect-square sm:aspect-[1.2/1]">
+        {/* Background glow behind canvas */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ 
+            background: 'radial-gradient(circle at 50% 50%, rgba(34,211,238,0.12) 0%, rgba(59,130,246,0.06) 45%, transparent 80%)',
+            transform: 'scale(1.2)'
+          }} />
+        
+        {/* Canvas with dynamic border mask-image to fade comets/lines near edges */}
+        <canvas 
+          ref={canvasRef} 
+          className="w-full h-full" 
+          style={{ 
+            display: 'block',
+            WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 80%, rgba(0,0,0,0.6) 92%, transparent 99%)',
+            maskImage: 'radial-gradient(circle at 50% 50%, black 80%, rgba(0,0,0,0.6) 92%, transparent 99%)'
+          }} 
+        />
+
+        {/* Left HUD Panel Overlay */}
+        <div 
+          className="hidden sm:block absolute rounded-lg border border-[#818CF8]/20 bg-[#050d1a]/60 backdrop-blur-lg p-3 select-none transition-all duration-300 hover:border-[#818CF8]/45 hover:shadow-[0_0_25px_rgba(129,140,248,0.25)] hover:-translate-y-0.5"
+          style={{
+            left: leftX,
+            top: LeftY,
+            width: 140,
+            fontFamily: '"JetBrains Mono", monospace',
+            borderTop: '2.5px solid #818CF8'
+          }}
+        >
+          <div className="absolute top-1 left-1 w-1.5 h-1.5 border-t border-l border-[#818CF8]/40" />
+          <div className="absolute top-1 right-1 w-1.5 h-1.5 border-t border-r border-[#818CF8]/40" />
+          <div className="absolute bottom-1 left-1 w-1.5 h-1.5 border-b border-l border-[#818CF8]/40" />
+          <div className="absolute bottom-1 right-1 w-1.5 h-1.5 border-b border-r border-[#818CF8]/40" />
+
+          <div className="text-[9px] font-black text-[#818CF8]/95 tracking-wider mb-1">NEURAL SYNC</div>
+          <div className="text-xs font-bold text-white mb-0.5">{telemetry.stable}% STABLE</div>
+          <div className="text-[8px] font-semibold text-[#34D399] mb-2">LATENCY &lt;2ms</div>
+          
+          {/* Spectrum Bouncing Bars */}
+          <div className="flex gap-1.5 items-end h-7 mt-1.5">
+            {[0.82, 0.91, 0.74, 0.95, 0.66, 0.88].map((v, i) => (
+              <div 
+                key={i} 
+                className="w-1.5 rounded-t-sm"
+                style={{
+                  height: `${v * 100}%`,
+                  backgroundColor: ['#22D3EE', '#3B82F6', '#818CF8', '#34D399', '#22D3EE', '#3B82F6'][i],
+                  opacity: 0.6,
+                  transformOrigin: 'bottom',
+                  animation: `bounceBar ${0.7 + i * 0.15}s ease-in-out infinite alternate`,
+                  animationDelay: `${i * 0.1}s`
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Right HUD Panel Overlay */}
+        <div 
+          className="hidden sm:block absolute rounded-lg border border-[#22D3EE]/20 bg-[#050d1a]/60 backdrop-blur-lg p-3 select-none transition-all duration-300 hover:border-[#22D3EE]/45 hover:shadow-[0_0_25px_rgba(34,211,238,0.25)] hover:-translate-y-0.5"
+          style={{
+            left: rightX,
+            top: RightY,
+            width: 150,
+            fontFamily: '"JetBrains Mono", monospace',
+            borderTop: '2.5px solid #22D3EE'
+          }}
+        >
+          <div className="absolute top-1 left-1 w-1.5 h-1.5 border-t border-l border-[#22D3EE]/40" />
+          <div className="absolute top-1 right-1 w-1.5 h-1.5 border-t border-r border-[#22D3EE]/40" />
+          <div className="absolute bottom-1 left-1 w-1.5 h-1.5 border-b border-l border-[#22D3EE]/40" />
+          <div className="absolute bottom-1 right-1 w-1.5 h-1.5 border-b border-r border-[#22D3EE]/40" />
+
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[9px] font-black text-[#22D3EE]/95 tracking-wider">STATUS</span>
+            <div className="flex items-center gap-1">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#34D399] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#34D399]"></span>
+              </span>
+              <span className="text-[8px] font-bold text-[#34D399]">ONLINE</span>
+            </div>
+          </div>
+          
+          <div className="text-[9px] font-bold text-white/50 mb-1.5">CORE AI v2.1</div>
+          
+          {/* Power Level */}
+          <div className="mb-2">
+            <div className="w-full bg-[#22D3EE]/10 rounded h-1.5 overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-[#22D3EE] to-[#3B82F6] transition-all duration-300"
+                style={{ width: `${telemetry.pwr}%` }}
+              />
+            </div>
+            <div className="text-[8px] font-bold text-white/40 mt-0.5">PWR {telemetry.pwr}%</div>
+          </div>
+          
+          <div className="text-[8px] font-semibold text-[#22D3EE]/70 mb-0.5">T_COIL: {telemetry.temp}K</div>
+          <div className="text-[8px] font-semibold text-[#818CF8]/70 mb-2">MAG_STB: {telemetry.mag}%</div>
+          
+          {/* Scrolling Waveform (Sparkline) */}
+          <div className="relative h-4 w-full overflow-hidden opacity-60 rounded border border-white/5 bg-black/20">
+            <svg 
+              className="absolute top-0 left-0 h-full w-[200%]" 
+              viewBox="0 0 176 16" 
+              preserveAspectRatio="none"
+              style={{
+                animation: 'scrollWave 3.5s linear infinite'
+              }}
+            >
+              <path 
+                d="M 0 8 Q 11 1, 22 8 T 44 8 T 66 8 T 88 8 Q 99 1, 110 8 T 132 8 T 154 8 T 176 8" 
+                stroke="#22D3EE" 
+                strokeWidth="1.2" 
+                fill="none" 
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Telemetry Status Bar */}
+      <div className="flex sm:hidden justify-between items-center gap-3 mt-4 px-4 py-2.5 bg-level-2/50 border border-white/5 rounded-xl font-mono text-[9px] select-none">
+        <div className="flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse"></span>
+          <span className="text-white/60">SYS:</span>
+          <span className="text-[#34D399] font-bold">ONLINE</span>
+        </div>
+        <div className="text-white/20">|</div>
+        <div>
+          <span className="text-white/60">SYNC:</span>
+          <span className="text-[#818CF8] font-bold">{telemetry.stable}%</span>
+        </div>
+        <div className="text-white/20">|</div>
+        <div>
+          <span className="text-white/60">PWR:</span>
+          <span className="text-[#22D3EE] font-bold">{telemetry.pwr}%</span>
+        </div>
+        <div className="text-white/20">|</div>
+        <div>
+          <span className="text-white/60">TEMP:</span>
+          <span className="text-amber-500 font-bold">{Math.round(telemetry.temp)}K</span>
+        </div>
+      </div>
     </div>
   );
 }

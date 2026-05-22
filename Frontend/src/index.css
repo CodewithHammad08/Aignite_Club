@@ -472,4 +472,330 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
   }
+
+  /* ══════════════════════════════════════════════════
+     HOME PAGE — PREMIUM VISUAL ENHANCEMENTS
+     ══════════════════════════════════════════════════ */
+
+  /* ── AURORA BACKGROUND ORBS ── */
+  .aurora-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(100px);
+    will-change: transform;
+  }
+
+  .aurora-orb-1 {
+    width: 600px;
+    height: 600px;
+    top: -10%;
+    left: -5%;
+    background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, rgba(34,211,238,0.04) 40%, transparent 70%);
+    animation: auroraFloat1 18s ease-in-out infinite;
+  }
+
+  .aurora-orb-2 {
+    width: 500px;
+    height: 500px;
+    bottom: -5%;
+    right: -5%;
+    background: radial-gradient(circle, rgba(129,140,248,0.08) 0%, rgba(59,130,246,0.04) 40%, transparent 70%);
+    animation: auroraFloat2 22s ease-in-out infinite;
+  }
+
+  .aurora-orb-3 {
+    width: 350px;
+    height: 350px;
+    top: 40%;
+    left: 40%;
+    background: radial-gradient(circle, rgba(34,211,238,0.05) 0%, transparent 70%);
+    animation: auroraFloat3 14s ease-in-out infinite;
+  }
+
+  @keyframes auroraFloat1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%       { transform: translate(60px, -40px) scale(1.1); }
+    66%       { transform: translate(-30px, 30px) scale(0.95); }
+  }
+  @keyframes auroraFloat2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%       { transform: translate(-80px, 50px) scale(1.08); }
+    66%       { transform: translate(40px, -30px) scale(0.92); }
+  }
+  @keyframes auroraFloat3 {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50%       { transform: translate(calc(-50% + 50px), calc(-50% + 60px)) scale(1.05); }
+  }
+
+  /* ── HERO BADGE ── */
+  .hero-badge {
+    background: rgba(13, 24, 41, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(34, 211, 238, 0.18);
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.06), inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: all 0.3s ease;
+  }
+
+  .hero-badge:hover {
+    border-color: rgba(34, 211, 238, 0.35);
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.12);
+  }
+
+  /* ── TYPEWRITER WORD ── */
+  .typewriter-word {
+    display: inline-flex;
+    align-items: center;
+    min-width: 130px;
+  }
+
+  /* ── HERO CTA PRIMARY ── */
+  .hero-cta-primary {
+    background: linear-gradient(135deg, #1d4ed8, #0e7490);
+    box-shadow: 0 0 40px rgba(34,211,238,0.25), 0 8px 32px rgba(59,130,246,0.3);
+    border: 1px solid rgba(34,211,238,0.3);
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .hero-cta-primary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 0 60px rgba(34,211,238,0.35), 0 12px 40px rgba(59,130,246,0.4);
+    border-color: rgba(34,211,238,0.5);
+  }
+
+  /* ── HERO CTA SECONDARY ── */
+  .hero-cta-secondary {
+    background: rgba(13, 24, 41, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(34,211,238,0.2);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03);
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .hero-cta-secondary:hover {
+    background: rgba(21, 32, 53, 0.8);
+    border-color: rgba(34,211,238,0.4);
+    box-shadow: 0 8px 30px rgba(34,211,238,0.12), inset 0 1px 0 rgba(255,255,255,0.05);
+    transform: translateY(-2px);
+  }
+
+  /* ── TERMINAL BAR ── */
+  .terminal-bar {
+    background: rgba(5, 13, 26, 0.8);
+    border: 1px solid rgba(34,211,238,0.12);
+    box-shadow: 0 0 20px rgba(34,211,238,0.04), inset 0 1px 0 rgba(255,255,255,0.02);
+    backdrop-filter: blur(8px);
+  }
+
+  .terminal-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22D3EE;
+    box-shadow: 0 0 8px #22D3EE, 0 0 16px rgba(34,211,238,0.4);
+    flex-shrink: 0;
+    animation: terminalPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes terminalPulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 8px #22D3EE, 0 0 16px rgba(34,211,238,0.4); }
+    50%       { opacity: 0.5; box-shadow: 0 0 4px #22D3EE, 0 0 8px rgba(34,211,238,0.2); }
+  }
+
+  .terminal-cursor {
+    width: 6px;
+    height: 14px;
+    background: #3B82F6;
+    border-radius: 1px;
+    flex-shrink: 0;
+    animation: blink 1s step-end infinite;
+  }
+
+  /* ── STAT SECTION BACKGROUND ── */
+  .stat-section-bg {
+    background: linear-gradient(180deg, #060910 0%, #080f1d 40%, #060910 100%);
+  }
+
+  /* ── STAT CARD ── */
+  .stat-card {
+    background: linear-gradient(145deg, #0d1829, #080f1d);
+    border: 1px solid rgba(34,211,238,0.08);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.02);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(34,211,238,0.2);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(34,211,238,0.1), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  /* Corner accent decorators */
+  .stat-card-corner-tl {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    border-top: 2px solid;
+    border-left: 2px solid;
+    border-radius: 8px 0 0 0;
+    opacity: 0.4;
+    transition: opacity 0.3s;
+  }
+
+  .stat-card:hover .stat-card-corner-tl {
+    opacity: 0.9;
+  }
+
+  .stat-card-corner-br {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
+    border-radius: 0 0 8px 0;
+    opacity: 0.4;
+    transition: opacity 0.3s;
+  }
+
+  .stat-card:hover .stat-card-corner-br {
+    opacity: 0.9;
+  }
+
+  /* ── DOMAIN BENTO GRID ── */
+  .domain-bento-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  @media (min-width: 768px) {
+    .domain-bento-grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+    }
+
+    .domain-card-featured {
+      grid-row: 1 / 3;
+    }
+  }
+
+  /* ── DOMAIN CARD ── */
+  .domain-card {
+    background: linear-gradient(145deg, #0d1829, #090f1d);
+    border: 1px solid rgba(0,212,255,0.08);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .domain-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(var(--accent-rgb, 34,211,238), 0.3);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(var(--accent-rgb, 34,211,238), 0.15), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  /* Animated gradient background on domain card */
+  .domain-card-bg-animated {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    background: radial-gradient(circle at 0% 0%, var(--glow, rgba(34,211,238,0.12)), transparent 60%);
+    pointer-events: none;
+  }
+
+  .domain-card:hover .domain-card-bg-animated {
+    opacity: 1;
+  }
+
+  /* Domain tag pill */
+  .domain-tag {
+    transition: all 0.3s ease;
+  }
+
+  /* ── EVENT CARD ── */
+  .event-card {
+    background: linear-gradient(145deg, #0d1829, #080f1d);
+    border: 1px solid rgba(34,211,238,0.07);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .event-card:hover {
+    border-color: rgba(34,211,238,0.2);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(34,211,238,0.08), inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+
+  /* ── TIMELINE LINE ── */
+  .timeline-line {
+    background: linear-gradient(to bottom, transparent, rgba(34,211,238,0.2) 10%, rgba(34,211,238,0.15) 90%, transparent);
+  }
+
+  /* ── MARQUEE NEON TAGS ── */
+  .marquee-tag {
+    color: rgba(148, 163, 184, 0.35);
+    transition: color 0.3s;
+  }
+
+  .marquee-tag:hover {
+    color: rgba(148, 163, 184, 0.7);
+  }
+
+  .marquee-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--mc, #22D3EE);
+    box-shadow: 0 0 6px var(--mc, #22D3EE), 0 0 12px var(--mc, #22D3EE);
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  /* ── BRAND CTA BUTTONS ── */
+  .brand-cta-btn {
+    background: rgba(13, 24, 41, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(34,211,238,0.25);
+    color: #22D3EE;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 0 rgba(34,211,238,0);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .brand-cta-btn:hover {
+    background: rgba(21, 32, 53, 0.8);
+    border-color: rgba(34,211,238,0.5);
+    box-shadow: 0 8px 32px rgba(34,211,238,0.15), 0 0 0 1px rgba(34,211,238,0.2);
+    transform: translateY(-2px);
+    color: #ffffff;
+  }
+
+  .brand-cta-secondary {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1d4ed8, #0e7490);
+    border: 1px solid rgba(34,211,238,0.3);
+    box-shadow: 0 0 40px rgba(34,211,238,0.2), 0 8px 32px rgba(59,130,246,0.25);
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .brand-cta-secondary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 0 60px rgba(34,211,238,0.3), 0 12px 40px rgba(59,130,246,0.35);
+    border-color: rgba(34,211,238,0.5);
+  }
+
+  /* ── ORBITAL RING SPIN ── */
+  @keyframes spin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to   { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  @keyframes spinRev {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to   { transform: translate(-50%, -50%) rotate(-360deg); }
+  }
 }
