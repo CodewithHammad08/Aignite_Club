@@ -25,31 +25,40 @@ export default function useCursorEffect() {
 
     let mouseX = -100, mouseY = -100;
     let ringX = -100, ringY = -100;
-    let rafId;
+    let rafId = null;
     let isExpanded = false;
+
+    // Lerp-based animation loop for the ring (creates the ~80ms lag)
+    const animate = () => {
+      // Dot follows instantly in the render loop
+      dot.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+
+      // Linear interpolation: ring chases the mouse at 18% per frame
+      const dx = mouseX - ringX;
+      const dy = mouseY - ringY;
+      
+      ringX += dx * 0.18;
+      ringY += dy * 0.18;
+
+      ring.style.transform = `translate3d(${ringX - 16}px, ${ringY - 16}px, 0)`;
+
+      // Only continue loop if the ring hasn't fully caught up
+      if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+        rafId = null;
+      } else {
+        rafId = requestAnimationFrame(animate);
+      }
+    };
 
     const onMouseMove = (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      // Dot follows instantly
-      dot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
-    };
-
-    // Lerp-based animation loop for the ring (creates the ~80ms lag)
-    const animate = () => {
-      // Linear interpolation: ring chases the mouse at 18% per frame
-      ringX += (mouseX - ringX) * 0.18;
-      ringY += (mouseY - ringY) * 0.18;
-
-      if (isExpanded) {
-        ring.style.transform = `translate(${ringX - 16}px, ${ringY - 16}px)`;
-      } else {
-        ring.style.transform = `translate(${ringX - 16}px, ${ringY - 16}px)`;
+      if (!rafId) {
+        rafId = requestAnimationFrame(animate);
       }
-
-      rafId = requestAnimationFrame(animate);
     };
-    animate();
+    // Trigger initial positioning animation frame
+    rafId = requestAnimationFrame(animate);
 
     // Detect interactive elements and expand the ring
     const INTERACTIVE = 'button, a, [role="button"], input, select, textarea, [data-interactive]';

@@ -88,8 +88,10 @@ function RegisterPanel({ onClose }) {
               className="px-4 py-3 rounded-xl text-sm font-semibold outline-none w-full"
               style={{ backgroundColor: '#0d1829', border: '1px solid rgba(0,212,255,0.12)', color: form.domain ? '#e8f4f8' : '#4a6070' }}>
               <option value="">Domain interest</option>
-              <option>AI / ML</option><option>Web Development</option>
-              <option>App Development</option><option>DevOps / Open Source</option>
+              <option>Machine Learning & Deep Learning</option>
+              <option>Natural Language Processing & GenAI</option>
+              <option>Web Development</option>
+              <option>MLOps & AI Infrastructure</option>
             </select>
             <div className="md:col-span-3 flex flex-col sm:flex-row gap-3">
               <button type="submit"
@@ -124,8 +126,8 @@ const EVENTS = [
 const PAST = [
   { title: 'Club Founded & Inaugural',          date: '2025', attendees: '200+', outcomes: 'Official Launch • Core Team Formed',    img: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=600&auto=format' },
   { title: 'Hands-on ML Workshop',              date: '2026', attendees: '120+', outcomes: '40+ Models Trained • 3 Datasets',       img: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=600&auto=format' },
-  { title: 'Command to Automation: Linux',      date: '2026', attendees: '100+', outcomes: '80+ Scripts • Full CLI Mastery',        img: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=600&auto=format' },
-  { title: 'Data Visualization using Tableau',  date: '2026', attendees: '30+',  outcomes: '15 Interactive Dashboards Built',       img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format' },
+  { title: 'WebCraft: Web from Scratch',          date: '2026', attendees: '80+',  outcomes: 'HTML, CSS & JS Basics Learned',         img: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=600&auto=format' },
+  { title: 'Practical Linux & OS: Commands to Automation', date: '2026', attendees: '100+', outcomes: 'CLI Basics & OS Concepts Gained', img: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=600&auto=format' },
 ];
 
 const FILTERS = ['All', 'Session', 'Workshop', 'Event', 'Speaker'];

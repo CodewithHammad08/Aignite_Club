@@ -46,6 +46,27 @@ function ParticleField() {
     resize();
     window.addEventListener('resize', resize);
 
+    // Pre-render glow dots on offscreen canvases for extreme performance
+    const cyanGlow = document.createElement('canvas');
+    cyanGlow.width = 30;
+    cyanGlow.height = 30;
+    const cCtx = cyanGlow.getContext('2d');
+    const cGrad = cCtx.createRadialGradient(15, 15, 0, 15, 15, 15);
+    cGrad.addColorStop(0, 'rgba(34,211,238,0.22)');
+    cGrad.addColorStop(1, 'rgba(34,211,238,0)');
+    cCtx.fillStyle = cGrad;
+    cCtx.beginPath(); cCtx.arc(15, 15, 15, 0, Math.PI * 2); cCtx.fill();
+
+    const blueGlow = document.createElement('canvas');
+    blueGlow.width = 30;
+    blueGlow.height = 30;
+    const bCtx = blueGlow.getContext('2d');
+    const bGrad = bCtx.createRadialGradient(15, 15, 0, 15, 15, 15);
+    bGrad.addColorStop(0, 'rgba(59,130,246,0.22)');
+    bGrad.addColorStop(1, 'rgba(59,130,246,0)');
+    bCtx.fillStyle = bGrad;
+    bCtx.beginPath(); bCtx.arc(15, 15, 15, 0, Math.PI * 2); bCtx.fill();
+
     const pts = Array.from({ length: 40 }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
@@ -82,27 +103,17 @@ function ParticleField() {
         }
       }
 
-      // Dots with glow
+      // Draw the pre-rendered glowing halos
       for (const p of pts) {
         const px = p.x + targetParallaxX;
         const py = p.y + targetParallaxY;
-        const g = ctx.createRadialGradient(px, py, 0, px, py, p.r * 5);
-        g.addColorStop(0, `hsla(${p.hue},90%,70%,0.3)`);
-        g.addColorStop(1, `hsla(${p.hue},90%,70%,0)`);
-        ctx.beginPath();
-        ctx.arc(px, py, p.r * 5, 0, Math.PI * 2);
-        ctx.fillStyle = g;
-        ctx.fill();
-
-        ctx.fillStyle = `hsla(${p.hue},90%,75%,0.5)`;
-        ctx.beginPath();
-        ctx.arc(px, py, p.r, 0, Math.PI * 2);
-        ctx.fill();
+        const glowImg = p.hue === 200 ? cyanGlow : blueGlow;
+        ctx.drawImage(glowImg, px - 15, py - 15, 30, 30);
       }
 
-      // Connections
+      // Draw connections in a single fast batched call
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(34,211,238,0.08)';
+      ctx.strokeStyle = 'rgba(34,211,238,0.05)';
       ctx.lineWidth = 0.6;
       for (let i = 0; i < pts.length; i++) {
         for (let j = i + 1; j < pts.length; j++) {
@@ -110,33 +121,38 @@ function ParticleField() {
           const dy = pts[i].y - pts[j].y;
           const d2 = dx * dx + dy * dy;
           if (d2 < CONN_DIST * CONN_DIST) {
-            const alpha = (1 - Math.sqrt(d2) / CONN_DIST) * 0.12;
-            ctx.globalAlpha = alpha;
             ctx.moveTo(pts[i].x + targetParallaxX, pts[i].y + targetParallaxY);
             ctx.lineTo(pts[j].x + targetParallaxX, pts[j].y + targetParallaxY);
           }
         }
       }
       ctx.stroke();
-      ctx.globalAlpha = 1;
 
-      // Mouse lines
-      if (mx > 0) {
+      // Draw mouse lines in a single fast batched call
+      if (mx !== -999 && mx > 0) {
         ctx.beginPath();
-        ctx.strokeStyle = 'rgba(34,211,238,0.15)';
+        ctx.strokeStyle = 'rgba(34,211,238,0.1)';
         ctx.lineWidth = 0.8;
         for (const p of pts) {
           const px = p.x + targetParallaxX;
           const py = p.y + targetParallaxY;
           const dx = px - mx, dy = py - my;
           if (dx * dx + dy * dy < MOUSE_DIST * MOUSE_DIST) {
-            const alpha = (1 - Math.sqrt(dx*dx+dy*dy)/MOUSE_DIST) * 0.2;
-            ctx.globalAlpha = alpha;
-            ctx.moveTo(px, py); ctx.lineTo(mx, my);
+            ctx.moveTo(px, py);
+            ctx.lineTo(mx, my);
           }
         }
         ctx.stroke();
-        ctx.globalAlpha = 1;
+      }
+
+      // Draw center solid dots
+      for (const p of pts) {
+        const px = p.x + targetParallaxX;
+        const py = p.y + targetParallaxY;
+        ctx.fillStyle = p.hue === 200 ? 'rgba(34,211,238,0.5)' : 'rgba(59,130,246,0.5)';
+        ctx.beginPath();
+        ctx.arc(px, py, p.r, 0, Math.PI * 2);
+        ctx.fill();
       }
 
       raf = requestAnimationFrame(draw);
@@ -190,25 +206,26 @@ function useTypewriter(words, speed = 80, pause = 2000) {
 /* ─── Data ─── */
 const STATS = [
   { value: '25+', label: 'Active Members', icon: Users, accent: '#22D3EE' },
-  { value: '4+',  label: 'Events Hosted',  icon: Zap,   accent: '#818CF8' },
-  { value: '2025', label: 'Year Founded',  icon: Sparkles, accent: '#34D399' },
+  { value: '4+', label: 'Events Hosted', icon: Zap, accent: '#818CF8' },
+  { value: '2025', label: 'Year Founded', icon: Sparkles, accent: '#34D399' },
 ];
 
 const DOMAINS = [
-  { icon: Brain, title: 'AI & Machine Learning', desc: 'Deep learning, NLP, computer vision and generative AI.', tag: 'Core', accent: '#3B82F6', glow: 'rgba(59,130,246,0.18)', size: 'large' },
-  { icon: Globe, title: 'Web Development', desc: 'Full-stack with React, Next.js, and modern architectures.', tag: 'Build', accent: '#22D3EE', glow: 'rgba(34,211,238,0.15)', size: 'normal' },
-  { icon: Cpu,   title: 'App Development', desc: 'Cross-platform apps with Flutter and React Native.', tag: 'Ship', accent: '#818CF8', glow: 'rgba(129,140,248,0.15)', size: 'normal' },
-  { icon: Code,  title: 'Open Source & DevOps', desc: 'OSS contributions, CI/CD pipelines, cloud infra.', tag: 'Scale', accent: '#34D399', glow: 'rgba(52,211,153,0.15)', size: 'normal' },
+  { icon: Brain, title: 'Machine Learning & Deep Learning', desc: 'The mathematical foundations of modern AI. Implementing neural networks, training deep models, optimization algorithms, and advanced predictive analysis from scratch.', tag: 'Core', accent: '#3B82F6', glow: 'rgba(59,130,246,0.18)' },
+  { icon: Sparkles, title: 'Natural Language Processing & GenAI', desc: 'Unlocking the power of language and creative AI. Building custom LLM agents, prompt engineering, speech processing, transformers, and multimodal AI architectures.', tag: 'GenAI', accent: '#818CF8', glow: 'rgba(129,140,248,0.15)' },
+  { icon: Globe, title: 'Web Development', desc: 'Creating the interface for intelligence. Full-stack development with React, Next.js, and integrating AI API endpoints, vector databases, or client-side model runners.', tag: 'Build', accent: '#22D3EE', glow: 'rgba(34,211,238,0.15)' },
+  { icon: Code, title: 'MLOps & AI Infrastructure', desc: 'Scaling models from local environments to production systems. Constructing automated training pipelines, model monitoring, containerized deployments, and robust data engineering workloads.', tag: 'MLOps', accent: '#34D399', glow: 'rgba(52,211,153,0.15)' },
 ];
 
 const RECENT_EVENTS = [
   { icon: Star, title: 'Club Founded & Inaugural', desc: 'The official launch of Aignite, establishing a new era of technical excellence.', stat: '2025', accent: '#3B82F6' },
   { icon: Brain, title: 'Hands-on ML Workshop', desc: 'An intensive session on Machine Learning fundamentals and practical AI implementation.', stat: '2026', accent: '#22D3EE' },
-  { icon: Code, title: 'Practical Linux Workshop', desc: 'From Command to Automation: A deep dive into Linux systems and shell scripting.', stat: '2026', accent: '#818CF8' },
-  { icon: Target, title: 'Tableau Visualization', desc: 'Mastering the art of transforming raw data into high-impact interactive dashboards.', stat: '2026', accent: '#F472B6' },
+  { icon: Globe, title: 'WebCraft: Web from Scratch', desc: 'An expert speaker session by Prof. Snehal Mumbaikar covering HTML, CSS, and JavaScript site building.', stat: '2026', accent: '#F472B6' },
+  { icon: Code, title: 'Practical Linux & OS', desc: 'An expert speaker session by Prof. Shubham Nerkar covering CLI commands, OS concepts, and CLI automation.', stat: '2026', accent: '#818CF8' },
+  { icon: Target, title: 'Tableau Visualization', desc: 'Mastering the art of transforming raw data into high-impact interactive dashboards.', stat: '2026', accent: '#34D399' },
 ];
 
-const TECH_TAGS = ['AI/ML', 'DEEP LEARNING', 'REACT', 'FLUTTER', 'DEVOPS', 'NLP', 'COMPUTER VISION', 'OPEN SOURCE', 'HACKATHONS', 'WORKSHOPS', 'GEN AI', 'CLOUD'];
+const TECH_TAGS = ['AI/ML', 'DEEP LEARNING', 'PYTORCH', 'TENSORFLOW', 'LLMS', 'MLOPS', 'REACT', 'NEXT.JS', 'TRANSFORMERS', 'DATA SCIENCE', 'GEN AI', 'NLP', 'COMPUTER VISION', 'HACKATHONS', 'WORKSHOPS'];
 
 /* ─── Orbit Ring (decorative) ─── */
 function OrbitRing({ radius, duration, reverse, color, dotSize = 5 }) {
@@ -247,13 +264,34 @@ export default function Home({ go }) {
   const typedText = useTypewriter(['Innovators.', 'Builders.', 'Dreamers.', 'Creators.'], 90, 2200);
 
   useEffect(() => {
-    const fn = () => {
-      if (!parallaxRef.current) return;
-      const y = window.scrollY;
-      parallaxRef.current.querySelectorAll('[data-speed]').forEach(el => {
-        el.style.transform = `translateY(${y * parseFloat(el.dataset.speed)}px)`;
+    if (!parallaxRef.current) return;
+    const els = Array.from(parallaxRef.current.querySelectorAll('[data-speed]'));
+    if (els.length === 0) return;
+
+    // Promote elements to their own GPU layers for buttery smooth scrolling
+    els.forEach(el => {
+      el.style.willChange = 'transform';
+    });
+
+    let scheduled = false;
+    let y = 0;
+
+    const update = () => {
+      els.forEach(el => {
+        const speed = parseFloat(el.dataset.speed) || 0;
+        el.style.transform = `translate3d(0, ${y * speed}px, 0)`;
       });
+      scheduled = false;
     };
+
+    const fn = () => {
+      y = window.scrollY;
+      if (!scheduled) {
+        scheduled = true;
+        requestAnimationFrame(update);
+      }
+    };
+
     window.addEventListener('scroll', fn, { passive: true });
     return () => window.removeEventListener('scroll', fn);
   }, []);
@@ -445,35 +483,63 @@ export default function Home({ go }) {
             {/* Three smaller cards */}
             {DOMAINS.slice(1).map((d, i) => {
               const DomainIcon = d.icon;
+              const isWide = i === 2;
               return (
-              <div key={i} data-animate="fade-up" data-delay={(i + 1) * 120}
-                className="domain-card group relative rounded-3xl p-7 overflow-hidden cursor-default"
-                style={{ '--accent': d.accent, '--glow': d.glow }}>
-                <div className="domain-card-bg-animated" />
-                <div className="absolute top-0 left-6 right-6 h-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{ background: `linear-gradient(to right, ${d.accent}, transparent)` }} />
+                <div key={i} data-animate="fade-up" data-delay={(i + 1) * 120}
+                  className={`domain-card group relative rounded-3xl p-7 overflow-hidden cursor-default ${isWide ? 'domain-card-wide' : ''}`}
+                  style={{ '--accent': d.accent, '--glow': d.glow }}>
+                  <div className="domain-card-bg-animated" />
+                  <div className="absolute top-0 left-6 right-6 h-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{ background: `linear-gradient(to right, ${d.accent}, transparent)` }} />
 
-                <div className="relative z-10">
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <div className="icon-box flex-shrink-0 w-14 h-14 shadow-xl group-hover:scale-110 transition-transform duration-300"
-                      style={{ border: `1px solid ${d.accent}30`, boxShadow: `0 0 20px ${d.accent}10` }}>
-                      <DomainIcon size={24} style={{ color: d.accent }} />
+                  <div className="relative z-10 flex flex-col h-full justify-between">
+                    <div className={`flex ${isWide ? 'flex-col md:flex-row md:items-center md:justify-between' : 'flex-col'} gap-4`}>
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                          <div className="icon-box flex-shrink-0 w-14 h-14 shadow-xl group-hover:scale-110 transition-transform duration-300"
+                            style={{ border: `1px solid ${d.accent}30`, boxShadow: `0 0 20px ${d.accent}10` }}>
+                            <DomainIcon size={24} style={{ color: d.accent }} />
+                          </div>
+                          {isWide && (
+                            <div>
+                              <h3 className="text-lg font-bold font-display group-hover:text-white transition-colors text-left" style={{ color: '#E5E7EB' }}>
+                                {d.title}
+                              </h3>
+                              <span className="text-[9px] font-bold font-mono px-2 py-0.5 rounded-md uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-all duration-300 inline-block mt-1"
+                                style={{ backgroundColor: `${d.accent}12`, color: d.accent, border: `1px solid ${d.accent}25` }}>
+                                {d.tag}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        {!isWide && (
+                          <span className="text-[9px] font-bold font-mono px-2 py-0.5 rounded-md uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-all duration-300"
+                            style={{ backgroundColor: `${d.accent}12`, color: d.accent, border: `1px solid ${d.accent}25` }}>
+                            {d.tag}
+                          </span>
+                        )}
+                      </div>
+
+                      {!isWide && (
+                        <div>
+                          <h3 className="text-lg font-bold font-display mb-2 group-hover:text-white transition-colors text-left" style={{ color: '#E5E7EB' }}>
+                            {d.title}
+                          </h3>
+                          <p className="text-sm leading-relaxed text-muted text-left">{d.desc}</p>
+                        </div>
+                      )}
+
+                      {isWide && (
+                        <p className="text-sm leading-relaxed text-muted text-left md:flex-1 md:max-w-xl md:ml-6">{d.desc}</p>
+                      )}
                     </div>
-                    <span className="text-[9px] font-bold font-mono px-2 py-0.5 rounded-md uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-all duration-300"
-                      style={{ backgroundColor: `${d.accent}12`, color: d.accent, border: `1px solid ${d.accent}25` }}>
-                      {d.tag}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-bold font-display mb-2 group-hover:text-white transition-colors" style={{ color: '#E5E7EB' }}>
-                    {d.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-muted">{d.desc}</p>
-                  <div className="mt-4 flex items-center gap-1 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-all duration-400 translate-y-2 group-hover:translate-y-0"
-                    style={{ color: d.accent }}>
-                    Explore <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+
+                    <div className="mt-4 flex items-center gap-1 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-all duration-400 translate-y-2 group-hover:translate-y-0 text-left"
+                      style={{ color: d.accent }}>
+                      Explore <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </div>
                 </div>
-              </div>
               );
             })}
           </div>
@@ -505,54 +571,54 @@ export default function Home({ go }) {
           {/* Timeline layout */}
           <div className="relative">
             {/* Vertical connector line */}
-            <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px timeline-line" />
+            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px timeline-line" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {RECENT_EVENTS.map((h, i) => {
                 const EventIcon = h.icon;
                 return (
-                <div key={i} data-animate="fade-up" data-delay={i * 150}
-                  className={`relative group ${i % 2 === 0 ? 'md:pr-10' : 'md:pl-10 md:mt-20'}`}>
-                  {/* Timeline dot (desktop) */}
-                  <div className="hidden md:flex absolute top-8 items-center justify-center"
-                    style={{ [i % 2 === 0 ? 'right' : 'left']: '-21px', zIndex: 10 }}>
-                    <div className="w-3 h-3 rounded-full border-2 border-current"
-                      style={{ backgroundColor: h.accent, borderColor: h.accent, boxShadow: `0 0 12px ${h.accent}` }} />
-                  </div>
+                  <div key={i} data-animate="fade-up" data-delay={i * 150}
+                    className={`relative group pl-10 md:pl-0 ${i % 2 === 0 ? 'md:pr-10' : 'md:pl-10 md:mt-20'}`}>
+                    {/* Timeline dot */}
+                    <div className={`absolute top-10 md:top-8 flex items-center justify-center left-4 -translate-x-[5.5px] ${i % 2 === 0 ? 'md:left-auto md:right-[-21.5px] md:translate-x-0' : 'md:left-[-21.5px] md:translate-x-0'}`}
+                      style={{ zIndex: 10 }}>
+                      <div className="w-3 h-3 rounded-full border-2 border-current"
+                        style={{ backgroundColor: h.accent, borderColor: h.accent, boxShadow: `0 0 12px ${h.accent}` }} />
+                    </div>
 
-                  {/* Card */}
-                  <div className="event-card relative rounded-3xl p-8 overflow-hidden group-hover:-translate-y-1 transition-transform duration-300">
-                    {/* Top accent line */}
-                    <div className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{ background: `linear-gradient(to right, transparent, ${h.accent}, transparent)` }} />
-                    {/* Hover radial glow */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none"
-                      style={{ background: `radial-gradient(circle at 50% 0%, ${h.accent}12, transparent 70%)` }} />
+                    {/* Card */}
+                    <div className="event-card relative rounded-3xl p-8 overflow-hidden group-hover:-translate-y-1 transition-transform duration-300">
+                      {/* Top accent line */}
+                      <div className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style={{ background: `linear-gradient(to right, transparent, ${h.accent}, transparent)` }} />
+                      {/* Hover radial glow */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none"
+                        style={{ background: `radial-gradient(circle at 50% 0%, ${h.accent}12, transparent 70%)` }} />
 
-                    {/* Number watermark */}
-                    <div className="absolute top-3 right-5 text-[5rem] font-black font-display leading-none select-none"
-                      style={{ color: 'transparent', WebkitTextStroke: `1px ${h.accent}20` }}>0{i + 1}</div>
-                    <div className="absolute top-3 right-5 text-[5rem] font-black font-display leading-none select-none opacity-0 group-hover:opacity-100 transition-all duration-500"
-                      style={{ color: 'transparent', WebkitTextStroke: `1px ${h.accent}50`, filter: `drop-shadow(0 0 16px ${h.accent}30)` }}>0{i + 1}</div>
+                      {/* Number watermark */}
+                      <div className="absolute top-3 right-5 text-[5rem] font-black font-display leading-none select-none"
+                        style={{ color: 'transparent', WebkitTextStroke: `1px ${h.accent}20` }}>0{i + 1}</div>
+                      <div className="absolute top-3 right-5 text-[5rem] font-black font-display leading-none select-none opacity-0 group-hover:opacity-100 transition-all duration-500"
+                        style={{ color: 'transparent', WebkitTextStroke: `1px ${h.accent}50`, filter: `drop-shadow(0 0 16px ${h.accent}30)` }}>0{i + 1}</div>
 
-                    <div className="relative z-10">
-                      <div className="flex items-start justify-between mb-5">
-                        <div className="icon-box w-14 h-14"
-                          style={{ border: `1px solid ${h.accent}30`, boxShadow: `0 0 20px ${h.accent}15` }}>
-                          <EventIcon size={24} style={{ color: h.accent }} />
+                      <div className="relative z-10">
+                        <div className="flex items-start justify-between mb-5">
+                          <div className="icon-box w-14 h-14"
+                            style={{ border: `1px solid ${h.accent}30`, boxShadow: `0 0 20px ${h.accent}15` }}>
+                            <EventIcon size={24} style={{ color: h.accent }} />
+                          </div>
+                          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold font-mono"
+                            style={{ background: `${h.accent}10`, color: h.accent, border: `1px solid ${h.accent}20` }}>
+                            <Zap size={10} />{h.stat}
+                          </div>
                         </div>
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold font-mono"
-                          style={{ background: `${h.accent}10`, color: h.accent, border: `1px solid ${h.accent}20` }}>
-                          <Zap size={10} />{h.stat}
-                        </div>
+                        <h3 className="text-xl font-bold font-display mb-3 group-hover:text-white transition-colors" style={{ color: '#E5E7EB' }}>
+                          {h.title}
+                        </h3>
+                        <p className="text-sm leading-relaxed text-muted">{h.desc}</p>
                       </div>
-                      <h3 className="text-xl font-bold font-display mb-3 group-hover:text-white transition-colors" style={{ color: '#E5E7EB' }}>
-                        {h.title}
-                      </h3>
-                      <p className="text-sm leading-relaxed text-muted">{h.desc}</p>
                     </div>
                   </div>
-                </div>
                 );
               })}
             </div>
@@ -569,7 +635,7 @@ export default function Home({ go }) {
             <div key={rep} className="flex items-center gap-6 px-3">
               {TECH_TAGS.map((t, i) => (
                 <span key={i} className="marquee-tag flex items-center gap-2.5 text-xs font-bold font-mono tracking-[0.2em]">
-                  <span className="marquee-dot" style={{ '--mc': ['#22D3EE','#3B82F6','#818CF8','#34D399','#F472B6'][i % 5] }} />
+                  <span className="marquee-dot" style={{ '--mc': ['#22D3EE', '#3B82F6', '#818CF8', '#34D399', '#F472B6'][i % 5] }} />
                   {t}
                 </span>
               ))}

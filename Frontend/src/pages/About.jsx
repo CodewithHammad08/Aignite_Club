@@ -21,7 +21,13 @@ const EVENTS = [
     icon: Star,
     tags: ['First ever event', 'Official launch', 'Cross-dept members'],
     // Add real paths like '/events/inaugural-1.jpg' — null = placeholder
-    photos: [null, null, null, null, null],
+    photos: [
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779466919/inaugral-1_xkrt47.png',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779466919/inaugral-2_bvbhqt.png',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779466920/inaugral-3_geptyn.png',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779467716/1000028126_enmz7l.jpg',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779467729/inaugral-4_qscrp2.heic',
+    ],
     placeholders: ['#1e3a8a', '#1d4ed8', '#2563eb', '#1e40af', '#1a3363'],
   },
   {
@@ -36,66 +42,84 @@ const EVENTS = [
     grad: 'linear-gradient(135deg, #0e3040, #0d1829)',
     icon: Brain,
     tags: ['Python & scikit-learn', 'Hands-on coding', 'ML fundamentals'],
-    photos: [null, null, null, null, null],
+    photos: [
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779473312/IMG_7193_p5zhmg.jpg',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779473314/IMG_4324_m9tlwv.jpg',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779473313/IMG_4315_rdqef0.jpg',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779473313/IMG_8741_zeyotl.jpg',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779473314/IMG_4320_mxwqlf.jpg',
+    ],
     placeholders: ['#0e7490', '#0891b2', '#06b6d4', '#0e4f5f', '#083344'],
   },
   {
-    id: 'linux-workshop',
+    id: 'web-dev',
     num: '03',
     month: 'FEB',
     year: '2026',
-    badge: 'WORKSHOP',
-    title: 'Practical Linux Workshop',
-    desc: 'From Command to Automation — members dived into Linux terminal, shell scripting, file permissions, process management, and dev environment setup.',
-    color: '#818CF8',
-    grad: 'linear-gradient(135deg, #1e1b4b, #0d1829)',
-    icon: Code,
-    tags: ['Terminal & shell', 'Bash scripting', 'Dev environment'],
-    photos: [null, null, null, null, null],
-    placeholders: ['#3730a3', '#4338ca', '#4f46e5', '#2e2687', '#1e1b4b'],
+    badge: 'SPEAKER SESSION',
+    title: 'WebCraft: Web from Scratch',
+    desc: 'An expert speaker session by Prof. Snehal Mumbaikar introducing HTML, CSS, and JavaScript. Students gained a hands-on understanding of site structure, styling, and interactivity, building their own projects from scratch.',
+    color: '#F472B6',
+    grad: 'linear-gradient(135deg, #4a0e2b, #0d1829)',
+    icon: Globe,
+    tags: ['HTML, CSS & JS', 'Speaker Session', 'Prof. Snehal M.'],
+    photos: [
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779512784/IMG_5286_aqg3lc.jpg',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779512784/IMG_5266_fgwgj5.jpg',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779514556/IMG_5252_1_xfdpu4.jpg',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779512784/IMG_5253_jzkfmc.jpg',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779512784/IMG_5255_zgkmwz.jpg',
+    ],
+    placeholders: ['#9d174d', '#be185d', '#db2777', '#831843', '#500724'],
   },
   {
-    id: 'tableau',
+    id: 'linux-workshop',
     num: '04',
     month: 'MAR',
     year: '2026',
     badge: 'WORKSHOP',
-    title: 'Tableau Data Visualization',
-    desc: 'Mastering the art of turning raw data into meaningful stories. Members built interactive dashboards and learned to communicate insights visually.',
-    color: '#F472B6',
-    grad: 'linear-gradient(135deg, #4a0e2b, #0d1829)',
-    icon: Target,
-    tags: ['Tableau Desktop', 'Interactive dashboards', 'Data storytelling'],
+    title: 'Practical Linux & OS',
+    desc: 'An expert-led session by Prof. Shubham Nerkar introducing Linux fundamentals and Operating System concepts. Students explored command-line tools, file and directory management, and practical shell automation.',
+    color: '#818CF8',
+    grad: 'linear-gradient(135deg, #1e1b4b, #0d1829)',
+    icon: Code,
+    tags: ['CLI Commands', 'OS Basics', 'Prof. Shubham N.'],
     photos: [null, null, null, null, null],
-    placeholders: ['#9d174d', '#be185d', '#db2777', '#831843', '#500724'],
+    placeholders: ['#3730a3', '#4338ca', '#4f46e5', '#2e2687', '#1e1b4b'],
   },
 ];
 
 const STATS = [
-  { value: 25,  suffix: '+', label: 'Active Members' },
-  { value: 4,   suffix: '',  label: 'Events Hosted' },
-  { value: 3,   suffix: '+', label: 'Workshops Run' },
+  { value: 25, suffix: '+', label: 'Active Members' },
+  { value: 4, suffix: '', label: 'Events Hosted' },
+  { value: 3, suffix: '+', label: 'Workshops Run' },
   { value: 100, suffix: '%', label: 'Free to Join' },
 ];
 
 const PILLARS = [
-  { icon: Target,   title: 'Mission', subtitle: 'Purpose-driven', color: '#3B82F6', tag: 'CORE MISSION',
-    desc: 'Bridge the gap between classroom theory and industry-level execution through real projects, hackathons, and mentorship.' },
-  { icon: Rocket,   title: 'Vision',  subtitle: 'Future-focused',  color: '#22D3EE', tag: 'LONG TERM',
-    desc: "Create an environment where students don't just learn technology — they build with it, grow through it, and shape the future." },
-  { icon: Sparkles, title: 'Values',  subtitle: 'Culture-first',   color: '#818CF8', tag: 'OUR DNA',
-    desc: 'Curiosity, collaboration, and craftsmanship. Learning happens fastest when you build alongside others.' },
+  {
+    icon: Target, title: 'Mission', subtitle: 'Purpose-driven', color: '#3B82F6', tag: 'CORE MISSION',
+    desc: 'Bridge the gap between classroom theory and industry-level execution through real projects, hackathons, and mentorship.'
+  },
+  {
+    icon: Rocket, title: 'Vision', subtitle: 'Future-focused', color: '#22D3EE', tag: 'LONG TERM',
+    desc: "Create an environment where students don't just learn technology — they build with it, grow through it, and shape the future."
+  },
+  {
+    icon: Sparkles, title: 'Values', subtitle: 'Culture-first', color: '#818CF8', tag: 'OUR DNA',
+    desc: 'Curiosity, collaboration, and craftsmanship. Learning happens fastest when you build alongside others.'
+  },
 ];
 
 const REASONS = [
-  { icon: Code,     label: 'Hands-On Workshops',  desc: 'Build real things, not just slides.',          color: '#3B82F6' },
-  { icon: Trophy,   label: 'Hackathon Access',     desc: 'Compete, prototype, and win.',                 color: '#22D3EE' },
-  { icon: Users,    label: 'Industry Mentors',     desc: 'Learn from people already in the field.',      color: '#818CF8' },
-  { icon: Rocket,   label: 'Build Real Projects',  desc: 'Ship things with your name on them.',          color: '#34D399' },
-  { icon: Target,   label: 'Certificates',         desc: 'Recognised for what you built, not attended.', color: '#F472B6' },
-  { icon: Globe,    label: 'Speaker Sessions',     desc: 'Perspectives from people doing the work.',     color: '#FBBF24' },
-  { icon: Zap,      label: 'Tech Community',       desc: 'Find your crew, build your network.',          color: '#A78BFA' },
-  { icon: Sparkles, label: 'Innovation Culture',   desc: 'An environment that rewards curiosity.',       color: '#60A5FA' },
+  { icon: Code, label: 'Hands-On Workshops', desc: 'Build real things, not just slides.', color: '#3B82F6' },
+  { icon: Trophy, label: 'Hackathon Access', desc: 'Compete, prototype, and win.', color: '#22D3EE' },
+  { icon: Users, label: 'Industry Mentors', desc: 'Learn from people already in the field.', color: '#818CF8' },
+  { icon: Rocket, label: 'Build Real Projects', desc: 'Ship things with your name on them.', color: '#34D399' },
+  { icon: Target, label: 'Certificates', desc: 'Recognised for what you built, not attended.', color: '#F472B6' },
+  { icon: Globe, label: 'Speaker Sessions', desc: 'Perspectives from people doing the work.', color: '#FBBF24' },
+  { icon: Zap, label: 'Tech Community', desc: 'Find your crew, build your network.', color: '#A78BFA' },
+  { icon: Sparkles, label: 'Innovation Culture', desc: 'An environment that rewards curiosity.', color: '#60A5FA' },
 ];
 
 /* ─── Animated counter ─── */
@@ -128,6 +152,7 @@ function Counter({ target, suffix }) {
 function PhotoSlot({ src, bg, color, size = 'md', className = '' }) {
   const sizeMap = { lg: 28, md: 20, sm: 16 };
   const iconSize = sizeMap[size] || 20;
+  const [loaded, setLoaded] = useState(false);
 
   return (
     <div className={`relative overflow-hidden group/slot ${className}`} style={{ background: bg }}>
@@ -145,14 +170,22 @@ function PhotoSlot({ src, bg, color, size = 'md', className = '' }) {
         style={{ background: `radial-gradient(circle at 0% 0%, ${color}, transparent)` }} />
 
       {src ? (
-        <img src={src} alt="" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/slot:scale-105" />
+        <img
+          src={src}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setLoaded(true)}
+          className={`absolute inset-0 w-full h-full object-cover transition-all duration-[800ms] group-hover/slot:scale-105 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+          style={{ willChange: 'transform, opacity', transform: 'translate3d(0,0,0)' }}
+        />
       ) : (
         <div className="relative z-10 w-full h-full flex flex-col items-center justify-center gap-1.5">
           {/* camera icon */}
           <div className="rounded-lg p-2 opacity-40" style={{ background: `${color}20`, border: `1px solid ${color}30` }}>
             <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
-              <circle cx="12" cy="13" r="4"/>
+              <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+              <circle cx="12" cy="13" r="4" />
             </svg>
           </div>
           {size !== 'sm' && (
@@ -268,14 +301,16 @@ export default function About() {
 
         {/* floating micro-orbs */}
         {[
-          { top: '30%', left: '7%',  c: '#22D3EE', d: '0s',   s: 8  },
-          { top: '55%', right: '9%', c: '#818CF8', d: '1.2s', s: 6  },
-          { top: '70%', left: '14%', c: '#F472B6', d: '2.4s', s: 5  },
-          { top: '22%', right: '18%',c: '#FBBF24', d: '0.6s', s: 10 },
+          { top: '30%', left: '7%', c: '#22D3EE', d: '0s', s: 8 },
+          { top: '55%', right: '9%', c: '#818CF8', d: '1.2s', s: 6 },
+          { top: '70%', left: '14%', c: '#F472B6', d: '2.4s', s: 5 },
+          { top: '22%', right: '18%', c: '#FBBF24', d: '0.6s', s: 10 },
         ].map((o, i) => (
           <div key={i} className="absolute rounded-full animate-float pointer-events-none"
-            style={{ top: o.top, left: o.left, right: o.right, width: o.s, height: o.s,
-              backgroundColor: o.c, opacity: 0.5, animationDelay: o.d }} />
+            style={{
+              top: o.top, left: o.left, right: o.right, width: o.s, height: o.s,
+              backgroundColor: o.c, opacity: 0.5, animationDelay: o.d
+            }} />
         ))}
 
         <div className="relative z-10 max-w-4xl mx-auto w-full">

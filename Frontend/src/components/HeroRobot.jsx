@@ -78,7 +78,7 @@ export default function HeroRobot() {
         mag: (98.2 + Math.cos(curT * 0.8) * 0.4).toFixed(2),
         pwr: Math.round(85 + Math.sin(curT * 0.9) * 9)
       });
-    }, 150);
+    }, 500);
 
     const CW = () => canvas.width  / dpr;
     const CH = () => canvas.height / dpr;
@@ -203,11 +203,10 @@ export default function HeroRobot() {
             const sc = pt.scale;
             const gr = glowR * sc;
             if (gr > 0) {
-              const g = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, gr);
-              g.addColorStop(0, color + '33');
-              g.addColorStop(1, color + '00');
               ctx.beginPath(); ctx.arc(pt.x, pt.y, gr, 0, Math.PI * 2);
-              ctx.fillStyle = g; ctx.fill();
+              ctx.fillStyle = color;
+              ctx.globalAlpha = 0.15;
+              ctx.fill();
             }
             
             ctx.beginPath(); ctx.arc(pt.x, pt.y, sz * sc, 0, Math.PI * 2);
@@ -639,11 +638,11 @@ export default function HeroRobot() {
             // Halo
             const rScaled = r * nScale;
             if (rScaled > 0) {
-              const g2 = ctx.createRadialGradient(nX, nY, 0, nX, nY, rScaled * 4.8);
-              g2.addColorStop(0, nColor + '30');
-              g2.addColorStop(1, nColor + '00');
-              ctx.beginPath(); ctx.arc(nX, nY, rScaled * 4.8, 0, Math.PI * 2);
-              ctx.fillStyle = g2; ctx.fill();
+              ctx.beginPath(); ctx.arc(nX, nY, rScaled * 4.0, 0, Math.PI * 2);
+              ctx.fillStyle = nColor;
+              ctx.globalAlpha = 0.07 * nScale;
+              ctx.fill();
+              ctx.globalAlpha = 1;
             }
             
             // Ring
@@ -656,13 +655,9 @@ export default function HeroRobot() {
             
             // Core
             if (rScaled > 0) {
-              const ng = ctx.createRadialGradient(nX, nY, 0, nX, nY, rScaled);
-              ng.addColorStop(0, W);
-              ng.addColorStop(0.4, nColor);
-              ng.addColorStop(1, nColor + '20');
               ctx.beginPath(); ctx.arc(nX, nY, rScaled, 0, Math.PI * 2);
-              ctx.fillStyle = ng;
-              ctx.globalAlpha = (0.35 + pulseVal * 0.10) * nScale;
+              ctx.fillStyle = nColor;
+              ctx.globalAlpha = (0.6 + pulseVal * 0.2) * nScale;
               ctx.fill();
               ctx.globalAlpha = 1;
             }
@@ -737,11 +732,11 @@ export default function HeroRobot() {
           z: pLED.z,
           draw: (ctx) => {
             const sc = pLED.scale;
-            const lg = ctx.createRadialGradient(pLED.x, pLED.y, 0, pLED.x, pLED.y, 3 * sc);
-            lg.addColorStop(0, C + '33');
-            lg.addColorStop(1, C + '00');
             ctx.beginPath(); ctx.arc(pLED.x, pLED.y, 3 * sc, 0, Math.PI * 2);
-            ctx.fillStyle = lg; ctx.fill();
+            ctx.fillStyle = C;
+            ctx.globalAlpha = 0.2 * sc;
+            ctx.fill();
+            ctx.globalAlpha = 1;
           }
         });
       }
@@ -1071,11 +1066,11 @@ export default function HeroRobot() {
             z: pt.z,
             draw: (ctx) => {
               const sc = pt.scale;
-              const og = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, 6 * sc);
-              og.addColorStop(0, orb.color+'33');
-              og.addColorStop(1, orb.color+'00');
-              ctx.beginPath(); ctx.arc(pt.x, pt.y, 6 * sc, 0, Math.PI*2);
-              ctx.fillStyle=og; ctx.fill();
+              ctx.beginPath(); ctx.arc(pt.x, pt.y, 5 * sc, 0, Math.PI*2);
+              ctx.fillStyle = orb.color;
+              ctx.globalAlpha = 0.18;
+              ctx.fill();
+              ctx.globalAlpha = 1;
             }
           });
         }
