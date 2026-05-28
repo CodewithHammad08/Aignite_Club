@@ -1,30 +1,36 @@
 import React, { useState } from 'react';
 import { Github, Linkedin, Users, Code, Calendar, Sparkles, Globe, Cpu } from '../Icons';
 import useScrollAnimate from '../hooks/useScrollAnimate';
-import TechTeam, { TeamCard, EventTeam, PRTeam, DesignTeam, ContentTeam } from '../components/TeamCard';
+import TechTeam, { TeamCard, EventTeam, PRTeam, DesignTeam, ContentTeam, DisciplineTeam } from '../components/TeamCard';
 
 /* ─── DATA (unchanged) ─── */
 const LEADS = [
   {
     id: '01', name: 'Sanskriti Singh', initials: 'SS', role: 'PRESIDENT', nationality: 'INDIAN',
-    tagline: 'Leading Aignite to new horizons', photo_body: null,
+    tagline: 'Leading Aignite to new horizons',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962703/ed5674e2364b4e48afd39e340b631383_dgxcsf.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779964112/71b08c5a731347c5af5ffa5255d57797_nolt6f.png',
+    photo_body: null,
     stats: [{ label: 'DOMAIN', value: 'Management' }, { label: 'STACK', value: 'Strategy' }, { label: 'PROJECTS', value: '12' }],
     linkedin: '#', github: '#',
   },
   {
     id: '02', name: 'Osman Sanjar', initials: 'OS', role: 'VICE PRESIDENT', nationality: 'INDIAN',
-    tagline: 'Operations and community leader', photo_body: null,
+    tagline: 'Operations and community leader',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962698/96b383d64c474058aa9f6b003340bc2f_udt6ue.png',
+    photo_body: null,
     stats: [{ label: 'DOMAIN', value: 'Operations' }, { label: 'STACK', value: 'Planning' }, { label: 'PROJECTS', value: '10' }],
     linkedin: '#', github: '#',
   },
 ];
 
 const DEPARTMENTS = [
-  { id: 'tech',    label: 'Tech',    icon: Code,     color: '#3B82F6' },
-  { id: 'event',   label: 'Events',  icon: Calendar, color: '#22D3EE' },
-  { id: 'pr',      label: 'PR',      icon: Globe,    color: '#818CF8' },
-  { id: 'design',  label: 'Design',  icon: Sparkles, color: '#F472B6' },
-  { id: 'content', label: 'Content', icon: Cpu,      color: '#34D399' },
+  { id: 'tech', label: 'Tech', icon: Code, color: '#3B82F6' },
+  { id: 'event', label: 'Events', icon: Calendar, color: '#22D3EE' },
+  { id: 'pr', label: 'PR', icon: Globe, color: '#818CF8' },
+  { id: 'design', label: 'Design', icon: Sparkles, color: '#F472B6' },
+  { id: 'social', label: 'Social Media', icon: Cpu, color: '#34D399' },
+  { id: 'discipline', label: 'Discipline', icon: Users, color: '#FBBF24' },
 ];
 
 const FACULTY = [
@@ -44,12 +50,12 @@ const FACULTY = [
 
 /* ─── Dept icon floating orbs for hero background ─── */
 const HERO_ORBS = [
-  { icon: Code,     color: '#3B82F6', top: '18%', left: '8%',   size: 36, delay: '0s',    dur: '6s'  },
-  { icon: Calendar, color: '#22D3EE', top: '62%', left: '5%',   size: 28, delay: '1s',    dur: '7s'  },
-  { icon: Sparkles, color: '#F472B6', top: '25%', right: '7%',  size: 32, delay: '0.5s',  dur: '8s'  },
-  { icon: Globe,    color: '#818CF8', top: '70%', right: '9%',  size: 26, delay: '2s',    dur: '6.5s'},
-  { icon: Cpu,      color: '#34D399', top: '45%', left: '3%',   size: 22, delay: '1.5s',  dur: '9s'  },
-  { icon: Users,    color: '#FBBF24', top: '50%', right: '4%',  size: 24, delay: '3s',    dur: '7.5s'},
+  { icon: Code, color: '#3B82F6', top: '18%', left: '8%', size: 36, delay: '0s', dur: '6s' },
+  { icon: Calendar, color: '#22D3EE', top: '62%', left: '5%', size: 28, delay: '1s', dur: '7s' },
+  { icon: Sparkles, color: '#F472B6', top: '25%', right: '7%', size: 32, delay: '0.5s', dur: '8s' },
+  { icon: Globe, color: '#818CF8', top: '70%', right: '9%', size: 26, delay: '2s', dur: '6.5s' },
+  { icon: Cpu, color: '#34D399', top: '45%', left: '3%', size: 22, delay: '1.5s', dur: '9s' },
+  { icon: Users, color: '#FBBF24', top: '50%', right: '4%', size: 24, delay: '3s', dur: '7.5s' },
 ];
 
 export default function Team() {
@@ -100,7 +106,7 @@ export default function Team() {
             className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-xs font-mono font-bold mb-8 border border-white/10"
             style={{ backgroundColor: 'rgba(0,212,255,0.06)', color: '#22D3EE' }}>
             <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: '#22D3EE', boxShadow: '0 0 10px #22D3EE' }} />
-            25+ members across 5 departments
+            30+ members across 6 departments
           </div>
 
           {/* Headline */}
@@ -145,10 +151,10 @@ export default function Team() {
         <div className="max-w-6xl mx-auto grid grid-cols-2 gap-3">
           {LEADS.map((l, i) => (
             <div key={i} data-animate={i === 0 ? 'fade-right' : 'fade-left'} data-delay={i * 150}>
-              <TeamCard member={l} heightClass="h-[260px] md:h-[380px]" />
+              <TeamCard member={l} heightClass="h-[260px] md:h-[380px]" facing={i % 2 === 0 ? 'right' : 'left'} />
               <div className="flex gap-3 mt-3 px-1">
                 <a href={l.linkedin} className="text-muted hover:text-neon transition-colors"><Linkedin size={18} /></a>
-                <a href={l.github}   className="text-muted hover:text-offwhite transition-colors"><Github size={18} /></a>
+                <a href={l.github} className="text-muted hover:text-offwhite transition-colors"><Github size={18} /></a>
               </div>
             </div>
           ))}
@@ -226,11 +232,12 @@ export default function Team() {
             </div>
 
             {/* Team card grids — unchanged component */}
-            {activeDept === 'tech'    && <TechTeam />}
-            {activeDept === 'event'   && <EventTeam />}
-            {activeDept === 'pr'      && <PRTeam />}
-            {activeDept === 'design'  && <DesignTeam />}
-            {activeDept === 'content' && <ContentTeam />}
+            {activeDept === 'tech' && <TechTeam />}
+            {activeDept === 'event' && <EventTeam />}
+            {activeDept === 'pr' && <PRTeam />}
+            {activeDept === 'design' && <DesignTeam />}
+            {activeDept === 'social' && <ContentTeam />}
+            {activeDept === 'discipline' && <DisciplineTeam />}
           </div>
         </div>
       </section>

@@ -82,76 +82,75 @@ export default function App() {
         </PageTransition>
       </main>
 
-      {/* ─── Global CTA Section ─── */}
-      {/* Communicates: every page ends with a call to action, but each one
-          speaks to where the user is in their journey. */}
-      <section
-        className="relative py-32 px-6 text-center overflow-hidden bg-level-1"
-        style={{
-          // Radial vignette: keeps focus on the text, avoids flat backgrounds
-          background: `
-            radial-gradient(ellipse 70% 80% at 50% 50%, rgba(5,13,26,0) 0%, rgba(5,13,26,0.8) 100%),
-            #080f1d
-          `,
-        }}
-      >
-        <div className="glow-divider absolute top-0 left-0 right-0" />
+      {/* ─── Global CTA Section — only on Team page ─── */}
+      {page === 'team' && (
+        <section
+          className="relative py-32 px-6 text-center overflow-hidden bg-level-1"
+          style={{
+            background: `
+              radial-gradient(ellipse 70% 80% at 50% 50%, rgba(5,13,26,0) 0%, rgba(5,13,26,0.8) 100%),
+              #080f1d
+            `,
+          }}
+        >
+          <div className="glow-divider absolute top-0 left-0 right-0" />
 
-        {/* Very subtle ambient cyan orb — one glow, not everywhere */}
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full blur-[140px] pointer-events-none"
-          style={{ backgroundColor: 'rgba(0,212,255,0.05)' }}
-        />
-
-        <div className="relative z-10 max-w-2xl mx-auto">
-          {/* Active pill */}
+          {/* Very subtle ambient cyan orb — one glow, not everywhere */}
           <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono font-bold mb-8 depth-card"
-            style={{ color: '#00d4ff' }}
-          >
-            <span
-              className="w-1.5 h-1.5 rounded-full animate-pulse"
-              style={{ backgroundColor: '#00d4ff', boxShadow: '0 0 8px rgba(0,212,255,0.6)' }}
-            />
-            Applications Open
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full blur-[140px] pointer-events-none"
+            style={{ backgroundColor: 'rgba(0,212,255,0.05)' }}
+          />
+
+          <div className="relative z-10 max-w-2xl mx-auto">
+            {/* Active pill */}
+            <div
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono font-bold mb-8 depth-card"
+              style={{ color: '#00d4ff' }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full animate-pulse"
+                style={{ backgroundColor: '#00d4ff', boxShadow: '0 0 8px rgba(0,212,255,0.6)' }}
+              />
+              Applications Open
+            </div>
+
+            {/* Headline: two-line with weight contrast */}
+            <h2
+              className="text-4xl md:text-6xl font-black font-display tracking-tight mb-6 leading-tight"
+              style={{ color: '#e8f4f8' }}
+            >
+              {cta.headline[0]}
+              <br />
+              <span className="grad-text">{cta.headline[1]}</span>
+            </h2>
+
+            <p className="text-lg mb-10 max-w-lg mx-auto leading-relaxed" style={{ color: '#4a6070' }}>
+              {cta.sub}
+            </p>
+
+            {/* Apply Now — arrow loops on hover, border pulses once */}
+            <a
+              href="https://forms.google.com"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-glow btn-pulse-border group inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg"
+              style={{
+                backgroundColor: '#00d4ff',
+                color: '#050d1a',
+                boxShadow: '0 0 30px rgba(0,212,255,0.20)',
+              }}
+            >
+              <span>Apply Now</span>
+              {/* Arrow slides right 4px and back in a loop on hover */}
+              <ArrowRight size={20} className="btn-arrow-icon" />
+            </a>
+
+            <p className="mt-6 text-xs font-mono" style={{ color: '#4a6070' }}>
+              // No experience required. Just curiosity.
+            </p>
           </div>
-
-          {/* Headline: two-line with weight contrast */}
-          <h2
-            className="text-4xl md:text-6xl font-black font-display tracking-tight mb-6 leading-tight"
-            style={{ color: '#e8f4f8' }}
-          >
-            {cta.headline[0]}
-            <br />
-            <span className="grad-text">{cta.headline[1]}</span>
-          </h2>
-
-          <p className="text-lg mb-10 max-w-lg mx-auto leading-relaxed" style={{ color: '#4a6070' }}>
-            {cta.sub}
-          </p>
-
-          {/* Apply Now — arrow loops on hover, border pulses once */}
-          <a
-            href="https://forms.google.com"
-            target="_blank"
-            rel="noreferrer"
-            className="btn-glow btn-pulse-border group inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg"
-            style={{
-              backgroundColor: '#00d4ff',
-              color: '#050d1a',
-              boxShadow: '0 0 30px rgba(0,212,255,0.20)',
-            }}
-          >
-            <span>Apply Now</span>
-            {/* Arrow slides right 4px and back in a loop on hover */}
-            <ArrowRight size={20} className="btn-arrow-icon" />
-          </a>
-
-          <p className="mt-6 text-xs font-mono" style={{ color: '#4a6070' }}>
-            // No experience required. Just curiosity.
-          </p>
-        </div>
-      </section>
+        </section>
+      )}
 
       <Footer />
     </div>
