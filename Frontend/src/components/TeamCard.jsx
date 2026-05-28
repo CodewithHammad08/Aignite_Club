@@ -10,8 +10,6 @@
 //               Drop real photos in /public/team/ and swap the null values below.
 
 import React from 'react';
-import hammadFace from '../assets/hammad-face.png';
-import hammadBody from '../assets/hammad-body.png';
 
 // ─── Monospace font stack used throughout the stats panel ───
 const MONO = '"JetBrains Mono", "Fira Code", monospace';
@@ -59,8 +57,8 @@ const members = [
     role: 'MEMBER · TECH',
     position: 'FULL STACK',
     tagline: 'Bridging the gap between design and code',
-    photo_face: hammadFace,
-    photo_body: hammadBody,
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779968193/hammad_bkfode.png',
+    photo_body: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779968335/hammad-hover_thhncg.png',
     github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
@@ -168,6 +166,8 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
     badgeText = member.role.includes('CO-HEAD') ? 'CH' : 'H';
   }
 
+  const isHead = member.role.includes('HEAD') || member.role.includes('PRESIDENT') || member.role.includes('VICE PRESIDENT');
+
   return (
     /**
      * OUTER CARD WRAPPER
@@ -221,9 +221,8 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
          ══════════════════════════════════════════════ */}
 
       {member.photo_face ? (
-        <>
-          {/* LAYER A — Ambient glow behind the subject: makes it feel like
-              the person is standing inside a lit space, not pasted on a flat bg */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 6 }}>
+          {/* LAYER A — Ambient glow behind the subject */}
           <div
             className="absolute inset-0"
             style={{
@@ -232,20 +231,19 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
             }}
           />
 
-          {/* LAYER B — Portrait image (object-contain, no size change) */}
+          {/* LAYER B — Portrait image (object-contain, size reduced on mobile for heads) */}
           <img
             src={member.photo_face}
             alt={member.name}
-            className="absolute inset-0 w-full h-full object-contain"
+            className={`absolute inset-0 w-full object-contain ${isHead ? 'h-[78%] top-[11%] md:h-full md:top-0' : 'h-full'
+              }`}
             style={{
               objectPosition: 'center center',
               filter: 'brightness(0.96) contrast(1.05)',
             }}
           />
 
-          {/* LAYER C — Radial vignette + bottom/side fades on TOP of image.
-              The radial darkens all four corners/edges so the subject feels
-              naturally embedded rather than floating on a flat surface. */}
+          {/* LAYER C — Radial vignette + bottom/side fades on TOP of image */}
           <div
             className="absolute inset-0"
             style={{
@@ -258,7 +256,7 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
               `,
             }}
           />
-        </>
+        </div>
       ) : (
         /* FALLBACK — initials circle when photo_face is null */
         <div className="absolute inset-0 flex items-center justify-center">
@@ -316,8 +314,8 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
           </div>
         )}
         <div
+          className="text-[26px] md:text-[44px]"
           style={{
-            fontSize: 44,
             fontWeight: 900,
             fontFamily: '"Arial Black", Arial, sans-serif',
             color: '#ffffff',
@@ -381,7 +379,7 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
             }}
           >
             <img
-              src={member.photo_hover || member.photo_face}
+              src={member.photo_hover || member.photo_body || member.photo_face}
               alt={member.name}
               className="w-full h-full object-cover"
               style={{ objectPosition: 'center top' }}
@@ -535,12 +533,12 @@ function TeamSection({ list }) {
     <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
       {/* ── Row 1: Heads (exactly 2 cards per row) ── */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-2 md:gap-3">
         {heads.map((member, i) => (
           <TeamCard
             key={member.id}
             member={member}
-            heightClass="h-[300px] md:h-[440px]"
+            heightClass="h-[220px] md:h-[440px]"
             facing={i % 2 === 0 ? 'right' : 'left'}
           />
         ))}
@@ -561,12 +559,12 @@ function TeamSection({ list }) {
       </div>
 
       {/* ── Row 2: Core Members (2 cards per row on mobile, 3 cards on desktop) ── */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
         {coreMembers.map((member, i) => (
           <TeamCard
             key={member.id}
             member={member}
-            heightClass="h-[270px] md:h-[380px]"
+            heightClass="h-[180px] md:h-[380px]"
             facing={i % 2 === 0 ? 'right' : 'left'}
           />
         ))}
