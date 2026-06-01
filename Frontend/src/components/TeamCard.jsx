@@ -14,6 +14,13 @@ import React from 'react';
 // ─── Monospace font stack used throughout the stats panel ───
 const MONO = '"JetBrains Mono", "Fira Code", monospace';
 
+// ─── Cloudinary Optimization Helper ───
+const optimizeCloudinaryUrl = (url, width = 500) => {
+  if (!url || typeof url !== 'string') return url;
+  if (!url.includes('cloudinary.com')) return url;
+  return url.replace('/image/upload/', `/image/upload/f_auto,q_auto,w_${width}/`);
+};
+
 // ─── Real Aignite Tech Team data — swap photo_face / photo_body when photos are ready ───
 const members = [
   {
@@ -233,7 +240,7 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
 
           {/* LAYER B — Portrait image (object-contain, size reduced on mobile for heads) */}
           <img
-            src={member.photo_face}
+            src={optimizeCloudinaryUrl(member.photo_face, 500)}
             alt={member.name}
             className={`absolute inset-0 w-full object-contain ${isHead ? 'h-[78%] top-[11%] md:h-full md:top-0' : 'h-full'
               }`}
@@ -379,7 +386,7 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
             }}
           >
             <img
-              src={member.photo_hover || member.photo_body || member.photo_face}
+              src={optimizeCloudinaryUrl(member.photo_hover || member.photo_body || member.photo_face, 300)}
               alt={member.name}
               className="w-full h-full object-cover"
               style={{ objectPosition: 'center top' }}
