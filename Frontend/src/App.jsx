@@ -152,7 +152,7 @@ export default function App() {
         </section>
       )}
 
-      <Footer />
+      <Footer go={go} />
     </div>
   );
 }

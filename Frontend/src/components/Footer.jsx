@@ -2,9 +2,22 @@ import React from 'react';
 import { Github, Linkedin, Instagram, Mail, MapPin } from '../Icons';
 import logo from '../assets/logo.png';
 
-export default function Footer() {
+export default function Footer({ go }) {
+  const handleLinkClick = (e, label) => {
+    const pageMap = {
+      'Home': 'home',
+      'About': 'about',
+      'Events': 'events',
+      'Team': 'team',
+    };
+    if (pageMap[label] && go) {
+      e.preventDefault();
+      go(pageMap[label]);
+    }
+  };
+
   return (
-    <footer className="relative pt-20 pb-10 px-6" style={{ background: 'linear-gradient(180deg, #060910 0%, #0B0F1A 30%, #0D1321 100%)' }}>
+    <footer className="relative z-10 pt-24 md:pt-28 pb-12 px-6" style={{ background: 'linear-gradient(180deg, #060910 0%, #0B0F1A 30%, #0D1321 100%)' }}>
       {/* Glow divider at top */}
       <div className="glow-divider absolute top-0 left-0 right-0"></div>
 
@@ -15,7 +28,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-14">
           {/* Brand */}
           <div className="md:col-span-5">
-            <div className="flex items-center gap-2.5 mb-4 group cursor-pointer">
+            <button onClick={() => go && go('home')} className="flex items-center gap-2.5 mb-4 group cursor-pointer text-left">
               <div className="w-10 h-10 rounded-xl overflow-hidden p-[1px] group-hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] transition-shadow"
                 style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.3), rgba(34,211,238,0.2))' }}>
                 <div className="w-full h-full bg-level-2 rounded-[10px] flex items-center justify-center">
@@ -23,18 +36,18 @@ export default function Footer() {
                 </div>
               </div>
               <span className="text-lg font-bold font-display" style={{ color: '#E5E7EB' }}>Aignite</span>
-            </div>
+            </button>
             <p className="text-sm leading-relaxed max-w-xs mb-6 text-muted">
-              The AI & Technology Club of Bharati Vidyapeeth Deemed University. Founded 2025.
+              The AI &amp; Technology Club of Bharati Vidyapeeth Deemed University. Founded 2025.
             </p>
             <div className="flex items-center gap-2 text-xs mb-6" style={{ color: '#4B5563' }}>
               <MapPin size={14} /> Pune, India
             </div>
             <div className="flex gap-3">
               {[
-                { Icon: Instagram, href: '#' },
-                { Icon: Linkedin, href: '#' },
-                { Icon: Github, href: '#' },
+                { Icon: Instagram, href: 'https://instagram.com' },
+                { Icon: Linkedin, href: 'https://linkedin.com' },
+                { Icon: Github, href: 'https://github.com' },
                 { Icon: Mail, href: 'mailto:aignite@bvdu.edu' },
               ].map(({ Icon, href }, i) => (
                 <a key={i} href={href} target="_blank" rel="noreferrer"
@@ -66,7 +79,11 @@ export default function Footer() {
                 <ul className="space-y-3">
                   {col.items.map(l => (
                     <li key={l}>
-                      <a href="#" className="text-sm text-muted transition-all duration-200 hover:text-white hover:translate-x-1 inline-flex items-center gap-0 hover:gap-1.5 group/link">
+                      <a 
+                        href="#" 
+                        onClick={(e) => handleLinkClick(e, l)}
+                        className="text-sm text-muted transition-all duration-200 hover:text-white hover:translate-x-1 inline-flex items-center gap-0 hover:gap-1.5 group/link"
+                      >
                         <span className="w-0 group-hover/link:w-3 transition-all duration-200 overflow-hidden">
                           <span className="inline-block w-2 h-[1px]" style={{ backgroundColor: '#3B82F6' }}></span>
                         </span>

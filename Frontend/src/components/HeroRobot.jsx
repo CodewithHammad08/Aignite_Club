@@ -1223,21 +1223,21 @@ export default function HeroRobot() {
       // ══════════ HUD PANELS (2D Screen Overlays drawn last on top) ══════════
 
       // Clamped HUD positions for Canvas Connectors
-      const paddingVal = 12;
-      const leftHUD_W = 140;
-      const rightHUD_W = 150;
+      const paddingVal = 16;
+      const leftHUD_W = 170;
+      const rightHUD_W = 175;
       
-      const leftX_canvas = Math.max(paddingVal, Math.min(cx - 100, cx - 296 * baseScale));
-      const LeftY_canvas = Math.max(cy + 10, Math.min(h - 100, cy + 20 * baseScale));
+      const leftX_canvas = Math.max(paddingVal, Math.min(cx - 100, cx - 310 * baseScale));
+      const LeftY_canvas = Math.max(cy + 10, Math.min(h - 110, cy + 20 * baseScale));
       
       const rightX_canvas = Math.max(cx + 20, Math.min(w - rightHUD_W - paddingVal, cx + 200 * baseScale));
-      const RightY_canvas = Math.max(12, Math.min(cy - 60, cy - 62 * baseScale));
+      const RightY_canvas = Math.max(16, Math.min(cy - 60, cy - 62 * baseScale));
 
       // Interactive 3D Target Connectors (Only drawn when HUD overlays are visible)
       if (w >= 640) {
         const pRightHUDConnect = project(135 * Math.cos(-t * 0.3), 135 * Math.sin(-t * 0.3), 15, cx, cy);
         ctx.setLineDash([3,5]);
-        ctx.strokeStyle=C; ctx.globalAlpha=0.12; ctx.lineWidth=0.6;
+        ctx.strokeStyle=C; ctx.globalAlpha=0.18; ctx.lineWidth=0.7;
         ctx.beginPath(); 
         ctx.moveTo(rightX_canvas, RightY_canvas + 25); 
         ctx.lineTo(pRightHUDConnect.x, pRightHUDConnect.y); 
@@ -1246,7 +1246,7 @@ export default function HeroRobot() {
 
         const pLeftHUDConnect = project(135 * Math.cos(Math.PI - t * 0.3), 135 * Math.sin(Math.PI - t * 0.3), 15, cx, cy);
         ctx.setLineDash([3,5]);
-        ctx.strokeStyle=P; ctx.globalAlpha=0.12; ctx.lineWidth=0.6;
+        ctx.strokeStyle=P; ctx.globalAlpha=0.18; ctx.lineWidth=0.7;
         ctx.beginPath(); 
         ctx.moveTo(leftX_canvas + leftHUD_W, LeftY_canvas + 20); 
         ctx.lineTo(pLeftHUDConnect.x, pLeftHUDConnect.y); 
@@ -1257,7 +1257,7 @@ export default function HeroRobot() {
       /* ── Watermark label ── */
       ctx.save();
       ctx.font=`700 ${8.5 * baseScale}px "JetBrains Mono",monospace`; ctx.textAlign='center';
-      ctx.fillStyle=C; ctx.globalAlpha=0.18;
+      ctx.fillStyle=C; ctx.globalAlpha=0.22;
       ctx.fillText('AIGNITE · AI CORE 3D', cx, cy + (outerR * baseScale) + 16 * baseScale);
       ctx.restore();
 
@@ -1278,11 +1278,11 @@ export default function HeroRobot() {
   const cx = width / 2;
   const cy = height / 2;
 
-  const leftX = Math.max(12, Math.min(cx - 100, cx - 296 * baseScale));
-  const LeftY = Math.max(cy + 10, Math.min(height - 100, cy + 20 * baseScale));
+  const leftX = Math.max(16, Math.min(cx - 100, cx - 310 * baseScale));
+  const LeftY = Math.max(cy + 10, Math.min(height - 110, cy + 20 * baseScale));
 
-  const rightX = Math.max(cx + 20, Math.min(width - 150 - 12, cx + 200 * baseScale));
-  const RightY = Math.max(12, Math.min(cy - 60, cy - 62 * baseScale));
+  const rightX = Math.max(cx + 20, Math.min(width - 175 - 16, cx + 200 * baseScale));
+  const RightY = Math.max(16, Math.min(cy - 60, cy - 62 * baseScale));
 
   return (
     <div className="relative w-full select-none mx-auto animate-zoom-in" style={{ maxWidth: 800 }}>
@@ -1319,34 +1319,48 @@ export default function HeroRobot() {
 
         {/* Left HUD Panel Overlay */}
         <div 
-          className="hidden sm:block absolute rounded-lg border border-[#818CF8]/20 bg-[#050d1a]/60 backdrop-blur-lg p-3 select-none transition-all duration-300 hover:border-[#818CF8]/45 hover:shadow-[0_0_25px_rgba(129,140,248,0.25)] hover:-translate-y-0.5"
+          className="hidden sm:block absolute rounded-xl border border-[#818CF8]/30 bg-[#050d1a]/80 backdrop-blur-xl p-4 select-none shadow-2xl transition-all duration-300 hover:border-[#818CF8]/60 hover:shadow-[0_0_30px_rgba(129,140,248,0.3)] hover:-translate-y-0.5"
           style={{
             left: leftX,
             top: LeftY,
-            width: 140,
+            width: 170,
             fontFamily: '"JetBrains Mono", monospace',
             borderTop: '2.5px solid #818CF8'
           }}
         >
-          <div className="absolute top-1 left-1 w-1.5 h-1.5 border-t border-l border-[#818CF8]/40" />
-          <div className="absolute top-1 right-1 w-1.5 h-1.5 border-t border-r border-[#818CF8]/40" />
-          <div className="absolute bottom-1 left-1 w-1.5 h-1.5 border-b border-l border-[#818CF8]/40" />
-          <div className="absolute bottom-1 right-1 w-1.5 h-1.5 border-b border-r border-[#818CF8]/40" />
+          {/* Tech Corner Brackets */}
+          <div className="absolute top-1 left-1 w-2 h-2 border-t border-l border-[#818CF8]/50" />
+          <div className="absolute top-1 right-1 w-2 h-2 border-t border-r border-[#818CF8]/50" />
+          <div className="absolute bottom-1 left-1 w-2 h-2 border-b border-l border-[#818CF8]/50" />
+          <div className="absolute bottom-1 right-1 w-2 h-2 border-b border-r border-[#818CF8]/50" />
 
-          <div className="text-[9px] font-black text-[#818CF8]/95 tracking-wider mb-1">NEURAL SYNC</div>
-          <div className="text-xs font-bold text-white mb-0.5">{telemetry.stable}% STABLE</div>
-          <div className="text-[8px] font-semibold text-[#34D399] mb-2">LATENCY &lt;2ms</div>
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[10px] font-extrabold text-[#818CF8] tracking-widest">NEURAL SYNC</span>
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#818CF8] opacity-75" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#818CF8]" />
+            </span>
+          </div>
+          
+          <div className="text-sm font-black text-white mb-1 tracking-tight flex items-baseline gap-1">
+            {telemetry.stable}<span className="text-xs text-[#818CF8]">% STABLE</span>
+          </div>
+
+          <div className="flex items-center justify-between text-[9px] font-bold text-[#34D399] mb-3 border-t border-white/5 pt-1.5">
+            <span className="text-slate-400 font-medium">LATENCY</span>
+            <span>&lt;2ms</span>
+          </div>
           
           {/* Spectrum Bouncing Bars */}
-          <div className="flex gap-1.5 items-end h-7 mt-1.5">
+          <div className="flex gap-1.5 items-end h-8 pt-1 border-t border-white/5">
             {[0.82, 0.91, 0.74, 0.95, 0.66, 0.88].map((v, i) => (
               <div 
                 key={i} 
-                className="w-1.5 rounded-t-sm"
+                className="flex-1 rounded-t-sm"
                 style={{
                   height: `${v * 100}%`,
                   backgroundColor: ['#22D3EE', '#3B82F6', '#818CF8', '#34D399', '#22D3EE', '#3B82F6'][i],
-                  opacity: 0.6,
+                  opacity: 0.75,
                   transformOrigin: 'bottom',
                   animation: `bounceBar ${0.7 + i * 0.15}s ease-in-out infinite alternate`,
                   animationDelay: `${i * 0.1}s`
@@ -1358,49 +1372,61 @@ export default function HeroRobot() {
 
         {/* Right HUD Panel Overlay */}
         <div 
-          className="hidden sm:block absolute rounded-lg border border-[#22D3EE]/20 bg-[#050d1a]/60 backdrop-blur-lg p-3 select-none transition-all duration-300 hover:border-[#22D3EE]/45 hover:shadow-[0_0_25px_rgba(34,211,238,0.25)] hover:-translate-y-0.5"
+          className="hidden sm:block absolute rounded-xl border border-[#22D3EE]/30 bg-[#050d1a]/80 backdrop-blur-xl p-4 select-none shadow-2xl transition-all duration-300 hover:border-[#22D3EE]/60 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-0.5"
           style={{
             left: rightX,
             top: RightY,
-            width: 150,
+            width: 175,
             fontFamily: '"JetBrains Mono", monospace',
             borderTop: '2.5px solid #22D3EE'
           }}
         >
-          <div className="absolute top-1 left-1 w-1.5 h-1.5 border-t border-l border-[#22D3EE]/40" />
-          <div className="absolute top-1 right-1 w-1.5 h-1.5 border-t border-r border-[#22D3EE]/40" />
-          <div className="absolute bottom-1 left-1 w-1.5 h-1.5 border-b border-l border-[#22D3EE]/40" />
-          <div className="absolute bottom-1 right-1 w-1.5 h-1.5 border-b border-r border-[#22D3EE]/40" />
+          {/* Tech Corner Brackets */}
+          <div className="absolute top-1 left-1 w-2 h-2 border-t border-l border-[#22D3EE]/50" />
+          <div className="absolute top-1 right-1 w-2 h-2 border-t border-r border-[#22D3EE]/50" />
+          <div className="absolute bottom-1 left-1 w-2 h-2 border-b border-l border-[#22D3EE]/50" />
+          <div className="absolute bottom-1 right-1 w-2 h-2 border-b border-r border-[#22D3EE]/50" />
 
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[9px] font-black text-[#22D3EE]/95 tracking-wider">STATUS</span>
-            <div className="flex items-center gap-1">
+            <span className="text-[10px] font-extrabold text-[#22D3EE] tracking-widest">STATUS</span>
+            <div className="flex items-center gap-1.5 bg-[#34D399]/10 px-2 py-0.5 rounded border border-[#34D399]/20">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#34D399] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#34D399]"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#34D399] opacity-75" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#34D399]" />
               </span>
-              <span className="text-[8px] font-bold text-[#34D399]">ONLINE</span>
+              <span className="text-[8px] font-extrabold text-[#34D399]">ONLINE</span>
             </div>
           </div>
           
-          <div className="text-[9px] font-bold text-white/50 mb-1.5">CORE AI v2.1</div>
+          <div className="text-[10px] font-bold text-slate-400 mb-2">CORE AI v2.1</div>
           
           {/* Power Level */}
-          <div className="mb-2">
-            <div className="w-full bg-[#22D3EE]/10 rounded h-1.5 overflow-hidden">
+          <div className="mb-2.5">
+            <div className="flex justify-between items-center text-[9px] font-bold mb-1">
+              <span className="text-slate-400">POWER</span>
+              <span className="text-[#22D3EE]">{telemetry.pwr}%</span>
+            </div>
+            <div className="w-full bg-slate-800/80 rounded-full h-1.5 overflow-hidden p-0.5 border border-white/5">
               <div 
-                className="h-full bg-gradient-to-r from-[#22D3EE] to-[#3B82F6] transition-all duration-300"
+                className="h-full bg-gradient-to-r from-[#22D3EE] to-[#3B82F6] rounded-full transition-all duration-300"
                 style={{ width: `${telemetry.pwr}%` }}
               />
             </div>
-            <div className="text-[8px] font-bold text-white/40 mt-0.5">PWR {telemetry.pwr}%</div>
           </div>
           
-          <div className="text-[8px] font-semibold text-[#22D3EE]/70 mb-0.5">T_COIL: {telemetry.temp}K</div>
-          <div className="text-[8px] font-semibold text-[#818CF8]/70 mb-2">MAG_STB: {telemetry.mag}%</div>
+          <div className="grid grid-cols-2 gap-1 text-[9px] font-semibold mb-2.5 border-t border-white/5 pt-2">
+            <div>
+              <span className="text-slate-400 block text-[8px]">T_COIL</span>
+              <span className="text-[#22D3EE] font-bold">{telemetry.temp}K</span>
+            </div>
+            <div>
+              <span className="text-slate-400 block text-[8px]">MAG_STB</span>
+              <span className="text-[#818CF8] font-bold">{telemetry.mag}%</span>
+            </div>
+          </div>
           
           {/* Scrolling Waveform (Sparkline) */}
-          <div className="relative h-4 w-full overflow-hidden opacity-60 rounded border border-white/5 bg-black/20">
+          <div className="relative h-4 w-full overflow-hidden opacity-75 rounded border border-cyan-500/20 bg-black/40">
             <svg 
               className="absolute top-0 left-0 h-full w-[200%]" 
               viewBox="0 0 176 16" 
@@ -1412,7 +1438,7 @@ export default function HeroRobot() {
               <path 
                 d="M 0 8 Q 11 1, 22 8 T 44 8 T 66 8 T 88 8 Q 99 1, 110 8 T 132 8 T 154 8 T 176 8" 
                 stroke="#22D3EE" 
-                strokeWidth="1.2" 
+                strokeWidth="1.4" 
                 fill="none" 
               />
             </svg>
@@ -1421,26 +1447,26 @@ export default function HeroRobot() {
       </div>
 
       {/* Mobile Telemetry Status Bar */}
-      <div className="flex sm:hidden justify-between items-center gap-3 mt-4 px-4 py-2.5 bg-level-2/50 border border-white/5 rounded-xl font-mono text-[9px] select-none">
+      <div className="flex sm:hidden justify-between items-center gap-2 mt-4 px-4 py-3 bg-[#050d1a]/85 backdrop-blur-md border border-cyan-500/20 rounded-xl font-mono text-[9px] select-none shadow-lg">
         <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse"></span>
-          <span className="text-white/60">SYS:</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" />
+          <span className="text-slate-400">SYS:</span>
           <span className="text-[#34D399] font-bold">ONLINE</span>
         </div>
         <div className="text-white/20">|</div>
         <div>
-          <span className="text-white/60">SYNC:</span>
+          <span className="text-slate-400">SYNC:</span>
           <span className="text-[#818CF8] font-bold">{telemetry.stable}%</span>
         </div>
         <div className="text-white/20">|</div>
         <div>
-          <span className="text-white/60">PWR:</span>
+          <span className="text-slate-400">PWR:</span>
           <span className="text-[#22D3EE] font-bold">{telemetry.pwr}%</span>
         </div>
         <div className="text-white/20">|</div>
         <div>
-          <span className="text-white/60">TEMP:</span>
-          <span className="text-amber-500 font-bold">{Math.round(telemetry.temp)}K</span>
+          <span className="text-slate-400">TEMP:</span>
+          <span className="text-amber-400 font-bold">{Math.round(telemetry.temp)}K</span>
         </div>
       </div>
     </div>
