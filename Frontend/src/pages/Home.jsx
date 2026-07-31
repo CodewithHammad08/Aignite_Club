@@ -364,7 +364,7 @@ export default function Home({ go }) {
 
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
           {/* Left Hero Column */}
-          <div className="order-2 lg:order-1 lg:col-span-6 flex flex-col items-start justify-center">
+          <div className="order-1 lg:col-span-6 flex flex-col items-start justify-center">
             {/* University badge */}
             <div data-animate="fade-right" className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full mb-6 hero-badge">
               <span className="relative flex h-2 w-2">
@@ -391,9 +391,14 @@ export default function Home({ go }) {
             </div>
 
             {/* Clean, non-overlapping paragraph block */}
-            <p data-animate="fade-up" data-delay="250" className="text-base md:text-lg max-w-lg mb-8 leading-relaxed text-muted">
+            <p data-animate="fade-up" data-delay="250" className="text-base md:text-lg max-w-lg mb-6 leading-relaxed text-muted">
               A student-led AI and technology club built for students who want to create, innovate, and lead through technology.
             </p>
+
+            {/* Mobile-only terminal — between text and buttons */}
+            <div className="lg:hidden w-full mb-6" data-animate="fade-up" data-delay="320">
+              <HeroTerminal />
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-8 w-full sm:w-auto" data-animate="fade-up" data-delay="400">
               <a href="https://forms.google.com" target="_blank" rel="noreferrer"
@@ -415,8 +420,8 @@ export default function Home({ go }) {
             </div>
           </div>
 
-          {/* Right: HeroTerminal (TASK 6) */}
-          <div className="order-1 lg:order-2 lg:col-span-6 relative flex justify-center w-full" data-animate="zoom-in">
+          {/* Right: HeroTerminal — desktop only */}
+          <div className="hidden lg:flex order-2 lg:col-span-6 relative items-center w-full" data-animate="zoom-in">
             <HeroTerminal />
           </div>
         </div>
