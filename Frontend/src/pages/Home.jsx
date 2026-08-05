@@ -1,8 +1,269 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Brain, Code, Cpu, Globe, Sparkles, Users, Zap, ChevronRight, Star, Trophy, Rocket, Target } from '../Icons';
+import { ArrowRight, Brain, Code, Cpu, Globe, Sparkles, Users, Zap, ChevronRight, Star, Trophy, Rocket, Target, Github } from '../Icons';
 import logo from '../assets/logo.png';
 import useScrollAnimate from '../hooks/useScrollAnimate';
 import HeroTerminal from '../components/HeroTerminal';
+
+/* ─── Developer Workspace Component ─── */
+const DeveloperWorkspace = () => {
+  const [activeTab, setActiveTab] = useState('Active Projects');
+  const tabs = ['Active Projects', 'Good First Issues', 'Project Ideas'];
+
+  return (
+    <section className="py-28 px-6 relative overflow-hidden bg-[#060910]">
+      {/* Vercel/Linear style minimal background: subtle grid (Opacity reduced to 20%) */}
+      <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)', backgroundSize: '64px 64px' }}></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-[#060910] via-transparent to-[#060910] pointer-events-none"></div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="mb-12" data-animate="fade-up">
+          <h2 className="text-4xl md:text-5xl font-semibold font-display tracking-tight text-white mb-4">
+            Build with AIgnite
+          </h2>
+          <p className="text-base md:text-lg text-slate-400 font-sans leading-relaxed max-w-2xl mb-8">
+            Collaborate on real projects, contribute to open source, and learn by building alongside fellow students.
+          </p>
+
+          {/* Impact Row */}
+          <div className="flex flex-wrap items-center gap-4 sm:gap-8 border-y border-white/5 py-4 mb-8">
+            <div className="flex flex-col">
+              <span className="text-2xl font-semibold text-white">4</span>
+              <span className="text-xs text-slate-500 uppercase tracking-wider">Active Projects</span>
+            </div>
+            <div className="h-8 w-px bg-white/10 hidden sm:block"></div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-semibold text-white">12</span>
+              <span className="text-xs text-slate-500 uppercase tracking-wider">Contributors</span>
+            </div>
+            <div className="h-8 w-px bg-white/10 hidden sm:block"></div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-semibold text-white">8</span>
+              <span className="text-xs text-slate-500 uppercase tracking-wider">Good First Issues</span>
+            </div>
+            <div className="h-8 w-px bg-white/10 hidden sm:block"></div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-semibold text-white">15</span>
+              <span className="text-xs text-slate-500 uppercase tracking-wider">Pull Requests</span>
+            </div>
+          </div>
+
+          {/* CTA & Tabs */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <p className="text-sm text-slate-400">
+              <span className="text-white font-medium">New to open source?</span> Start with a Good First Issue.
+            </p>
+            
+            <div className="flex items-center gap-1 sm:gap-2 bg-[#0a0e17] p-1.5 rounded-lg border border-white/10 self-start lg:self-auto overflow-x-auto max-w-full">
+              {tabs.map(tab => (
+                <button key={tab} onClick={() => setActiveTab(tab)}
+                  className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-all duration-300 whitespace-nowrap ${activeTab === tab ? 'bg-white/10 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'}`}>
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Tab Content Area */}
+        <div className="relative min-h-[500px]">
+          {/* Active Projects Tab */}
+          {activeTab === 'Active Projects' && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              {/* Featured Project */}
+              <div className="lg:col-span-2 bg-[#0a0e17] border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col hover:border-white/20 transition-colors group relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-500 opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 h-full">
+                  {/* Left Column: Core Info */}
+                  <div className="flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-8">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded bg-white/5 flex items-center justify-center border border-white/10">
+                            <Github size={20} className="text-slate-200" />
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-semibold text-white">AIgnite Website</h3>
+                            <p className="text-xs text-slate-500 font-mono mt-1">Frontend</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-3 mb-8">
+                        <p className="text-slate-200 text-lg font-medium">Official website powering AIgnite.</p>
+                        <ul className="text-slate-400 space-y-2 text-sm">
+                          <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full" /> Built by students.</li>
+                          <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full" /> Open for contributions.</li>
+                          <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full" /> Designed with a reusable component system.</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 mb-8 lg:mb-0">
+                       <div className="bg-white/5 border border-white/5 rounded-lg p-4">
+                          <p className="text-xs text-slate-500 font-mono mb-1">Open Issues</p>
+                          <p className="text-xl font-semibold text-white">8</p>
+                       </div>
+                       <div className="bg-white/5 border border-white/5 rounded-lg p-4">
+                          <p className="text-xs text-slate-500 font-mono mb-1">Contributors</p>
+                          <p className="text-xl font-semibold text-white">12</p>
+                       </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Meta & Action */}
+                  <div className="flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="mb-8">
+                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Tech Stack</p>
+                        <div className="flex flex-wrap gap-2">
+                          {['React', 'Tailwind v4', 'Vite', 'Node.js'].map(tech => (
+                            <span key={tech} className="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-xs text-slate-300 font-mono">{tech}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mb-8">
+                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Maintainers</p>
+                        <div className="flex items-center gap-2">
+                          <div className="flex -space-x-2">
+                            <div className="w-8 h-8 rounded-full bg-slate-800 border-2 border-[#0a0e17] flex items-center justify-center text-xs text-slate-400 font-semibold">JD</div>
+                            <div className="w-8 h-8 rounded-full bg-slate-700 border-2 border-[#0a0e17] flex items-center justify-center text-xs text-slate-400 font-semibold">AS</div>
+                            <div className="w-8 h-8 rounded-full bg-slate-600 border-2 border-[#0a0e17] flex items-center justify-center text-xs text-slate-400 font-semibold">+3</div>
+                          </div>
+                          <span className="text-xs text-slate-500 ml-2">Active now</span>
+                        </div>
+                      </div>
+                      
+                      <div className="mb-8">
+                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Recent Activity</p>
+                        <div className="flex items-start gap-3 text-sm">
+                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                          <p className="text-slate-400 leading-tight">Merged PR <span className="text-blue-400 font-mono">#42</span> - Improve responsive navigation.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-4 mt-auto">
+                      <div className="flex items-center gap-4 text-xs text-slate-500">
+                        <div className="flex items-center gap-1.5">
+                          <Globe size={14} /> Synced with GitHub
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Code size={14} /> Last updated yesterday
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <button className="flex-1 px-4 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-medium transition-colors">
+                          View Repository
+                        </button>
+                        <button className="flex-1 px-4 py-2.5 rounded-lg bg-white text-black hover:bg-slate-200 text-sm font-semibold transition-colors">
+                          Contribute
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Secondary Projects Grid */}
+              <div className="lg:col-span-1 flex flex-col gap-4">
+                {[
+                  { name: 'Workshop Resources', category: '12 notebooks', stack: 'Python • Jupyter', status: 'Updated 3 days ago' },
+                  { name: 'Discord Bot Core', category: '3 active modules', stack: 'TypeScript • Node', status: 'Updated yesterday' },
+                  { name: 'ML Starter Kits', category: '5 starter templates', stack: 'TensorFlow • Pandas', status: 'Updated last week' }
+                ].map(project => (
+                  <div key={project.name} className="bg-[#0a0e17] border border-white/10 rounded-xl p-5 hover:border-white/20 hover:bg-[#0c111c] transition-colors group cursor-pointer flex flex-col justify-between h-full min-h-[140px]">
+                    <div>
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className="text-base font-semibold text-white group-hover:text-blue-400 transition-colors">{project.name}</h4>
+                        <ArrowRight size={16} className="text-slate-600 group-hover:text-blue-400 transition-colors group-hover:translate-x-1" />
+                      </div>
+                      <p className="text-sm text-slate-400 mb-4">{project.category}</p>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mt-auto pt-2">
+                      <span className="text-xs text-slate-500 font-mono">{project.stack}</span>
+                      <span className="text-xs text-slate-500">{project.status}</span>
+                    </div>
+                  </div>
+                ))}
+                
+                {/* View all card */}
+                <div className="bg-transparent border border-dashed border-white/10 rounded-xl p-5 hover:border-white/20 hover:bg-white/5 transition-colors cursor-pointer flex items-center justify-center h-full min-h-[80px]">
+                  <span className="text-sm font-medium text-slate-400">View all repositories →</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Good First Issues Tab */}
+          {activeTab === 'Good First Issues' && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              {[
+                { title: "Improve UI Responsiveness", repo: "AIgnite Website", tags: ["Frontend", "CSS"], difficulty: "Beginner" },
+                { title: "Fix Authentication Bug", repo: "Discord Bot Core", tags: ["Backend", "Auth"], difficulty: "Intermediate" },
+                { title: "Update README Examples", repo: "Workshop Resources", tags: ["Documentation"], difficulty: "Beginner" },
+                { title: "Add Dark Mode Toggle", repo: "AIgnite Website", tags: ["Frontend", "React"], difficulty: "Beginner" },
+                { title: "Optimize Image Loading", repo: "AIgnite Website", tags: ["Performance"], difficulty: "Intermediate" },
+                { title: "Refactor API Routes", repo: "Student Dashboard", tags: ["Backend", "Node"], difficulty: "Advanced" },
+                { title: "Improve Keyboard Navigation", repo: "AIgnite Website", tags: ["Accessibility"], difficulty: "Beginner" },
+                { title: "Write Unit Tests", repo: "ML Starter Kits", tags: ["Testing", "Python"], difficulty: "Intermediate" },
+              ].map((issue, idx) => (
+                <div key={idx} className="bg-[#0a0e17] border border-white/10 rounded-xl p-5 hover:border-blue-500/30 hover:shadow-[0_0_20px_rgba(59,130,246,0.05)] transition-all group cursor-pointer flex flex-col justify-between min-h-[160px]">
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Target size={14} className="text-emerald-400" />
+                      <span className="text-xs text-slate-500 font-mono truncate">{issue.repo}</span>
+                    </div>
+                    <h4 className="text-sm font-medium text-white mb-4 group-hover:text-blue-400 transition-colors line-clamp-2">{issue.title}</h4>
+                  </div>
+                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
+                    <div className="flex gap-2">
+                      {issue.tags.slice(0, 1).map(tag => (
+                        <span key={tag} className="text-[10px] px-2 py-1 rounded bg-white/5 text-slate-400 border border-white/5">{tag}</span>
+                      ))}
+                    </div>
+                    <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-500">{issue.difficulty}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Project Ideas Tab */}
+          {activeTab === 'Project Ideas' && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              {[
+                { title: "AI Resume Analyzer", desc: "A tool to help students optimize their resumes for ATS systems using NLP and local LLMs.", category: "Machine Learning" },
+                { title: "Smart Campus Navigation", desc: "An AR-based or interactive map application to help freshers find labs and classrooms easily.", category: "Mobile / Web" },
+                { title: "Automated Attendance System", desc: "Using computer vision to streamline attendance during large club workshops and events.", category: "Computer Vision" },
+                { title: "Open Source CMS for Clubs", desc: "A reusable headless CMS template tailored specifically for university technical clubs.", category: "Full-Stack" },
+                { title: "AI Study Buddy Chatbot", desc: "A Discord bot trained on university syllabi to help students find study materials quickly.", category: "NLP / Bots" },
+                { title: "Resource Hub Platform", desc: "A centralized platform to share and rate technical resources, roadmaps, and tutorials.", category: "Frontend" }
+              ].map((idea, idx) => (
+                <div key={idx} className="bg-[#0a0e17] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all group flex flex-col h-full">
+                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 mb-5">
+                    <Sparkles size={18} className="text-indigo-400" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-white mb-2">{idea.title}</h4>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">
+                    {idea.desc}
+                  </p>
+                  <div className="mt-auto">
+                    <div className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-400 bg-indigo-500/10 px-3 py-1.5 rounded-full border border-indigo-500/20">
+                      {idea.category}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
 
 /* ─── Animated counter ─── */
 function useCounter(target, duration = 2000) {
@@ -481,75 +742,8 @@ export default function Home({ go }) {
         <div className="glow-divider absolute bottom-0 left-0 right-0" />
       </section>
 
-      {/* ═══════ DOMAINS (TASK 1: Cohesive 2x2 grid layout) ═══════ */}
-      <section className="py-28 px-6 relative overflow-hidden">
-        {/* Dot grid */}
-        <div className="absolute inset-0 dot-grid opacity-60 pointer-events-none" />
-        {/* Ambient center glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full blur-[150px] pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse, rgba(59,130,246,0.06) 0%, transparent 70%)' }} />
-
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16" data-animate="fade-up">
-            <div className="max-w-xl">
-              <div className="inline-flex items-center gap-2 mb-4">
-                <div className="h-px w-8 bg-blue-500/50" />
-                <p className="text-xs font-bold font-mono uppercase tracking-[0.3em]" style={{ color: '#60A5FA' }}>&lt;verticals /&gt;</p>
-              </div>
-              <h2 className="text-3xl md:text-5xl font-black font-display tracking-tight" style={{ color: '#E5E7EB' }}>
-                Four domains.<br /><span className="grad-text">Infinite impact.</span>
-              </h2>
-            </div>
-            <p className="text-base leading-relaxed text-muted max-w-xs">Every domain is a launchpad. Pick one, or master all four.</p>
-          </div>
-
-          {/* Balanced 2x2 Grid Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {DOMAINS.map((d, i) => {
-              const DomainIcon = d.icon;
-              const isMLCard = i === 0; // Machine Learning & Deep Learning
-              return (
-                <div key={i} data-animate="fade-up" data-delay={i * 100}
-                  className="domain-card group relative rounded-3xl p-8 overflow-hidden cursor-default flex flex-col justify-between"
-                  style={{ '--accent': d.accent, '--glow': d.glow }}>
-                  {/* Animated gradient background */}
-                  <div className="domain-card-bg-animated" />
-                  {/* Accent top line */}
-                  <div className="absolute top-0 left-0 right-0 h-[2px] opacity-60 group-hover:opacity-100 transition-opacity duration-500"
-                    style={{ background: `linear-gradient(to right, transparent, ${d.accent}, transparent)` }} />
-
-                  <div className="relative z-10 flex flex-col h-full justify-between gap-6">
-                    <div>
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="icon-box w-14 h-14 shadow-xl group-hover:scale-110 transition-transform duration-300"
-                          style={{ border: `1px solid ${d.accent}40`, boxShadow: `0 0 25px ${d.accent}15` }}>
-                          <DomainIcon size={26} style={{ color: d.accent }} />
-                        </div>
-                        <span className="domain-tag text-[10px] font-bold font-mono px-3 py-1 rounded-lg uppercase tracking-wider"
-                          style={{ backgroundColor: `${d.accent}15`, color: d.accent, border: `1px solid ${d.accent}30` }}>
-                          {d.tag}
-                        </span>
-                      </div>
-
-                      <h3 className="text-xl md:text-2xl font-black font-display mb-3 group-hover:text-white transition-colors" style={{ color: '#E5E7EB' }}>
-                        {d.title}
-                      </h3>
-                      <p className="text-sm leading-relaxed text-muted">{d.desc}</p>
-                    </div>
-
-                    {!isMLCard && (
-                      <div className="flex items-center gap-1.5 text-xs font-bold transition-all duration-300" style={{ color: d.accent }}>
-                        <span>Explore</span>
-                        <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* ═══════ DEVELOPER WORKSPACE (Replaces Open Source) ═══════ */}
+      <DeveloperWorkspace />
 
       {/* ═══════ EVENTS TIMELINE (TASK 2: Vertical split cards with images) ═══════ */}
       <section className="py-28 px-6 relative overflow-hidden">
