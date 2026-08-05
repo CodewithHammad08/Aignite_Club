@@ -9,7 +9,7 @@ const reduced = typeof window !== 'undefined'
 
 // Communicates: filtered items don't just appear — they arrive with purpose
 const listItemVariants = {
-  hidden:  { opacity: 0, y: reduced ? 0 : 16 },
+  hidden: { opacity: 0, y: reduced ? 0 : 16 },
   visible: (i) => ({
     opacity: 1, y: 0,
     transition: reduced ? { duration: 0.2 } : { duration: 0.35, ease: 'easeOut', delay: i * 0.03 },
@@ -113,20 +113,20 @@ function RegisterPanel({ onClose }) {
 
 /* ── Data ── */
 const EVENTS = [
-  { title: 'AI/ML Concept-Based Interactive Session', date: 'Jul 15, 2026', type: 'Session',  seats: 45 },
-  { title: 'AI System Design & Problem Solving',      date: 'Aug 10, 2026', type: 'Workshop', seats: 60 },
-  { title: 'Flagship AI Interactive Event',           date: 'Aug 25, 2026', type: 'Event',    seats: 120, featured: true },
-  { title: 'AI Career Guidance / Expert Talk',        date: 'Oct 05, 2026', type: 'Speaker',  seats: 150 },
-  { title: 'AI Application & Analysis Session',       date: 'Jan 15, 2027', type: 'Session',  seats: 50 },
-  { title: 'AI Simulation / Engagement Session',      date: 'Feb 05, 2027', type: 'Workshop', seats: 40 },
-  { title: 'AI Tools & Practical Applications',       date: 'Feb 20, 2027', type: 'Workshop', seats: 40 },
-  { title: 'AI Innovation & Idea Presentation',       date: 'Mar 10, 2027', type: 'Event',    seats: 80 },
+  { title: 'AI/ML Concept-Based Interactive Session', date: 'Jul 15, 2026', type: 'Session', seats: 45 },
+  { title: 'AI System Design & Problem Solving', date: 'Aug 10, 2026', type: 'Workshop', seats: 60 },
+  { title: 'Flagship AI Interactive Event', date: 'Aug 25, 2026', type: 'Event', seats: 120, featured: true },
+  { title: 'AI Career Guidance / Expert Talk', date: 'Oct 05, 2026', type: 'Speaker', seats: 150 },
+  { title: 'AI Application & Analysis Session', date: 'Jan 15, 2027', type: 'Session', seats: 50 },
+  { title: 'AI Simulation / Engagement Session', date: 'Feb 05, 2027', type: 'Workshop', seats: 40 },
+  { title: 'AI Tools & Practical Applications', date: 'Feb 20, 2027', type: 'Workshop', seats: 40 },
+  { title: 'AI Innovation & Idea Presentation', date: 'Mar 10, 2027', type: 'Event', seats: 80 },
 ];
 
 const PAST = [
-  { title: 'Club Founded & Inaugural',          date: '2025', attendees: '200+', outcomes: 'Official Launch • Core Team Formed',    img: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=600&auto=format' },
-  { title: 'Hands-on ML Workshop',              date: '2026', attendees: '120+', outcomes: '40+ Models Trained • 3 Datasets',       img: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=600&auto=format' },
-  { title: 'WebCraft: Web from Scratch',          date: '2026', attendees: '80+',  outcomes: 'HTML, CSS & JS Basics Learned',         img: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=600&auto=format' },
+  { title: 'Club Founded & Inaugural', date: '2025', attendees: '200+', outcomes: 'Official Launch • Core Team Formed', img: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=600&auto=format' },
+  { title: 'Hands-on ML Workshop', date: '2026', attendees: '120+', outcomes: '40+ Models Trained • 3 Datasets', img: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=600&auto=format' },
+  { title: 'WebCraft: Web from Scratch', date: '2026', attendees: '80+', outcomes: 'HTML, CSS & JS Basics Learned', img: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=600&auto=format' },
   { title: 'Practical Linux & OS: Commands to Automation', date: '2026', attendees: '100+', outcomes: 'CLI Basics & OS Concepts Gained', img: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=600&auto=format' },
 ];
 
@@ -176,11 +176,13 @@ export default function Events() {
           style={{ backgroundColor: '#00d4ff' }} />
         <div className="relative z-10">
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-7xl font-black font-display tracking-tight mb-4" style={{ color: '#e8f4f8' }}>
-            <span className="grad-text">Events</span> & Workshops
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-display mb-5 leading-[0.95]"
+            style={{ color: '#e8f4f8', letterSpacing: '-0.03em' }}>
+            <span className="grad-text">Events</span> &amp; Workshops
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-            className="text-lg md:text-xl max-w-2xl mx-auto" style={{ color: '#4a6070' }}>
+            className="text-base sm:text-lg max-w-xl mx-auto leading-relaxed font-sans"
+            style={{ color: '#6a8090' }}>
             Learn, build, and connect. Here's what's happening at Aignite.
           </motion.p>
         </div>

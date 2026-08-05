@@ -19,17 +19,37 @@
 /* Step 1 — Load Tailwind CSS */
 @import "tailwindcss";
 
-/* Step 2 — Customise the design tokens */
+/* Step 2 — Design tokens: fonts, type scale, brand palette */
 @theme {
-  --font-sans: "Outfit", sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
-  /* Brand palette as CSS custom properties */
-  --color-bg:      #050d1a;
-  --color-cyan:    #00d4ff;
-  --color-text:    #e8f4f8;
-  --color-muted:   #4a6070;
-  --color-amber:   #e8a020;
+  /* ── Font Stacks ──────────────────────────────────────────── */
+  --font-sans:    "Outfit", system-ui, sans-serif;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+
+  /* ── Type Scale ───────────────────────────────────────────── */
+  /* Fluid, intentional sizes — not browser defaults */
+  --text-xs:   0.70rem;   /* 11.2px — labels, captions, badges    */
+  --text-sm:   0.813rem;  /* 13px   — body small, cards           */
+  --text-base: 0.938rem;  /* 15px   — primary body text           */
+  --text-lg:   1.063rem;  /* 17px   — lead paragraphs             */
+  --text-xl:   1.25rem;   /* 20px   — subheadings                 */
+  --text-2xl:  1.5rem;    /* 24px   — section labels              */
+  --text-3xl:  1.875rem;  /* 30px   — small headings              */
+  --text-4xl:  2.25rem;   /* 36px   — medium headings             */
+  --text-5xl:  3rem;      /* 48px   — large headings              */
+  --text-6xl:  3.75rem;   /* 60px   — hero headings (md)          */
+  --text-7xl:  4.5rem;    /* 72px   — hero headings (lg)          */
+  --text-8xl:  6rem;      /* 96px   — display headings            */
+
+  /* ── Brand Palette ────────────────────────────────────────── */
+  --color-bg:       #050d1a;
+  --color-cyan:     #00d4ff;
+  --color-text:     #e8f4f8;
+  --color-muted:    #4a6070;
+  --color-amber:    #e8a020;
+  --color-offwhite: #E5E7EB;
+  --color-neon:     #60A5FA;
 }
 
 
@@ -39,23 +59,86 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* 16px root — all rem values scale from this */
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply antialiased font-sans;
+    font-family: "Outfit", system-ui, sans-serif;
+    font-size: var(--text-base);      /* 15px — slightly tighter than 16px default */
+    line-height: 1.65;                /* Generous leading for readability           */
+    font-weight: 400;
     background-color: #050d1a;
     color: #e8f4f8;
-    /* Hide native cursor globally — useCursorEffect replaces it on desktop */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   }
 
-  /* Text selection — cyan tint, stays on brand */
+  /* ── Heading scale (Space Grotesk) ── */
+  h1 {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: #E5E7EB;
+  }
+  h2 {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    font-size: clamp(1.875rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: #E5E7EB;
+  }
+  h3 {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: #E5E7EB;
+  }
+  h4, h5, h6 {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: #E5E7EB;
+  }
+
+  /* ── Body copy ── */
+  p {
+    font-family: "Outfit", system-ui, sans-serif;
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: inherit;
+  }
+
+  /* ── Mono / code ── */
+  code, kbd, samp, pre {
+    font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+    font-size: 0.875em;
+    font-variant-ligatures: common-ligatures;
+  }
+
+  /* ── Links ── */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* ── Text selection ── */
   ::selection {
     background: rgba(0, 212, 255, 0.25);
     color: #e8f4f8;
   }
 
-  /* Reduced motion: all Framer Motion and GSAP animations are controlled
-     in JS via the prefersReducedMotion check. This CSS rule catches anything else. */
+  /* ── Reduced motion ── */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -63,6 +146,49 @@
       transition-duration: 0.01ms !important;
     }
   }
+}
+
+
+/* ──────────────────────────────────────────────────────────── */
+/*  TYPOGRAPHY UTILITY CLASSES                                  */
+/*  Explicit classes keep the type system self-contained and    */
+/*  consistent regardless of which Tailwind instance is active. */
+/* ──────────────────────────────────────────────────────────── */
+@layer utilities {
+
+  /* ── Font families ── */
+  .font-sans    { font-family: "Outfit", system-ui, sans-serif; }
+  .font-display { font-family: "Space Grotesk", system-ui, sans-serif; }
+  .font-mono    { font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace; }
+
+  /* ── Brand text colors ── */
+  .text-offwhite { color: #E5E7EB; }
+  .text-muted    { color: #4a6070; }
+  .text-neon     { color: #60A5FA; }
+  .text-cyan     { color: #00d4ff; }
+  .text-amber    { color: #e8a020; }
+
+  /* ── Letter spacing ── */
+  .tracking-tighter { letter-spacing: -0.05em; }
+  .tracking-tight   { letter-spacing: -0.025em; }
+  .tracking-normal  { letter-spacing: 0; }
+  .tracking-wide    { letter-spacing: 0.05em; }
+  .tracking-wider   { letter-spacing: 0.1em; }
+  .tracking-widest  { letter-spacing: 0.2em; }
+
+  /* ── Line heights ── */
+  .leading-none    { line-height: 1; }
+  .leading-tight   { line-height: 1.1; }
+  .leading-snug    { line-height: 1.25; }
+  .leading-normal  { line-height: 1.5; }
+  .leading-relaxed { line-height: 1.7; }
+  .leading-loose   { line-height: 2; }
+
+  /* ── Depth backgrounds ── */
+  .bg-level-0 { background-color: #050d1a; }
+  .bg-level-1 { background-color: #080f1d; }
+  .bg-level-2 { background-color: #0d1829; }
+  .bg-level-3 { background-color: #152035; }
 }
 
 

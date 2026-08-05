@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import anime from 'animejs';
 
 export default function NeuralLoader({ onFinish }) {
   const canvasRef = useRef(null);
@@ -41,8 +42,9 @@ export default function NeuralLoader({ onFinish }) {
     const timer = setTimeout(() => {
       setShowText(true);
       requestAnimationFrame(() => {
-        const tl = window.anime.timeline({ easing: 'easeOutExpo' });
-        tl.add({ targets: '.ldr-letter', translateY: [80,0], opacity: [0,1], duration: 900, delay: window.anime.stagger(60) })
+        // Uses animejs imported as ES module — NOT window.anime (no CDN)
+        const tl = anime.timeline({ easing: 'easeOutExpo' });
+        tl.add({ targets: '.ldr-letter', translateY: [80,0], opacity: [0,1], duration: 900, delay: anime.stagger(60) })
           .add({ targets: '.ldr-tagline', translateY: [20,0], opacity: [0,1], duration: 700 }, '-=400')
           .add({ targets: '.ldr-line-left', scaleX: [0,1], opacity: [0,1], duration: 800, easing: 'easeInOutQuart' }, '-=600')
           .add({ targets: '.ldr-line-right', scaleX: [0,1], opacity: [0,1], duration: 800, easing: 'easeInOutQuart' }, '-=800')
@@ -71,7 +73,7 @@ export default function NeuralLoader({ onFinish }) {
             <div className="ldr-dot w-2 h-2 rounded-full opacity-0" style={{ backgroundColor: '#3B82F6', boxShadow: '0 0 12px rgba(59,130,246,0.8)' }}></div>
             <div className="ldr-line-right w-16 h-[1px] origin-left opacity-0" style={{ background: 'linear-gradient(to left, transparent, rgba(59,130,246,0.6))' }}></div>
           </div>
-          <p className="ldr-tagline text-[10px] md:text-xs font-bold tracking-[0.4em] uppercase opacity-0" style={{ color: 'rgba(96,165,250,0.5)' }}>AI & Technology Club</p>
+          <p className="ldr-tagline text-[10px] md:text-xs font-bold tracking-[0.4em] uppercase opacity-0" style={{ color: 'rgba(96,165,250,0.5)' }}>AI &amp; Technology Club</p>
           <div className="mt-8 w-48 h-[3px] rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(59,130,246,0.1)' }}>
             <div className="ldr-bar-fill h-full w-full origin-left rounded-full" style={{ transform: 'scaleX(0)', background: 'linear-gradient(to right, #0F172A, #3B82F6, #22D3EE)' }}></div>
           </div>

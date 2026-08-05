@@ -376,7 +376,12 @@ export default function Home({ go }) {
 
             {/* Main headline */}
             <h1 data-animate="fade-up" data-delay="100"
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.25rem] font-black font-display tracking-tight leading-[1.05] mb-5 text-slate-100">
+              className="font-black font-display leading-[1.0] mb-5"
+              style={{
+                fontSize: 'clamp(2.75rem, 7vw, 5.5rem)',
+                letterSpacing: '-0.035em',
+                color: '#E5E7EB'
+              }}>
               Where<br />
               <span className="grad-text">Innovation</span><br />
               Meets Intelligence
@@ -384,14 +389,14 @@ export default function Home({ go }) {
 
             {/* Typewriter sub-headline (Stack cleanly without position/parallax overlap) */}
             <div data-animate="fade-up" data-delay="200" className="flex items-center gap-3 mb-5">
-              <span className="text-lg md:text-xl font-semibold text-slate-400">We are</span>
-              <span className="text-lg md:text-xl font-black typewriter-word" style={{ color: '#22D3EE' }}>
+              <span className="text-base md:text-lg font-medium font-sans" style={{ color: '#6a8090' }}>We are</span>
+              <span className="text-base md:text-lg font-black font-display typewriter-word" style={{ color: '#22D3EE' }}>
                 {typedText}<span className="typewriter-cursor" />
               </span>
             </div>
 
             {/* Clean, non-overlapping paragraph block */}
-            <p data-animate="fade-up" data-delay="250" className="text-base md:text-lg max-w-lg mb-6 leading-relaxed text-muted">
+            <p data-animate="fade-up" data-delay="250" className="text-base md:text-lg max-w-lg mb-6 leading-relaxed font-sans" style={{ color: '#6a8090' }}>
               A student-led AI and technology club built for students who want to create, innovate, and lead through technology.
             </p>
 

@@ -323,14 +323,20 @@ export default function About() {
           </div>
 
           <h1 data-animate="fade-up" data-delay="100"
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-display tracking-tight mb-6 leading-[0.9] text-offwhite">
+            className="font-black font-display mb-6 leading-[0.95]"
+            style={{
+              fontSize: 'clamp(3rem, 8vw, 6rem)',
+              letterSpacing: '-0.035em',
+              color: '#E5E7EB'
+            }}>
             We are<br /><span className="grad-text">Aignite.</span>
           </h1>
 
           <p data-animate="fade-up" data-delay="200"
-            className="text-base sm:text-lg max-w-2xl mx-auto leading-relaxed text-muted mb-12">
+            className="text-base sm:text-lg max-w-2xl mx-auto leading-relaxed font-sans mb-12"
+            style={{ color: '#6a8090' }}>
             A student-led AI &amp; technology club built for students who want to
-            <strong style={{ color: '#e8f4f8' }}> create, innovate, and lead.</strong>{' '}
+            <strong style={{ color: '#e8f4f8', fontWeight: 700 }}> create, innovate, and lead.</strong>{' '}
             More than a club — a community of builders.
           </p>
 

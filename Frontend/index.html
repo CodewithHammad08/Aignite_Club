@@ -6,46 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Aignite — The AI & Tech Club of Bharati Vidyapeeth Deemed University.">
   <title>Aignite — AI & Tech Club</title>
+
+  <!-- Fonts: Outfit (body) · Space Grotesk (display headings) · JetBrains Mono (code/labels) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            display: ['"Space Grotesk"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-          },
-          colors: {
-            deep:    '#0B0F1A',
-            navy:    '#0F172A',
-            surface: '#131B2E',
-            electric:'#3B82F6',
-            neon:    '#60A5FA',
-            cyan:    '#22D3EE',
-            muted:   '#9CA3AF',
-            offwhite:'#E5E7EB',
-          },
-          animation: {
-            'float': 'float 6s ease-in-out infinite',
-            'pulse-glow': 'pulse-glow 4s ease-in-out infinite',
-            'gradient': 'gradient 8s ease infinite',
-          },
-          keyframes: {
-            float: { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-20px)' } },
-            'pulse-glow': { '0%, 100%': { opacity: '0.4' }, '50%': { opacity: '0.8' } },
-            gradient: { '0%, 100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } },
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!--
+    NOTE: Do NOT add the Tailwind CDN <script> here.
+    This project uses Vite + @tailwindcss/vite (Tailwind v4).
+    Adding the CDN script causes double Tailwind and breaks all styles.
+  -->
 </head>
-<body class="bg-[#060910]">
+<body>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>

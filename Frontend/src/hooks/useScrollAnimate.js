@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
+import anime from 'animejs';
 
 
 export default function useScrollAnimate() {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    if (!containerRef.current || !window.anime) return;
+    if (!containerRef.current) return;
 
     const targets = containerRef.current.querySelectorAll('[data-animate]');
     if (!targets.length) return;
@@ -33,38 +34,38 @@ export default function useScrollAnimate() {
 
         switch (type) {
           case 'fade-up':
-            window.anime({ ...base, translateY: [40, 0] });
+            anime({ ...base, translateY: [40, 0] });
             break;
           case 'fade-down':
-            window.anime({ ...base, translateY: [-30, 0] });
+            anime({ ...base, translateY: [-30, 0] });
             break;
           case 'fade-left':
-            window.anime({ ...base, translateX: [50, 0] });
+            anime({ ...base, translateX: [50, 0] });
             break;
           case 'fade-right':
-            window.anime({ ...base, translateX: [-50, 0] });
+            anime({ ...base, translateX: [-50, 0] });
             break;
           case 'zoom-in':
-            window.anime({ ...base, scale: [0.85, 1] });
+            anime({ ...base, scale: [0.85, 1] });
             break;
           case 'stagger-up':
             // For parent containers: animate children
             const children = el.querySelectorAll('[data-stagger-child]');
             if (children.length) {
               children.forEach(c => { c.style.opacity = '0'; });
-              window.anime({
+              anime({
                 targets: children,
                 opacity: [0, 1],
                 translateY: [30, 0],
                 easing: 'easeOutCubic',
                 duration: 600,
-                delay: window.anime.stagger(80, { start: delay }),
+                delay: anime.stagger(80, { start: delay }),
               });
             }
             el.style.opacity = '1';
             break;
           default:
-            window.anime(base);
+            anime(base);
         }
 
         observer.unobserve(el);

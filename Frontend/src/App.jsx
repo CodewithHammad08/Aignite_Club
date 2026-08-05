@@ -116,8 +116,12 @@ export default function App() {
 
             {/* Headline: two-line with weight contrast */}
             <h2
-              className="text-4xl md:text-6xl font-black font-display tracking-tight mb-6 leading-tight"
-              style={{ color: '#e8f4f8' }}
+              className="font-black font-display tracking-tight mb-6 leading-tight"
+              style={{
+                fontSize: 'clamp(2rem, 5vw, 3.75rem)',
+                letterSpacing: '-0.03em',
+                color: '#e8f4f8'
+              }}
             >
               {cta.headline[0]}
               <br />

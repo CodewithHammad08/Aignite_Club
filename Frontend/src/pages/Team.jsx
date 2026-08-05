@@ -111,13 +111,19 @@ export default function Team() {
 
           {/* Headline */}
           <h1 data-animate="fade-up" data-delay="80"
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-display tracking-tight mb-6 leading-[0.9] text-offwhite">
+            className="font-black font-display mb-6 leading-[0.95]"
+            style={{
+              fontSize: 'clamp(3rem, 8vw, 6rem)',
+              letterSpacing: '-0.035em',
+              color: '#E5E7EB'
+            }}>
             The people<br />behind <span className="grad-text">Aignite.</span>
           </h1>
 
           {/* Sub */}
           <p data-animate="fade-up" data-delay="160"
-            className="text-base sm:text-lg max-w-xl leading-relaxed text-muted">
+            className="text-base sm:text-lg max-w-xl leading-relaxed font-sans"
+            style={{ color: '#6a8090' }}>
             A diverse crew of builders, thinkers, and doers — united by a shared obsession with technology.
           </p>
 
