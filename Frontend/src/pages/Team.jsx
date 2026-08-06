@@ -33,16 +33,7 @@ const DEPARTMENTS = [
   { id: 'discipline', label: 'Discipline', icon: Users, color: '#FBBF24' },
 ];
 
-const FACULTY = [
-  {
-    code: 'SK', title: 'FACULTY COORDINATOR', name: 'Sanam Kazi', role: 'FACULTY COORDINATOR',
-    tagline: 'Fostering academic engagement, supporting student development programs, and driving growth in technical research.',
-  },
-  {
-    code: 'SK', title: 'AIML HOD', name: 'Supriya Khaitan', role: 'AIML HOD',
-    tagline: 'Leading the department towards innovation, research excellence, and pioneering next-generation machine learning projects.',
-  },
-];
+
 
 /* ─── Dept icon floating orbs for hero background ─── */
 const HERO_ORBS = [
@@ -245,88 +236,70 @@ export default function Team() {
       </section>
 
       {/* ══════════════════════════════════════════════
-          §4  FACULTY — Honorable Memento
+          §4  STORY DRIVEN JOIN CTA
       ══════════════════════════════════════════════ */}
-      <section className="relative px-5 sm:px-8 py-20 sm:py-28 bg-level-0">
+      <section className="relative px-5 sm:px-8 py-24 sm:py-32 bg-[#060910] overflow-hidden">
         <div className="glow-divider absolute top-0 left-0 right-0" />
 
-        {/* Ambient amber glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full blur-[180px] opacity-[0.025] pointer-events-none"
-          style={{ backgroundColor: '#FBBF24' }} />
+        {/* Cinematic ambient background */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full blur-[200px] opacity-[0.03]"
+            style={{ background: 'radial-gradient(circle, #22D3EE, #818CF8)' }} />
+          <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        </div>
 
-        <div className="max-w-6xl mx-auto">
-
-          {/* Header */}
-          <div className="text-center mb-12 sm:mb-16">
-            <div data-animate="fade-up" className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-xs font-mono font-bold mb-6 border"
-              style={{ color: '#F59E0B', borderColor: 'rgba(245,158,11,0.2)', backgroundColor: 'rgba(245,158,11,0.05)' }}>
-              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#F59E0B' }} />
-              Honorable Memento
+        <div className="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12 lg:gap-20">
+          
+          {/* Left: Typography & Story */}
+          <div className="flex-1 text-center md:text-left">
+            <div data-animate="fade-up" className="inline-flex items-center gap-3 mb-6">
+              <div className="h-px w-8 bg-gradient-to-r from-cyan-500/50 to-transparent hidden md:block" />
+              <p className="text-[10px] sm:text-xs font-bold font-mono uppercase tracking-[0.3em] text-cyan-400">
+                {'// the_next_chapter'}
+              </p>
             </div>
-            <h2 data-animate="fade-up" data-delay="80"
-              className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-offwhite mb-4 leading-tight">
-              The minds that <span style={{ color: '#F59E0B' }}>guide</span> us
+            
+            <h2 data-animate="fade-up" data-delay="100" className="text-4xl md:text-5xl lg:text-6xl font-black font-display tracking-tight text-white mb-6 leading-[1.1]">
+              Think you belong<br />on this <span className="grad-text">page?</span>
             </h2>
-            <p data-animate="fade-up" data-delay="160"
-              className="text-sm sm:text-base text-muted max-w-md mx-auto leading-relaxed">
-              Faculty coordinators and department heads who shape the direction of Aignite.
+            
+            <p data-animate="fade-up" data-delay="200" className="text-base md:text-lg text-slate-400 leading-relaxed font-sans mb-10 max-w-lg mx-auto md:mx-0">
+              We are constantly looking for curious minds, restless builders, and passionate designers. If you want to stop attending workshops and start organizing them, your seat is empty.
             </p>
+
+            <div data-animate="fade-up" data-delay="300" className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+              <a href="https://forms.google.com" target="_blank" rel="noreferrer"
+                className="group relative flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-bold text-sm text-white overflow-hidden bg-[#0a0e17] border border-white/10 hover:border-cyan-500/50 transition-all duration-300 w-full sm:w-auto">
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="relative z-10">Apply for Core Team</span>
+                <Sparkles size={16} className="relative z-10 text-cyan-400 group-hover:scale-110 transition-transform duration-300" />
+              </a>
+            </div>
           </div>
 
-          {/* Faculty cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 max-w-4xl mx-auto gap-4 sm:gap-5">
-            {FACULTY.map((f, i) => (
-              <div key={i} data-animate="fade-up" data-delay={i * 120}
-                className="relative overflow-hidden rounded-2xl sm:rounded-3xl group cursor-default transition-all duration-500 hover:-translate-y-2"
-                style={{
-                  background: 'linear-gradient(145deg, #111a2e, #0d1526)',
-                  border: '1px solid rgba(245,158,11,0.15)',
-                  boxShadow: '0 0 0 0 rgba(245,158,11,0)',
-                }}>
-
-                {/* Top amber gradient bar */}
-                <div className="h-[3px] w-full" style={{ background: 'linear-gradient(90deg, #F59E0B, #FCD34D, #F59E0B)' }} />
-
-                {/* Hover ambient glow */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                  style={{ background: 'radial-gradient(circle at 50% 0%, rgba(245,158,11,0.06), transparent 70%)' }} />
-
-                {/* Large watermark initials */}
-                <div className="absolute top-0 right-3 font-black leading-none select-none pointer-events-none opacity-[0.035] text-amber-400"
-                  style={{ fontSize: '7rem', fontFamily: '"Arial Black", Arial, sans-serif', lineHeight: 1 }}>
-                  {f.code}
-                </div>
-
-                <div className="relative z-10 p-6 sm:p-8 flex flex-col min-h-[220px] justify-between">
-                  <div>
-                    {/* Role badge */}
-                    <div className="inline-flex items-center gap-1.5 text-[9px] font-black font-mono tracking-[0.2em] uppercase px-2.5 py-1 rounded-md mb-5"
-                      style={{ color: '#F59E0B', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.18)' }}>
-                      {f.title}
-                    </div>
-
-                    {/* Name */}
-                    <h3 className="text-xl sm:text-2xl font-black font-display text-offwhite uppercase tracking-tight mb-1 leading-tight">
-                      {f.name}
-                    </h3>
-                    <div className="text-[10px] font-mono text-muted uppercase tracking-widest mb-5">{f.role}</div>
-                  </div>
-
-                  {/* Quote block */}
-                  <blockquote className="relative pl-4 border-l-2 border-amber-500/30">
-                    <div className="absolute -top-1 -left-1.5 text-amber-400/40 font-serif text-2xl leading-none select-none">"</div>
-                    <p className="text-xs sm:text-sm text-muted italic leading-relaxed line-clamp-3">
-                      {f.tagline}
-                    </p>
-                  </blockquote>
-                </div>
-
-                {/* Bottom right corner glow */}
-                <div className="absolute bottom-0 right-0 w-20 h-20 rounded-tl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                  style={{ background: 'radial-gradient(circle at 100% 100%, rgba(245,158,11,0.12), transparent)' }} />
+          {/* Right: Visual Storytelling Grid */}
+          <div className="flex-1 relative w-full" data-animate="fade-left" data-delay="300">
+            <div className="relative w-full aspect-square max-w-[400px] mx-auto">
+              
+              {/* Floating glass panels */}
+              <div className="absolute top-[10%] right-[10%] w-[60%] aspect-[4/3] rounded-2xl border border-white/10 bg-[#0a0e17]/80 backdrop-blur-xl overflow-hidden shadow-2xl z-20 animate-float" style={{ animationDelay: '0s' }}>
+                <img src="https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_500/v1779473312/IMG_7193_p5zhmg.jpg" alt="Team collaborating" className="w-full h-full object-cover opacity-60 mix-blend-luminosity" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e17] via-transparent to-transparent" />
+                <div className="absolute bottom-3 left-4 text-[10px] font-mono text-cyan-400 uppercase tracking-widest">Late Night Builds</div>
               </div>
-            ))}
+              
+              <div className="absolute bottom-[10%] left-[5%] w-[55%] aspect-square rounded-2xl border border-white/10 bg-[#0a0e17]/80 backdrop-blur-xl overflow-hidden shadow-2xl z-30 animate-float" style={{ animationDelay: '1.5s' }}>
+                <img src="https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_500/v1779466919/inaugral-1_xkrt47.png" alt="Team celebrating" className="w-full h-full object-cover opacity-60 mix-blend-luminosity" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e17] via-transparent to-transparent" />
+                <div className="absolute bottom-3 left-4 text-[10px] font-mono text-indigo-400 uppercase tracking-widest">Community Impact</div>
+              </div>
+
+              {/* Decorative nodes */}
+              <div className="absolute top-[45%] left-[60%] w-px h-24 bg-gradient-to-b from-cyan-500/50 to-transparent -rotate-45 z-10" />
+              <div className="absolute top-[45%] left-[60%] w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee] z-10" />
+            </div>
           </div>
+          
         </div>
       </section>
 

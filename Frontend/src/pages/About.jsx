@@ -3,9 +3,7 @@ import { Brain, Rocket, Target, Sparkles, Users, Trophy, Code, Zap, Star, Globe 
 import useScrollAnimate from '../hooks/useScrollAnimate';
 
 /* ─────────────────────────────────────────────────────────
-   EVENTS — each has up to 5 photo slots.
-   Drop real images into /public/events/ and update `photos`.
-   Any null slot renders a branded placeholder gradient.
+   ORIGINAL DATA PRESERVED
 ───────────────────────────────────────────────────────── */
 const EVENTS = [
   {
@@ -17,10 +15,8 @@ const EVENTS = [
     title: 'Club Founded & Inaugural',
     desc: 'The official launch of Aignite at Bharati Vidyapeeth — students, faculty, and leadership came together to kick-start a community dedicated to AI and technology.',
     color: '#3B82F6',
-    grad: 'linear-gradient(135deg, #1e3a5f, #0d1829)',
     icon: Star,
     tags: ['First ever event', 'Official launch', 'Cross-dept members'],
-    // Add real paths like '/events/inaugural-1.jpg' — null = placeholder
     photos: [
       'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779466919/inaugral-1_xkrt47.png',
       'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779466919/inaugral-2_bvbhqt.png',
@@ -39,7 +35,6 @@ const EVENTS = [
     title: 'Hands-on ML Workshop',
     desc: 'An intensive session on Machine Learning fundamentals — members wrote real Python code, preprocessed data, and trained their first ML models from scratch.',
     color: '#22D3EE',
-    grad: 'linear-gradient(135deg, #0e3040, #0d1829)',
     icon: Brain,
     tags: ['Python & scikit-learn', 'Hands-on coding', 'ML fundamentals'],
     photos: [
@@ -60,7 +55,6 @@ const EVENTS = [
     title: 'WebCraft: Web from Scratch',
     desc: 'An expert speaker session by Prof. Snehal Mumbaikar introducing HTML, CSS, and JavaScript. Students gained a hands-on understanding of site structure, styling, and interactivity, building their own projects from scratch.',
     color: '#F472B6',
-    grad: 'linear-gradient(135deg, #4a0e2b, #0d1829)',
     icon: Globe,
     tags: ['HTML, CSS & JS', 'Speaker Session', 'Prof. Snehal M.'],
     photos: [
@@ -81,7 +75,6 @@ const EVENTS = [
     title: 'Practical Linux & OS',
     desc: 'An expert-led session by Prof. Shubham Nerkar introducing Linux fundamentals and Operating System concepts. Students explored command-line tools, file and directory management, and practical shell automation.',
     color: '#818CF8',
-    grad: 'linear-gradient(135deg, #1e1b4b, #0d1829)',
     icon: Code,
     tags: ['CLI Commands', 'OS Basics', 'Prof. Shubham N.'],
     photos: [null, null, null, null, null],
@@ -111,16 +104,7 @@ const PILLARS = [
   },
 ];
 
-const REASONS = [
-  { icon: Code, label: 'Hands-On Workshops', desc: 'Build real things, not just slides.', color: '#3B82F6' },
-  { icon: Trophy, label: 'Hackathon Access', desc: 'Compete, prototype, and win.', color: '#22D3EE' },
-  { icon: Users, label: 'Industry Mentors', desc: 'Learn from people already in the field.', color: '#818CF8' },
-  { icon: Rocket, label: 'Build Real Projects', desc: 'Ship things with your name on them.', color: '#34D399' },
-  { icon: Target, label: 'Certificates', desc: 'Recognised for what you built, not attended.', color: '#F472B6' },
-  { icon: Globe, label: 'Speaker Sessions', desc: 'Perspectives from people doing the work.', color: '#FBBF24' },
-  { icon: Zap, label: 'Tech Community', desc: 'Find your crew, build your network.', color: '#A78BFA' },
-  { icon: Sparkles, label: 'Innovation Culture', desc: 'An environment that rewards curiosity.', color: '#60A5FA' },
-];
+
 
 /* ─── Animated counter ─── */
 function Counter({ target, suffix }) {
@@ -148,389 +132,287 @@ function Counter({ target, suffix }) {
   return <span ref={ref}>{count}{suffix}</span>;
 }
 
-/* ─── Photo slot — shared between mobile & desktop ─── */
+/* ─── Photo slot ─── */
 function PhotoSlot({ src, bg, color, size = 'md', className = '' }) {
   const sizeMap = { lg: 28, md: 20, sm: 16 };
   const iconSize = sizeMap[size] || 20;
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <div className={`relative overflow-hidden group/slot ${className}`} style={{ background: bg }}>
-      {/* texture: dot grid */}
-      <div className="absolute inset-0 opacity-[0.08]"
-        style={{
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px)',
-          backgroundSize: '14px 14px',
-        }} />
-      {/* diagonal shimmer */}
-      <div className="absolute inset-0 opacity-[0.07]"
-        style={{ background: `linear-gradient(135deg, ${color} 0%, transparent 50%, ${color} 100%)` }} />
-      {/* corner color accent */}
-      <div className="absolute top-0 left-0 w-12 h-12 opacity-20 rounded-br-3xl"
-        style={{ background: `radial-gradient(circle at 0% 0%, ${color}, transparent)` }} />
+    <div className={`relative overflow-hidden group/slot rounded-xl sm:rounded-2xl border border-white/5 shadow-2xl transition-transform duration-700 hover:scale-[1.02] hover:z-10 ${className}`} style={{ background: bg }}>
+      <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px)', backgroundSize: '14px 14px' }} />
+      <div className="absolute inset-0 opacity-[0.1]" style={{ background: `linear-gradient(135deg, ${color} 0%, transparent 50%, ${color} 100%)` }} />
+      <div className="absolute inset-0 bg-black/20 group-hover/slot:bg-transparent transition-colors duration-500 z-10" />
 
       {src ? (
-        <img
-          src={src}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          onLoad={() => setLoaded(true)}
-          className={`absolute inset-0 w-full h-full object-cover transition-all duration-[800ms] group-hover/slot:scale-105 ${loaded ? 'opacity-100' : 'opacity-0'}`}
-          style={{ willChange: 'transform, opacity', transform: 'translate3d(0,0,0)' }}
-        />
+        <img src={src} alt="" loading="lazy" onLoad={() => setLoaded(true)}
+          className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 group-hover/slot:scale-110 ${loaded ? 'opacity-100' : 'opacity-0'}`} />
       ) : (
-        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center gap-1.5">
-          {/* camera icon */}
-          <div className="rounded-lg p-2 opacity-40" style={{ background: `${color}20`, border: `1px solid ${color}30` }}>
+        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center gap-2">
+          <div className="rounded-xl p-3 opacity-50" style={{ background: `${color}20`, border: `1px solid ${color}30` }}>
             <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
               <circle cx="12" cy="13" r="4" />
             </svg>
           </div>
-          {size !== 'sm' && (
-            <span className="text-[8px] font-mono uppercase tracking-[0.2em] opacity-30" style={{ color }}>
-              photo
-            </span>
-          )}
+          {size !== 'sm' && <span className="text-[9px] font-mono uppercase tracking-[0.3em] opacity-40 font-bold" style={{ color }}>Coming Soon</span>}
         </div>
       )}
     </div>
   );
 }
 
-/* ─── Photo cluster ─── */
+/* ─── Storytelling Editorial Photo Cluster ─── */
 function PhotoCluster({ event }) {
-  const { photos, placeholders, color, num, title } = event;
+  const { photos, placeholders, color, num } = event;
 
   return (
-    <div className="w-full">
+    <div className="w-full relative group">
+      {/* Cinematic back glow */}
+      <div className="absolute inset-0 blur-[60px] opacity-10 group-hover:opacity-30 transition-opacity duration-1000 rounded-[3rem]" style={{ backgroundColor: color }} />
 
-      {/* ── MOBILE (< sm): 3-tile asymmetric layout ──
-          ┌──────────┬────────┐
-          │          │  [1]   │
-          │   [0]    ├────────┤
-          │  (tall)  │  [2]   │
-          └──────────┴────────┘
-      */}
-      <div className="sm:hidden grid gap-2" style={{ gridTemplateColumns: '1.4fr 1fr', gridTemplateRows: '120px 120px' }}>
-        {/* Big left — spans both rows */}
-        <div className="row-span-2 rounded-2xl overflow-hidden relative">
+      {/* MOBILE Layout */}
+      <div className="sm:hidden grid gap-2 relative z-10" style={{ gridTemplateColumns: '1.4fr 1fr', gridTemplateRows: '140px 140px' }}>
+        <div className="row-span-2 relative">
           <PhotoSlot src={photos[0]} bg={placeholders[0]} color={color} size="lg" className="w-full h-full" />
-          {/* Watermark number */}
-          <div className="absolute bottom-2 left-3 text-[40px] font-black leading-none select-none pointer-events-none opacity-[0.07]"
-            style={{ color, fontFamily: '"Arial Black", Arial, sans-serif' }}>
-            {num}
-          </div>
+          <div className="absolute bottom-2 left-3 text-[50px] font-black leading-none select-none pointer-events-none opacity-[0.08]" style={{ color, fontFamily: '"Arial Black", Arial, sans-serif' }}>{num}</div>
         </div>
-        {/* Top right */}
-        <div className="rounded-2xl overflow-hidden">
-          <PhotoSlot src={photos[1]} bg={placeholders[1]} color={color} size="md" className="w-full h-full" />
-        </div>
-        {/* Bottom right */}
-        <div className="rounded-2xl overflow-hidden">
-          <PhotoSlot src={photos[2]} bg={placeholders[2]} color={color} size="md" className="w-full h-full" />
-        </div>
+        <PhotoSlot src={photos[1]} bg={placeholders[1]} color={color} size="md" className="w-full h-full" />
+        <PhotoSlot src={photos[2]} bg={placeholders[2]} color={color} size="md" className="w-full h-full" />
       </div>
 
-      {/* ── DESKTOP (≥ sm): 5-tile mosaic ──
-          ┌──────────┬─────────────┐
-          │  [0]     │     [1]     │   row 1: 180px
-          │  (tall)  ├──────┬──────┤
-          │          │  [2] │  [3] │   row 2: 140px
-          └──────────┴──────┴──────┘
-          + [4] spans part of row2
-      */}
-      <div className="hidden sm:grid gap-2"
-        style={{ gridTemplateColumns: '1fr 1fr 1fr', gridTemplateRows: '185px 145px' }}>
-        {/* Tall left — row-span-2 */}
-        <div className="row-span-2 rounded-2xl overflow-hidden relative">
+      {/* DESKTOP Editorial Layout */}
+      <div className="hidden sm:grid gap-3 relative z-10" style={{ gridTemplateColumns: '1fr 1fr 1fr', gridTemplateRows: '220px 180px' }}>
+        <div className="row-span-2 relative transform transition-transform duration-700 hover:-translate-y-2">
           <PhotoSlot src={photos[0]} bg={placeholders[0]} color={color} size="lg" className="w-full h-full" />
-          <div className="absolute bottom-3 left-4 text-[56px] font-black leading-none select-none pointer-events-none opacity-[0.06]"
-            style={{ color, fontFamily: '"Arial Black", Arial, sans-serif' }}>
-            {num}
-          </div>
+          <div className="absolute bottom-4 left-5 text-[80px] font-black leading-none select-none pointer-events-none opacity-[0.08] z-20 drop-shadow-2xl" style={{ color, fontFamily: '"Arial Black", Arial, sans-serif' }}>{num}</div>
         </div>
-        {/* Top right wide — col-span-2 */}
-        <div className="col-span-2 rounded-2xl overflow-hidden">
+        <div className="col-span-2 transform transition-transform duration-700 hover:-translate-y-2">
           <PhotoSlot src={photos[1]} bg={placeholders[1]} color={color} size="md" className="w-full h-full" />
         </div>
-        {/* Bottom right — 2 equal tiles */}
-        <div className="rounded-2xl overflow-hidden">
+        <div className="transform transition-transform duration-700 hover:-translate-y-2">
           <PhotoSlot src={photos[2]} bg={placeholders[2]} color={color} size="sm" className="w-full h-full" />
         </div>
-        <div className="rounded-2xl overflow-hidden">
+        <div className="transform transition-transform duration-700 hover:-translate-y-2">
           <PhotoSlot src={photos[3]} bg={placeholders[3]} color={color} size="sm" className="w-full h-full" />
         </div>
       </div>
-
-      {/* Photo count chip — shown only when no photos */}
-      {photos.every(p => !p) && (
-        <div className="mt-2.5 flex items-center gap-1.5">
-          <div className="w-1 h-1 rounded-full" style={{ backgroundColor: color }} />
-          <span className="text-[9px] font-mono tracking-[0.2em] uppercase" style={{ color, opacity: 0.4 }}>
-            Photos coming soon
-          </span>
-        </div>
-      )}
     </div>
   );
 }
 
-
-/* ═══════════════════════════════════════════════════════
-   PAGE
-═══════════════════════════════════════════════════════ */
 export default function About() {
   const ref = useScrollAnimate();
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="bg-[#050810] min-h-screen font-sans">
+      
+      <style>{`
+        .clip-diagonal { clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%); }
+        .clip-diagonal-rev { clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 100%); }
+        .glass-panel {
+          background: rgba(10, 14, 23, 0.6);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+      `}</style>
 
       {/* ══════════════════════════════════════════════
-          §1  HERO
+          §1  CINEMATIC HERO & STATS
       ══════════════════════════════════════════════ */}
-      <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-5 sm:px-8 pt-24 pb-16 text-center overflow-hidden bg-level-0">
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-28 pb-32 text-center overflow-hidden clip-diagonal z-10 bg-[#060910]">
+        {/* Deep ambient backgrounds */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 dot-grid opacity-30" />
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[700px] h-[700px] rounded-full blur-[200px] opacity-[0.06]"
-            style={{ background: 'radial-gradient(circle, #00d4ff, #3B82F6)' }} />
-          <div className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full blur-[120px] opacity-[0.04]" style={{ backgroundColor: '#818CF8' }} />
-          <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full blur-[100px] opacity-[0.04]" style={{ backgroundColor: '#F472B6' }} />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:40px_40px]" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[800px] h-[800px] rounded-full blur-[250px] opacity-[0.05]" style={{ background: 'radial-gradient(circle, #22D3EE, #3B82F6)' }} />
+          <div className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full blur-[200px] opacity-[0.04]" style={{ backgroundColor: '#818CF8' }} />
         </div>
 
-        {/* floating micro-orbs */}
-        {[
-          { top: '30%', left: '7%', c: '#22D3EE', d: '0s', s: 8 },
-          { top: '55%', right: '9%', c: '#818CF8', d: '1.2s', s: 6 },
-          { top: '70%', left: '14%', c: '#F472B6', d: '2.4s', s: 5 },
-          { top: '22%', right: '18%', c: '#FBBF24', d: '0.6s', s: 10 },
-        ].map((o, i) => (
-          <div key={i} className="absolute rounded-full animate-float pointer-events-none"
-            style={{
-              top: o.top, left: o.left, right: o.right, width: o.s, height: o.s,
-              backgroundColor: o.c, opacity: 0.5, animationDelay: o.d
-            }} />
-        ))}
-
-        <div className="relative z-10 max-w-4xl mx-auto w-full">
-          <div data-animate="fade-up"
-            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-xs font-mono font-bold mb-8 border border-white/10"
-            style={{ backgroundColor: 'rgba(0,212,255,0.06)', color: '#22D3EE' }}>
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: '#22D3EE', boxShadow: '0 0 10px #22D3EE' }} />
-            Est. 2025 · Bharati Vidyapeeth Deemed University
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: '#22D3EE', boxShadow: '0 0 10px #22D3EE' }} />
+        <div className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center">
+          
+          {/* Badge */}
+          <div data-animate="fade-up" className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full text-xs font-mono font-bold mb-10 border border-cyan-500/20 bg-cyan-500/5 shadow-[0_0_30px_rgba(34,211,238,0.1)]">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_#22D3EE]" />
+            <span className="text-cyan-300 tracking-wider">Est. 2025 · Bharati Vidyapeeth</span>
           </div>
 
-          <h1 data-animate="fade-up" data-delay="100"
-            className="font-black font-display mb-6 leading-[0.95]"
-            style={{
-              fontSize: 'clamp(3rem, 8vw, 6rem)',
-              letterSpacing: '-0.035em',
-              color: '#E5E7EB'
-            }}>
-            We are<br /><span className="grad-text">Aignite.</span>
+          {/* Epic Headline */}
+          <h1 data-animate="fade-up" data-delay="100" className="font-black font-display mb-8 leading-[1.0] tracking-tight text-white drop-shadow-2xl" style={{ fontSize: 'clamp(3.5rem, 9vw, 7rem)' }}>
+            We are<br /><span className="grad-text pr-2">Aignite.</span>
           </h1>
 
-          <p data-animate="fade-up" data-delay="200"
-            className="text-base sm:text-lg max-w-2xl mx-auto leading-relaxed font-sans mb-12"
-            style={{ color: '#6a8090' }}>
-            A student-led AI &amp; technology club built for students who want to
-            <strong style={{ color: '#e8f4f8', fontWeight: 700 }}> create, innovate, and lead.</strong>{' '}
-            More than a club — a community of builders.
+          <p data-animate="fade-up" data-delay="200" className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-sans font-medium text-slate-400 mb-20">
+            A student-led AI & technology club built for students who want to <strong className="text-white">create, innovate, and lead.</strong> More than a club — a community of builders.
           </p>
 
-          <div data-animate="fade-up" data-delay="300"
-            className="w-full max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden"
-            style={{ border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.03)' }}>
+          {/* Storytelling Stats Grid */}
+          <div data-animate="fade-up" data-delay="300" className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 relative">
+            {/* Connecting line */}
+            <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent hidden md:block -translate-y-1/2 z-0" />
+            
             {STATS.map((s, i) => (
-              <div key={i} className="flex flex-col items-center justify-center py-5 px-4"
-                style={{ background: 'rgba(0,0,0,0.2)', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.05)' : '' }}>
-                <div className="text-2xl sm:text-3xl font-black font-display text-offwhite mb-1">
+              <div key={i} className="glass-panel rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-center relative z-10 group hover:-translate-y-2 transition-transform duration-500">
+                <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
+                <div className="text-4xl sm:text-5xl font-black font-display text-white mb-3 tracking-tight drop-shadow-lg">
                   <Counter target={s.value} suffix={s.suffix} />
                 </div>
-                <div className="text-[10px] font-mono text-muted uppercase tracking-wider">{s.label}</div>
+                <div className="text-[10px] sm:text-xs font-mono text-cyan-400 uppercase tracking-[0.2em] font-bold text-center">
+                  {s.label}
+                </div>
               </div>
             ))}
           </div>
+
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════
-          §2  PILLARS
+          §2  THE PILLARS (Ultra-Premium Editorial Layout)
       ══════════════════════════════════════════════ */}
-      <section className="relative px-5 sm:px-8 py-20 sm:py-28 bg-level-1 overflow-hidden">
-        <div className="glow-divider absolute top-0 left-0 right-0" />
-        <div className="max-w-5xl mx-auto mb-12 sm:mb-16">
-          <div data-animate="fade-up" className="flex items-center gap-3 mb-4">
-            <div className="w-5 h-px" style={{ backgroundColor: '#00d4ff' }} />
-            <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-muted">Our foundation</span>
+      <section className="relative pt-32 pb-40 bg-[#050810] z-20">
+        <div className="max-w-7xl mx-auto px-6 mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div data-animate="fade-up">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-px bg-cyan-500" />
+              <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-cyan-400 font-bold">
+                Our Foundation
+              </span>
+            </div>
+            <h2 className="text-5xl md:text-7xl font-black font-display tracking-tight text-white leading-none">
+              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-500">Core.</span>
+            </h2>
           </div>
-          <h2 data-animate="fade-up" data-delay="80"
-            className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-offwhite leading-tight">
-            Built on three <span className="grad-text">pillars</span>
-          </h2>
+          <div data-animate="fade-up" data-delay="100" className="md:text-right max-w-sm">
+            <p className="text-lg text-slate-400 font-sans leading-relaxed">
+              We stripped away the noise to focus on three principles that dictate how we operate, build, and grow.
+            </p>
+          </div>
         </div>
-        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+
+        {/* Minimalist Brutalist Grid */}
+        <div className="max-w-7xl mx-auto border-t border-b border-white/10 grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-white/10 bg-[#050810]">
           {PILLARS.map((p, i) => (
-            <div key={i} data-animate="fade-up" data-delay={i * 100}
-              className="relative rounded-2xl sm:rounded-3xl p-6 sm:p-8 overflow-hidden group cursor-default"
-              style={{ background: 'linear-gradient(145deg, #0d1829, #090f1d)', border: `1px solid ${p.color}20` }}>
-              <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full blur-[60px] opacity-0 group-hover:opacity-15 transition-opacity duration-700" style={{ backgroundColor: p.color }} />
-              <div className="flex items-start justify-between mb-6">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: `${p.color}12`, border: `1px solid ${p.color}30` }}>
-                  <p.icon size={22} style={{ color: p.color }} />
-                </div>
-                <span className="text-[9px] font-black font-mono tracking-[0.2em] uppercase px-2.5 py-1 rounded-md"
-                  style={{ color: p.color, background: `${p.color}12`, border: `1px solid ${p.color}20` }}>{p.tag}</span>
+            <div key={i} data-animate="fade-up" data-delay={i * 100} className="relative p-10 md:p-14 lg:p-16 flex flex-col group overflow-hidden transition-colors duration-700 hover:bg-white/[0.02]">
+              
+              {/* Massive background number */}
+              <div className="absolute -top-10 -right-6 text-[12rem] font-black font-display leading-none select-none pointer-events-none transition-all duration-700 opacity-[0.02] group-hover:opacity-[0.05] group-hover:-translate-y-4" style={{ color: p.color }}>
+                0{i + 1}
               </div>
-              <div className="text-[10px] font-mono tracking-[0.15em] uppercase mb-2" style={{ color: p.color }}>{p.subtitle}</div>
-              <h3 className="text-2xl font-black font-display text-offwhite mb-3">{p.title}</h3>
-              <p className="text-sm leading-relaxed text-muted">{p.desc}</p>
-              <div className="absolute bottom-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: `linear-gradient(90deg, transparent, ${p.color}60, transparent)` }} />
+
+              {/* Top Accent Line */}
+              <div className="absolute top-0 left-0 w-0 h-1 transition-all duration-700 group-hover:w-full" style={{ backgroundColor: p.color }} />
+
+              <div className="relative z-10 flex flex-col h-full">
+                <div className="flex items-center gap-4 mb-10">
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color, boxShadow: `0 0 10px ${p.color}` }} />
+                  <span className="text-xs font-mono uppercase tracking-[0.2em] font-bold text-slate-300">
+                    {p.title}
+                  </span>
+                </div>
+                
+                <h3 className="text-3xl font-black font-display text-white mb-6 leading-tight">
+                  {p.subtitle}.
+                </h3>
+                
+                <p className="text-base text-slate-400 font-sans leading-relaxed mt-auto">
+                  {p.desc}
+                </p>
+              </div>
+
             </div>
           ))}
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════
-          §3  EVENTS — Photo cluster per event
+          §3  EVENTS (Cinematic Story Timeline)
       ══════════════════════════════════════════════ */}
-      <section className="relative px-5 sm:px-8 py-20 sm:py-32 bg-level-0 overflow-hidden">
-        <div className="glow-divider absolute top-0 left-0 right-0" />
-
-        {/* ambient orbs */}
+      <section className="relative px-6 py-32 bg-[#060910] clip-diagonal-rev z-30">
+        
+        {/* Ambient background */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.025]" style={{ backgroundColor: '#3B82F6' }} />
-          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.025]" style={{ backgroundColor: '#818CF8' }} />
+          <div className="absolute top-[10%] left-[5%] w-[600px] h-[600px] rounded-full blur-[200px] opacity-[0.03]" style={{ backgroundColor: '#3B82F6' }} />
+          <div className="absolute bottom-[10%] right-[5%] w-[500px] h-[500px] rounded-full blur-[180px] opacity-[0.03]" style={{ backgroundColor: '#F472B6' }} />
         </div>
 
-        <div className="max-w-5xl mx-auto relative">
-          {/* Header */}
-          <div className="mb-14 sm:mb-20">
-            <div data-animate="fade-up" className="flex items-center gap-3 mb-4">
-              <div className="w-5 h-px" style={{ backgroundColor: '#00d4ff' }} />
-              <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-muted">Season 2025–26</span>
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-              <h2 data-animate="fade-up" data-delay="80"
-                className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-offwhite leading-tight">
-                What we've <span className="grad-text">done</span>
+        <div className="max-w-6xl mx-auto relative pt-10">
+          
+          <div className="mb-24 md:mb-32 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div>
+              <div data-animate="fade-up" className="inline-flex items-center gap-3 mb-6">
+                <div className="h-px w-8 bg-gradient-to-r from-cyan-500/50 to-transparent hidden md:block" />
+                <p className="text-xs font-bold font-mono uppercase tracking-[0.3em] text-cyan-400">{'// season_2025_26'}</p>
+              </div>
+              <h2 data-animate="fade-up" data-delay="100" className="text-4xl md:text-5xl lg:text-7xl font-black font-display tracking-tight text-white leading-tight">
+                What we've <span className="grad-text">done.</span>
               </h2>
-              <p data-animate="fade-up" data-delay="120"
-                className="text-sm text-muted max-w-xs leading-relaxed sm:text-right">
-                Real events. Real students. Real skills built from scratch.
-              </p>
             </div>
+            <p data-animate="fade-up" data-delay="200" className="text-lg text-slate-400 max-w-sm leading-relaxed md:text-right font-sans">
+              Real events. Real students. Real skills built from scratch.
+            </p>
           </div>
 
-          {/* Event blocks */}
-          <div className="flex flex-col gap-20 sm:gap-28">
+          <div className="flex flex-col gap-32 md:gap-48">
             {EVENTS.map((ev, i) => {
               const isEven = i % 2 === 0;
               return (
-                <div key={ev.id} data-animate="fade-up" data-delay={i * 80}
-                  className={`flex flex-col gap-8 lg:gap-12 ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-start`}>
-
-                  {/* ── Photo cluster ── */}
-                  <div className="w-full lg:w-[55%] flex-shrink-0">
+                <div key={ev.id} data-animate="fade-up" data-delay={i * 100} className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12 lg:gap-24 relative`}>
+                  
+                  {/* Visual Cluster */}
+                  <div className="w-full lg:w-[55%] flex-shrink-0 relative z-10">
                     <PhotoCluster event={ev} />
                   </div>
 
-                  {/* ── Info panel ── */}
-                  <div className="w-full lg:flex-1 flex flex-col justify-center">
-                    {/* Number + date */}
-                    <div className="flex items-center gap-3 mb-5">
-                      <div className="w-10 h-10 rounded-xl flex flex-col items-center justify-center flex-shrink-0"
-                        style={{ background: `${ev.color}15`, border: `1.5px solid ${ev.color}35` }}>
-                        <span className="text-[10px] font-black font-mono leading-none" style={{ color: ev.color }}>{ev.num}</span>
+                  {/* Story Text */}
+                  <div className="w-full lg:flex-1 flex flex-col justify-center relative z-20">
+                    
+                    <div className="flex items-center gap-4 mb-8">
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style={{ background: `${ev.color}15`, border: `2px solid ${ev.color}40` }}>
+                        <span className="text-2xl font-black font-display leading-none" style={{ color: ev.color }}>{ev.num}</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-black font-mono tracking-[0.2em] uppercase px-2.5 py-1 rounded-md"
-                          style={{ color: ev.color, background: `${ev.color}12`, border: `1px solid ${ev.color}25` }}>{ev.badge}</span>
-                        <span className="text-[10px] font-mono text-muted">{ev.month} {ev.year}</span>
+                      <div>
+                        <span className="inline-block text-[10px] font-black font-mono tracking-[0.2em] uppercase px-3 py-1.5 rounded-md mb-1" style={{ color: ev.color, background: `${ev.color}15`, border: `1px solid ${ev.color}30` }}>
+                          {ev.badge}
+                        </span>
+                        <div className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest">{ev.month} {ev.year}</div>
                       </div>
                     </div>
 
-                    {/* Title */}
-                    <h3 className="text-2xl sm:text-3xl font-black font-display text-offwhite mb-4 leading-tight">{ev.title}</h3>
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-black font-display text-white mb-6 leading-tight drop-shadow-md">
+                      {ev.title}
+                    </h3>
 
-                    {/* Accent line */}
-                    <div className="w-10 h-0.5 mb-5 rounded-full" style={{ backgroundColor: ev.color }} />
+                    <div className="w-16 h-1.5 rounded-full mb-8 shadow-[0_0_15px_currentColor]" style={{ backgroundColor: ev.color, color: ev.color }} />
 
-                    {/* Desc */}
-                    <p className="text-sm sm:text-base leading-relaxed text-muted mb-6">{ev.desc}</p>
+                    <p className="text-lg md:text-xl leading-relaxed text-slate-400 mb-10 font-sans">
+                      {ev.desc}
+                    </p>
 
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-3">
                       {ev.tags.map((t, j) => (
-                        <span key={j} className="text-[10px] sm:text-xs font-mono px-3 py-1.5 rounded-full"
-                          style={{ color: ev.color, background: `${ev.color}10`, border: `1px solid ${ev.color}25` }}>{t}</span>
+                        <span key={j} className="text-xs font-mono px-4 py-2 rounded-lg font-bold shadow-sm" style={{ color: ev.color, background: `${ev.color}10`, border: `1px solid ${ev.color}25` }}>
+                          {t}
+                        </span>
                       ))}
                     </div>
                   </div>
+                  
                 </div>
               );
             })}
           </div>
 
-          {/* Footer note */}
-          <div data-animate="fade-up" className="mt-16 sm:mt-24 text-center">
-            <p className="text-xs font-mono text-muted">
-              // More events, hackathons &amp; sessions coming in 2026.
+          <div data-animate="fade-up" className="mt-32 text-center pb-10">
+            <p className="text-sm font-mono font-bold text-slate-500 tracking-[0.1em]">
+              // More events, hackathons & sessions coming in 2026.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════
-          §4  WHY JOIN
-      ══════════════════════════════════════════════ */}
-      <section className="relative py-20 sm:py-28 bg-level-1 overflow-hidden">
-        <div className="glow-divider absolute top-0 left-0 right-0" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full blur-[150px] opacity-[0.025] pointer-events-none"
-          style={{ backgroundColor: '#22D3EE' }} />
 
-        {/* Header */}
-        <div className="px-5 sm:px-8 max-w-5xl mx-auto mb-10 sm:mb-14">
-          <div data-animate="fade-up" className="flex items-center gap-3 mb-4">
-            <div className="w-5 h-px" style={{ backgroundColor: '#00d4ff' }} />
-            <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-muted">Membership perks</span>
-          </div>
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-            <h2 data-animate="fade-up" data-delay="80"
-              className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-offwhite leading-tight">
-              Why <span className="grad-text">Join Us?</span>
-            </h2>
-            <p data-animate="fade-up" data-delay="120" className="text-sm text-muted sm:text-right max-w-xs">
-              Eight reasons we're built differently from a typical college club.
-            </p>
-          </div>
-        </div>
 
-        {/* Unified grid — 2 col on mobile, 4 col on desktop. No scroll. */}
-        <div className="px-5 sm:px-8 max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {REASONS.map((r, i) => (
-            <div key={i} data-animate="fade-up" data-delay={i * 50}
-              className="relative rounded-2xl p-4 sm:p-5 overflow-hidden group cursor-default transition-all duration-300 hover:-translate-y-1.5"
-              style={{ background: 'linear-gradient(145deg, #0d1829, #090f1d)', border: `1px solid ${r.color}18` }}>
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
-                style={{ background: `radial-gradient(circle at 50% 120%, ${r.color}18, transparent 65%)` }} />
-              <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: `linear-gradient(90deg, transparent, ${r.color}90, transparent)` }} />
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center mb-3 sm:mb-4 transition-transform duration-300 group-hover:scale-110"
-                style={{ background: `${r.color}12`, border: `1px solid ${r.color}28` }}>
-                <r.icon size={18} style={{ color: r.color }} />
-              </div>
-              <div className="text-xs sm:text-sm font-bold text-offwhite font-display mb-1 leading-snug">{r.label}</div>
-              <div className="text-[10px] sm:text-[11px] text-muted leading-relaxed">{r.desc}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <style>{`@keyframes dash { to { stroke-dashoffset: -100; } }`}</style>
     </div>
   );
 }
