@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import anime from 'animejs';
 
 export default function NeuralLoader({ onFinish }) {
   const canvasRef = useRef(null);
   const overlayRef = useRef(null);
   const [showText, setShowText] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -39,43 +39,104 @@ export default function NeuralLoader({ onFinish }) {
     };
     draw();
 
-    const timer = setTimeout(() => {
-      setShowText(true);
-      requestAnimationFrame(() => {
-        // Uses animejs imported as ES module — NOT window.anime (no CDN)
-        const tl = anime.timeline({ easing: 'easeOutExpo' });
-        tl.add({ targets: '.ldr-letter', translateY: [80,0], opacity: [0,1], duration: 900, delay: anime.stagger(60) })
-          .add({ targets: '.ldr-tagline', translateY: [20,0], opacity: [0,1], duration: 700 }, '-=400')
-          .add({ targets: '.ldr-line-left', scaleX: [0,1], opacity: [0,1], duration: 800, easing: 'easeInOutQuart' }, '-=600')
-          .add({ targets: '.ldr-line-right', scaleX: [0,1], opacity: [0,1], duration: 800, easing: 'easeInOutQuart' }, '-=800')
-          .add({ targets: '.ldr-dot', scale: [0,1], opacity: [0,1], duration: 400 }, '-=400')
-          .add({ targets: '.ldr-bar-fill', scaleX: [0,1], duration: 1400, easing: 'easeInOutQuart' }, '-=200')
-          .add({ targets: overlayRef.current, opacity: 0, duration: 800, easing: 'easeInCubic', complete: () => onFinish() }, '+=400');
-      });
-    }, 1800);
+    // Show text after 1.8s, then fade out after another 2.5s — pure CSS animations, no animejs
+    const t1 = setTimeout(() => setShowText(true), 1800);
+    const t2 = setTimeout(() => setFadeOut(true), 4000);
+    const t3 = setTimeout(() => onFinish(), 4800);
 
-    return () => { clearTimeout(timer); cancelAnimationFrame(animId); window.removeEventListener('resize', resize); };
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); cancelAnimationFrame(animId); window.removeEventListener('resize', resize); };
   }, [onFinish]);
 
   return (
-    <div ref={overlayRef} className="fixed inset-0 z-[100] flex items-center justify-center" style={{ backgroundColor: '#0B0F1A' }}>
+    <div
+      ref={overlayRef}
+      className="fixed inset-0 z-[100] flex items-center justify-center"
+      style={{
+        backgroundColor: '#0B0F1A',
+        transition: 'opacity 0.8s cubic-bezier(0.4,0,0.2,1)',
+        opacity: fadeOut ? 0 : 1,
+      }}
+    >
       <canvas ref={canvasRef} className="absolute inset-0" />
+
+      <style>{`
+        @keyframes ldrLetterIn {
+          from { transform: translateY(80px); opacity: 0; }
+          to   { transform: translateY(0);   opacity: 1; }
+        }
+        @keyframes ldrFadeUp {
+          from { transform: translateY(20px); opacity: 0; }
+          to   { transform: translateY(0);    opacity: 1; }
+        }
+        @keyframes ldrScaleX {
+          from { transform: scaleX(0); opacity: 0; }
+          to   { transform: scaleX(1); opacity: 1; }
+        }
+        @keyframes ldrDot {
+          from { transform: scale(0); opacity: 0; }
+          to   { transform: scale(1); opacity: 1; }
+        }
+        @keyframes ldrBarFill {
+          from { transform: scaleX(0); }
+          to   { transform: scaleX(1); }
+        }
+      `}</style>
+
       {showText && (
         <div className="relative z-10 flex flex-col items-center">
           <div className="flex items-center gap-0 overflow-hidden mb-4">
             {'AIGNITE'.split('').map((l, i) => (
-              <span key={i} className="ldr-letter inline-block text-5xl md:text-7xl font-black font-display tracking-[0.2em] opacity-0"
-                style={{ color: '#E5E7EB', textShadow: '0 0 40px rgba(59,130,246,0.5), 0 0 80px rgba(34,211,238,0.2)' }}>{l}</span>
+              <span
+                key={i}
+                className="inline-block text-5xl md:text-7xl font-black font-display tracking-[0.2em]"
+                style={{
+                  color: '#E5E7EB',
+                  textShadow: '0 0 40px rgba(59,130,246,0.5), 0 0 80px rgba(34,211,238,0.2)',
+                  animation: `ldrLetterIn 0.9s cubic-bezier(0.16,1,0.3,1) both`,
+                  animationDelay: `${i * 60}ms`,
+                }}
+              >{l}</span>
             ))}
           </div>
           <div className="flex items-center gap-3 mb-4">
-            <div className="ldr-line-left w-16 h-[1px] origin-right opacity-0" style={{ background: 'linear-gradient(to right, transparent, rgba(59,130,246,0.6))' }}></div>
-            <div className="ldr-dot w-2 h-2 rounded-full opacity-0" style={{ backgroundColor: '#3B82F6', boxShadow: '0 0 12px rgba(59,130,246,0.8)' }}></div>
-            <div className="ldr-line-right w-16 h-[1px] origin-left opacity-0" style={{ background: 'linear-gradient(to left, transparent, rgba(59,130,246,0.6))' }}></div>
+            <div
+              className="w-16 h-[1px] origin-right"
+              style={{
+                background: 'linear-gradient(to right, transparent, rgba(59,130,246,0.6))',
+                animation: 'ldrScaleX 0.8s cubic-bezier(0.76,0,0.24,1) 0.5s both',
+              }}
+            />
+            <div
+              className="w-2 h-2 rounded-full"
+              style={{
+                backgroundColor: '#3B82F6',
+                boxShadow: '0 0 12px rgba(59,130,246,0.8)',
+                animation: 'ldrDot 0.4s cubic-bezier(0.16,1,0.3,1) 0.9s both',
+              }}
+            />
+            <div
+              className="w-16 h-[1px] origin-left"
+              style={{
+                background: 'linear-gradient(to left, transparent, rgba(59,130,246,0.6))',
+                animation: 'ldrScaleX 0.8s cubic-bezier(0.76,0,0.24,1) 0.5s both',
+              }}
+            />
           </div>
-          <p className="ldr-tagline text-[10px] md:text-xs font-bold tracking-[0.4em] uppercase opacity-0" style={{ color: 'rgba(96,165,250,0.5)' }}>AI &amp; Technology Club</p>
+          <p
+            className="text-[10px] md:text-xs font-bold tracking-[0.4em] uppercase"
+            style={{
+              color: 'rgba(96,165,250,0.5)',
+              animation: 'ldrFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.8s both',
+            }}
+          >AI &amp; Technology Club</p>
           <div className="mt-8 w-48 h-[3px] rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(59,130,246,0.1)' }}>
-            <div className="ldr-bar-fill h-full w-full origin-left rounded-full" style={{ transform: 'scaleX(0)', background: 'linear-gradient(to right, #0F172A, #3B82F6, #22D3EE)' }}></div>
+            <div
+              className="h-full w-full origin-left rounded-full"
+              style={{
+                background: 'linear-gradient(to right, #0F172A, #3B82F6, #22D3EE)',
+                animation: 'ldrBarFill 1.4s cubic-bezier(0.76,0,0.24,1) 0.6s both',
+              }}
+            />
           </div>
         </div>
       )}
