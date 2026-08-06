@@ -265,6 +265,152 @@ const DeveloperWorkspace = () => {
   );
 };
 
+/* ─── Horizontal Timeline Component ─── */
+const HorizontalTimeline = ({ events }) => {
+  const containerRef = useRef(null);
+  const trackRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current || !trackRef.current) return;
+      const { top, height } = containerRef.current.getBoundingClientRect();
+      const stickyHeight = window.innerHeight;
+      
+      const maxScroll = height - stickyHeight;
+      let progress = (0 - top) / maxScroll;
+      
+      progress = Math.max(0, Math.min(1, progress));
+      
+      const trackWidth = trackRef.current.scrollWidth;
+      const viewportWidth = window.innerWidth;
+      const maxTranslate = trackWidth - viewportWidth;
+      
+      if (maxTranslate > 0) {
+        trackRef.current.style.transform = `translate3d(${-progress * maxTranslate}px, 0, 0)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    handleScroll();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
+
+  return (
+    <section ref={containerRef} style={{ height: `${events.length * 80 + 100}vh` }} className="relative bg-[#060910]">
+      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center border-y border-white/5">
+        
+        {/* Ambient background glow */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-b from-[#080f1d] to-transparent opacity-50" />
+          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px]"
+            style={{ background: 'radial-gradient(circle, rgba(34,211,238,0.04) 0%, transparent 70%)' }} />
+        </div>
+
+        {/* The Horizontal Scrolling Track */}
+        <div ref={trackRef} className="relative flex items-center h-full w-max will-change-transform z-10 px-[5vw] md:px-[10vw]">
+            
+            {/* 1. Intro Panel (Part of the track, scrolls away) */}
+            <div className="w-[85vw] md:w-[60vw] lg:w-[45vw] flex-shrink-0 flex flex-col justify-center pr-12 md:pr-32">
+                <div className="inline-flex items-center gap-3 mb-6">
+                  <div className="h-px w-12 bg-gradient-to-r from-transparent to-cyan-500/50" />
+                  <p className="text-xs font-bold font-mono uppercase tracking-[0.3em] text-cyan-400">{'// our_journey'}</p>
+                </div>
+                <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight text-white drop-shadow-2xl mb-8 leading-[1.1]">
+                  Not just a club.<br /><span className="grad-text">A launchpad.</span>
+                </h2>
+                <p className="text-base md:text-lg text-slate-400 font-sans leading-relaxed mb-10 max-w-md">
+                  Every workshop, every session, every line of code is a step towards building the next generation of tech leaders.
+                </p>
+                
+                <div className="flex items-center gap-4 text-xs font-mono text-slate-500 uppercase tracking-widest">
+                  <span>Scroll to explore</span>
+                  <div className="w-24 h-px bg-white/10 relative overflow-hidden">
+                     <div className="absolute inset-y-0 left-0 bg-cyan-400 w-1/3 animate-pulse" />
+                  </div>
+                  <ArrowRight size={14} className="text-cyan-500" />
+                </div>
+            </div>
+
+            {/* The infinite horizontal line (Starts slightly past the intro) */}
+            <div className="absolute left-[85vw] md:left-[60vw] lg:left-[45vw] right-0 top-1/2 -translate-y-1/2 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-0" />
+
+            {/* Timeline Events */}
+            {events.map((h, i) => {
+              const isEven = i % 2 === 0;
+              const EventIcon = h.icon;
+              
+              return (
+                <div key={i} className="relative grid grid-rows-2 h-full w-[85vw] sm:w-[400px] md:w-[450px] mr-16 md:mr-32 shrink-0 group items-center z-10">
+                    
+                    {/* Node on the central line */}
+                    <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-30">
+                        <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-[#060910] border border-white/20 flex items-center justify-center transition-all duration-500 group-hover:scale-125 group-hover:border-white/50">
+                            <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full" style={{ backgroundColor: h.accent, boxShadow: `0 0 12px ${h.accent}` }} />
+                        </div>
+                    </div>
+                    
+                    {/* Watermark */}
+                    <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-[12rem] md:text-[18rem] font-black font-display opacity-[0.02] pointer-events-none select-none transition-opacity duration-700 group-hover:opacity-[0.05] z-0"
+                         style={{ color: 'transparent', WebkitTextStroke: `2px ${h.accent}` }}>
+                      0{i + 1}
+                    </div>
+
+                    {isEven ? (
+                        <>
+                            {/* Row 1: Image, anchored to bottom (sits on the line) */}
+                            <div className="w-full h-[35vh] md:h-[320px] self-end pb-8 md:pb-12 z-20">
+                                <div className="absolute bottom-[2rem] md:bottom-[3rem] left-1/2 -translate-x-1/2 w-px h-8 md:h-12 bg-gradient-to-t from-white/20 to-transparent transition-all duration-500 group-hover:h-10 md:group-hover:h-16 group-hover:bg-white/40" />
+                                <div className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 group-hover:border-white/20 transition-all duration-700 shadow-2xl group-hover:-translate-y-2">
+                                    <img src={h.image} alt={h.alt} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+                                    <div className="absolute inset-0 opacity-40 group-hover:opacity-0 transition-opacity duration-700" style={{ backgroundColor: h.accent, mixBlendMode: 'color' }} />
+                                </div>
+                            </div>
+                            
+                            {/* Row 2: Text, anchored to top (hangs from the line) */}
+                            <div className="w-full self-start pt-8 md:pt-12 text-center z-20 transition-transform duration-500 group-hover:translate-y-2">
+                                <div className="flex items-center justify-center gap-2 md:gap-3 mb-3">
+                                    <EventIcon size={14} style={{ color: h.accent }} />
+                                    <span className="text-[10px] md:text-xs font-mono uppercase tracking-widest text-slate-400">Chapter 0{i+1} • {h.stat}</span>
+                                </div>
+                                <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">{h.title}</h3>
+                                <p className="text-xs md:text-sm text-slate-400 leading-relaxed max-w-sm mx-auto">{h.desc}</p>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            {/* Row 1: Text, anchored to bottom (sits on the line) */}
+                            <div className="w-full self-end pb-8 md:pb-12 text-center z-20 transition-transform duration-500 group-hover:-translate-y-2">
+                                <div className="flex items-center justify-center gap-2 md:gap-3 mb-3">
+                                    <EventIcon size={14} style={{ color: h.accent }} />
+                                    <span className="text-[10px] md:text-xs font-mono uppercase tracking-widest text-slate-400">Chapter 0{i+1} • {h.stat}</span>
+                                </div>
+                                <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">{h.title}</h3>
+                                <p className="text-xs md:text-sm text-slate-400 leading-relaxed max-w-sm mx-auto">{h.desc}</p>
+                            </div>
+                            
+                            {/* Row 2: Image, anchored to top (hangs from the line) */}
+                            <div className="w-full h-[35vh] md:h-[320px] self-start pt-8 md:pt-12 z-20">
+                                <div className="absolute top-[2rem] md:top-[3rem] left-1/2 -translate-x-1/2 w-px h-8 md:h-12 bg-gradient-to-b from-white/20 to-transparent transition-all duration-500 group-hover:h-10 md:group-hover:h-16 group-hover:bg-white/40" />
+                                <div className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 group-hover:border-white/20 transition-all duration-700 shadow-2xl group-hover:translate-y-2">
+                                    <img src={h.image} alt={h.alt} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+                                    <div className="absolute inset-0 opacity-40 group-hover:opacity-0 transition-opacity duration-700" style={{ backgroundColor: h.accent, mixBlendMode: 'color' }} />
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 /* ─── Animated counter ─── */
 function useCounter(target, duration = 2000) {
   const [count, setCount] = useState(0);
@@ -539,6 +685,17 @@ const REASONS = [
 
 const TECH_TAGS = ['AI/ML', 'DEEP LEARNING', 'PYTORCH', 'TENSORFLOW', 'LLMS', 'MLOPS', 'REACT', 'NEXT.JS', 'TRANSFORMERS', 'DATA SCIENCE', 'GEN AI', 'NLP', 'COMPUTER VISION', 'HACKATHONS', 'WORKSHOPS'];
 
+const FACULTY = [
+  {
+    code: 'SK', title: 'FACULTY COORDINATOR', name: 'Sanam Kazi', role: 'FACULTY COORDINATOR',
+    tagline: 'Fostering academic engagement, supporting student development programs, and driving growth in technical research.',
+  },
+  {
+    code: 'SK', title: 'AIML HOD', name: 'Supriya Khaitan', role: 'AIML HOD',
+    tagline: 'Leading the department towards innovation, research excellence, and pioneering next-generation machine learning projects.',
+  },
+];
+
 /* ─── Orbit Ring (decorative) ─── */
 function OrbitRing({ radius, duration, reverse, color, dotSize = 5 }) {
   return (
@@ -745,148 +902,178 @@ export default function Home({ go }) {
       {/* ═══════ DEVELOPER WORKSPACE (Replaces Open Source) ═══════ */}
       <DeveloperWorkspace />
 
-      {/* ═══════ EVENTS TIMELINE (TASK 2: Vertical split cards with images) ═══════ */}
-      <section className="py-28 px-6 relative overflow-hidden">
-        <div className="glow-divider absolute top-0 left-0 right-0" />
-        {/* Background ambient */}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #060910 0%, #080f1d 50%, #060910 100%)' }} />
-        <div className="absolute top-1/4 left-0 w-[400px] h-[400px] rounded-full blur-[180px] pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%)' }} />
-        <div className="absolute bottom-1/4 right-0 w-[350px] h-[350px] rounded-full blur-[160px] pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(34,211,238,0.04) 0%, transparent 70%)' }} />
+      {/* ═══════ EVENTS TIMELINE (Cinematic Story Layout) ═══════ */}
+      <HorizontalTimeline events={RECENT_EVENTS} />
 
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="text-center mb-16" data-animate="fade-up">
-            <div className="inline-flex items-center gap-2 mb-4">
-              <div className="h-px w-8 bg-cyan-500/50" />
-              <p className="text-xs font-bold font-mono uppercase tracking-[0.3em]" style={{ color: '#60A5FA' }}>{'// our_events'}</p>
-              <div className="h-px w-8 bg-cyan-500/50" />
+      {/* ═══════ BEHIND THE CLUB (Faculty) ═══════ */}
+      <section className="relative px-5 sm:px-8 py-20 sm:py-28 bg-[#060910]">
+        <div className="glow-divider absolute top-0 left-0 right-0" />
+
+        {/* Ambient amber glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full blur-[180px] opacity-[0.025] pointer-events-none"
+          style={{ backgroundColor: '#FBBF24' }} />
+
+        <div className="max-w-6xl mx-auto">
+
+          {/* Header */}
+          <div className="text-center mb-12 sm:mb-16">
+            <div data-animate="fade-up" className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-xs font-mono font-bold mb-6 border"
+              style={{ color: '#F59E0B', borderColor: 'rgba(245,158,11,0.2)', backgroundColor: 'rgba(245,158,11,0.05)' }}>
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#F59E0B' }} />
+              Behind the Club
             </div>
-            <h2 className="text-3xl md:text-5xl font-black font-display tracking-tight" style={{ color: '#E5E7EB' }}>
-              Not just a club.<br /><span className="grad-text">A launchpad.</span>
+            <h2 data-animate="fade-up" data-delay="80"
+              className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-white mb-4 leading-tight">
+              The minds that <span style={{ color: '#F59E0B' }}>guide</span> us
             </h2>
+            <p data-animate="fade-up" data-delay="160"
+              className="text-sm sm:text-base text-slate-400 max-w-md mx-auto leading-relaxed font-sans">
+              Faculty coordinators and department heads who shape the direction of Aignite.
+            </p>
           </div>
 
-          {/* Timeline layout */}
-          <div className="relative">
-            {/* Vertical connector line */}
-            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px timeline-line" />
+          {/* Faculty cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 max-w-4xl mx-auto gap-4 sm:gap-5">
+            {FACULTY.map((f, i) => (
+              <div key={i} data-animate="fade-up" data-delay={i * 120}
+                className="relative overflow-hidden rounded-2xl sm:rounded-3xl group cursor-default transition-all duration-500 hover:-translate-y-2"
+                style={{
+                  background: 'linear-gradient(145deg, #111a2e, #0d1526)',
+                  border: '1px solid rgba(245,158,11,0.15)',
+                  boxShadow: '0 0 0 0 rgba(245,158,11,0)',
+                }}>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {RECENT_EVENTS.map((h, i) => {
-                const EventIcon = h.icon;
-                return (
-                  <div key={i} data-animate="fade-up" data-delay={i * 150}
-                    className={`relative group pl-10 md:pl-0 ${i % 2 === 0 ? 'md:pr-10' : 'md:pl-10 md:mt-20'}`}>
-                    {/* Timeline dot */}
-                    <div className={`absolute top-10 md:top-8 flex items-center justify-center left-4 -translate-x-[5.5px] ${i % 2 === 0 ? 'md:left-auto md:right-[-21.5px] md:translate-x-0' : 'md:left-[-21.5px] md:translate-x-0'}`}
-                      style={{ zIndex: 10 }}>
-                      <div className="w-3 h-3 rounded-full border-2 border-current"
-                        style={{ backgroundColor: h.accent, borderColor: h.accent, boxShadow: `0 0 12px ${h.accent}` }} />
+                {/* Top amber gradient bar */}
+                <div className="h-[3px] w-full" style={{ background: 'linear-gradient(90deg, #F59E0B, #FCD34D, #F59E0B)' }} />
+
+                {/* Hover ambient glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                  style={{ background: 'radial-gradient(circle at 50% 0%, rgba(245,158,11,0.06), transparent 70%)' }} />
+
+                {/* Large watermark initials */}
+                <div className="absolute top-0 right-3 font-black leading-none select-none pointer-events-none opacity-[0.035] text-amber-400"
+                  style={{ fontSize: '7rem', fontFamily: '"Arial Black", Arial, sans-serif', lineHeight: 1 }}>
+                  {f.code}
+                </div>
+
+                <div className="relative z-10 p-6 sm:p-8 flex flex-col min-h-[220px] justify-between">
+                  <div>
+                    {/* Role badge */}
+                    <div className="inline-flex items-center gap-1.5 text-[9px] font-black font-mono tracking-[0.2em] uppercase px-2.5 py-1 rounded-md mb-5"
+                      style={{ color: '#F59E0B', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.18)' }}>
+                      {f.title}
                     </div>
 
-                    {/* Card split vertically top-to-bottom (~60:40) */}
-                    <div className="event-card relative rounded-3xl overflow-hidden group-hover:-translate-y-1 transition-transform duration-300 flex flex-col">
-                      {/* Top accent line */}
-                      <div className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20"
-                        style={{ background: `linear-gradient(to right, transparent, ${h.accent}, transparent)` }} />
-                      
-                      {/* TOP PORTION (60%): Light-background event photo frame */}
-                      <div className="relative w-full h-48 sm:h-56 bg-slate-100 overflow-hidden flex items-center justify-center border-b border-white/5">
-                        <img
-                          src={h.image}
-                          alt={h.alt}
-                          loading="lazy"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        {/* Gradient transition to card content */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0d1829] via-transparent to-transparent opacity-80" />
-                        
-                        {/* Top-right stat pill */}
-                        <div className="absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold font-mono shadow-lg backdrop-blur-md"
-                          style={{ background: 'rgba(5, 13, 26, 0.75)', color: h.accent, border: `1px solid ${h.accent}40` }}>
-                          <Zap size={10} />{h.stat}
-                        </div>
-                      </div>
-
-                      {/* BOTTOM PORTION (40%): Title, Description & Badge text */}
-                      <div className="relative p-6 sm:p-7 flex-1 flex flex-col justify-between">
-                        {/* Hover radial glow */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-b-3xl pointer-events-none"
-                          style={{ background: `radial-gradient(circle at 50% 0%, ${h.accent}12, transparent 70%)` }} />
-
-                        {/* Number watermark */}
-                        <div className="absolute bottom-2 right-4 text-[4rem] font-black font-display leading-none select-none pointer-events-none"
-                          style={{ color: 'transparent', WebkitTextStroke: `1px ${h.accent}15` }}>0{i + 1}</div>
-                        <div className="absolute bottom-2 right-4 text-[4rem] font-black font-display leading-none select-none pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-500"
-                          style={{ color: 'transparent', WebkitTextStroke: `1px ${h.accent}40`, filter: `drop-shadow(0 0 12px ${h.accent}25)` }}>0{i + 1}</div>
-
-                        <div className="relative z-10">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="icon-box w-10 h-10"
-                              style={{ border: `1px solid ${h.accent}30`, boxShadow: `0 0 15px ${h.accent}15` }}>
-                              <EventIcon size={18} style={{ color: h.accent }} />
-                            </div>
-                            <span className="text-[10px] font-bold font-mono tracking-wider uppercase" style={{ color: h.accent }}>
-                              Event 0{i + 1}
-                            </span>
-                          </div>
-
-                          <h3 className="text-xl font-bold font-display mb-2 group-hover:text-white transition-colors" style={{ color: '#E5E7EB' }}>
-                            {h.title}
-                          </h3>
-                          <p className="text-sm leading-relaxed text-muted">{h.desc}</p>
-                        </div>
-                      </div>
-                    </div>
+                    {/* Name */}
+                    <h3 className="text-xl sm:text-2xl font-black font-display text-white uppercase tracking-tight mb-1 leading-tight">
+                      {f.name}
+                    </h3>
+                    <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-5">{f.role}</div>
                   </div>
-                );
-              })}
-            </div>
+
+                  {/* Quote block */}
+                  <blockquote className="relative pl-4 border-l-2 border-amber-500/30">
+                    <div className="absolute -top-1 -left-1.5 text-amber-400/40 font-serif text-2xl leading-none select-none">"</div>
+                    <p className="text-xs sm:text-sm text-slate-400 italic leading-relaxed line-clamp-3 font-sans">
+                      {f.tagline}
+                    </p>
+                  </blockquote>
+                </div>
+
+                {/* Bottom right corner glow */}
+                <div className="absolute bottom-0 right-0 w-20 h-20 rounded-tl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                  style={{ background: 'radial-gradient(circle at 100% 100%, rgba(245,158,11,0.12), transparent)' }} />
+              </div>
+            ))}
           </div>
         </div>
-        <div className="glow-divider absolute bottom-0 left-0 right-0" />
       </section>
 
-      {/* ═══════ WHY JOIN US (TASK 4: Added below Launchpad timeline) ═══════ */}
-      <section className="relative py-24 px-6 bg-level-1 overflow-hidden">
+      {/* ═══════ WHY JOIN US (Premium Perks Grid) ═══════ */}
+      <section className="relative py-28 md:py-40 px-6 bg-[#060910] overflow-hidden">
         <div className="glow-divider absolute top-0 left-0 right-0" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full blur-[150px] opacity-[0.03] pointer-events-none"
-          style={{ backgroundColor: '#22D3EE' }} />
+        
+        {/* Ambient section backgrounds */}
+        <div className="absolute inset-0 pointer-events-none">
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] rounded-full blur-[200px] opacity-[0.02]"
+             style={{ backgroundColor: '#22D3EE' }} />
+           <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full blur-[150px]"
+             style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.04) 0%, transparent 70%)' }} />
+        </div>
 
         {/* Header */}
-        <div className="max-w-6xl mx-auto mb-14">
-          <div data-animate="fade-up" className="flex items-center gap-3 mb-4">
-            <div className="w-5 h-px" style={{ backgroundColor: '#22D3EE' }} />
-            <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-muted">Membership perks</span>
-          </div>
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <h2 data-animate="fade-up" data-delay="80"
-              className="text-3xl md:text-5xl font-black font-display tracking-tight text-offwhite leading-tight">
-              Why <span className="grad-text">Join Us?</span>
-            </h2>
-            <p data-animate="fade-up" data-delay="120" className="text-sm text-muted md:text-right max-w-xs leading-relaxed">
-              Eight reasons we're built differently from a typical college club.
+        <div className="max-w-7xl mx-auto mb-16 md:mb-24 relative z-10">
+          <div data-animate="fade-up" className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div>
+                <div className="inline-flex items-center gap-3 mb-6">
+                  <div className="h-px w-12 bg-gradient-to-r from-transparent to-cyan-500/50" />
+                  <p className="text-xs font-bold font-mono uppercase tracking-[0.3em] text-cyan-400">{'// membership_perks'}</p>
+                </div>
+                <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight text-white leading-[1.1]">
+                  Why <span className="grad-text">Join Us?</span>
+                </h2>
+            </div>
+            <p data-animate="fade-up" data-delay="120" className="text-base md:text-lg text-slate-400 max-w-sm md:text-right font-sans leading-relaxed">
+              Eight reasons we're built entirely differently from a typical college club.
             </p>
           </div>
         </div>
 
-        {/* Unified grid — 2 col on mobile, 4 col on desktop */}
-        <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        {/* Premium Grid */}
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
           {REASONS.map((r, i) => (
             <div key={i} data-animate="fade-up" data-delay={i * 50}
-              className="relative rounded-2xl p-5 overflow-hidden group cursor-default transition-all duration-300 hover:-translate-y-1.5"
-              style={{ background: 'linear-gradient(145deg, #0d1829, #090f1d)', border: `1px solid ${r.color}20` }}>
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
-                style={{ background: `radial-gradient(circle at 50% 120%, ${r.color}18, transparent 65%)` }} />
-              <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: `linear-gradient(90deg, transparent, ${r.color}90, transparent)` }} />
-              <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
-                style={{ background: `${r.color}14`, border: `1px solid ${r.color}30` }}>
-                <r.icon size={20} style={{ color: r.color }} />
+              className="relative rounded-3xl p-6 md:p-8 overflow-hidden group cursor-default transition-all duration-500 hover:-translate-y-2 flex flex-col justify-between min-h-[220px]"
+              style={{ 
+                background: 'rgba(10, 14, 23, 0.7)', 
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                boxShadow: 'inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 10px 30px -10px rgba(0, 0, 0, 0.5)'
+              }}>
+              
+              {/* Animated Background Radial Glow */}
+              <div className="absolute top-0 right-0 w-32 h-32 rounded-full blur-[50px] opacity-10 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none"
+                   style={{ backgroundColor: r.color, transform: 'translate(20%, -20%)' }} />
+                   
+              {/* Number Watermark */}
+              <div className="absolute -bottom-4 -right-2 text-[7rem] font-black font-display leading-none select-none pointer-events-none opacity-[0.02] group-hover:opacity-[0.06] transition-opacity duration-500"
+                   style={{ color: 'white' }}>
+                0{i + 1}
               </div>
-              <div className="text-sm sm:text-base font-bold text-offwhite font-display mb-1.5 leading-snug">{r.label}</div>
-              <div className="text-xs text-muted leading-relaxed">{r.desc}</div>
+
+              {/* Hover Solid Animated Border */}
+              <div className="absolute inset-0 z-0 pointer-events-none rounded-3xl transition-all duration-500 opacity-0 group-hover:opacity-100"
+                   style={{ 
+                     border: `1px solid ${r.color}50`, 
+                     boxShadow: `inset 0 0 20px ${r.color}10, 0 0 20px ${r.color}10` 
+                   }} />
+
+              <div className="relative z-10 flex flex-col h-full" style={{ '--hover-color': r.color }}>
+                  {/* Top section: Icon and decorative line */}
+                  <div className="flex justify-between items-start mb-10 md:mb-14">
+                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg"
+                         style={{ 
+                           background: `linear-gradient(135deg, ${r.color}20, transparent)`, 
+                           border: `1px solid ${r.color}30`,
+                           boxShadow: `0 0 20px ${r.color}15` 
+                         }}>
+                      <r.icon size={24} style={{ color: r.color }} className="drop-shadow-md" />
+                    </div>
+                    
+                    <div className="flex items-center gap-1.5 opacity-30 group-hover:opacity-100 transition-opacity duration-500">
+                       <div className="w-1.5 h-1.5 rounded-full shadow-[0_0_8px_currentColor]" style={{ backgroundColor: r.color, color: r.color }} />
+                       <div className="h-px w-10" style={{ background: `linear-gradient(to right, ${r.color}, transparent)` }} />
+                    </div>
+                  </div>
+                  
+                  {/* Bottom section: Typography */}
+                  <div>
+                    <h3 className="text-lg md:text-xl font-bold font-display text-white mb-2 tracking-tight transition-colors duration-500 group-hover:text-[var(--hover-color)]">
+                      {r.label}
+                    </h3>
+                    <p className="text-sm text-slate-400 leading-relaxed font-sans">{r.desc}</p>
+                  </div>
+              </div>
             </div>
           ))}
         </div>

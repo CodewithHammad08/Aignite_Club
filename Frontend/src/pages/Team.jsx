@@ -35,10 +35,6 @@ const DEPARTMENTS = [
 
 const FACULTY = [
   {
-    code: 'VS', title: 'FACULTY COORDINATOR', name: 'Vishwayogita Savalkar', role: 'FACULTY COORDINATOR',
-    tagline: 'Empowering students through technical leadership, project coordination, and structured academic mentorship.',
-  },
-  {
     code: 'SK', title: 'FACULTY COORDINATOR', name: 'Sanam Kazi', role: 'FACULTY COORDINATOR',
     tagline: 'Fostering academic engagement, supporting student development programs, and driving growth in technical research.',
   },
@@ -278,7 +274,7 @@ export default function Team() {
           </div>
 
           {/* Faculty cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 max-w-4xl mx-auto gap-4 sm:gap-5">
             {FACULTY.map((f, i) => (
               <div key={i} data-animate="fade-up" data-delay={i * 120}
                 className="relative overflow-hidden rounded-2xl sm:rounded-3xl group cursor-default transition-all duration-500 hover:-translate-y-2"
