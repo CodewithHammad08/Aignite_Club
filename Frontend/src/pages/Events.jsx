@@ -1,28 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, ArrowRight, Trophy, Users, Star, Zap, Rocket, Target, Sparkles, CheckCircle } from '../Icons';
+import { Calendar, ArrowRight, Trophy, Users, Star, Rocket, Target, Sparkles, CheckCircle } from '../Icons';
 
 const reduced = typeof window !== 'undefined'
   ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false;
-
-/* ── Framer Motion variants ── */
-
-// Communicates: filtered items don't just appear — they arrive with purpose
-const listItemVariants = {
-  hidden: { opacity: 0, y: reduced ? 0 : 16 },
-  visible: (i) => ({
-    opacity: 1, y: 0,
-    transition: reduced ? { duration: 0.2 } : { duration: 0.35, ease: 'easeOut', delay: i * 0.03 },
-  }),
-  exit: { opacity: 0, y: reduced ? 0 : -10, transition: { duration: 0.2 } },
-};
 
 /* ── Flip Digit — airport board style ── */
 function FlipDigit({ value }) {
   const [current, setCurrent] = useState(value);
   const [flipping, setFlipping] = useState(false);
   const prevRef = useRef(value);
-
   useEffect(() => {
     if (prevRef.current !== value) {
       setFlipping(true);
@@ -31,7 +18,6 @@ function FlipDigit({ value }) {
       return () => clearTimeout(t);
     }
   }, [value]);
-
   return (
     <div className="flip-digit-container">
       <div className={`flip-digit text-xl sm:text-3xl md:text-4xl font-black font-mono px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg w-10 sm:w-16 md:w-20 text-center ${flipping ? 'flipping' : ''}`}
@@ -46,12 +32,10 @@ function FlipDigit({ value }) {
 function RegisterPanel({ onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', domain: '' });
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
   };
-
   return (
     <motion.div
       layout
@@ -65,7 +49,6 @@ function RegisterPanel({ onClose }) {
         {submitted ? (
           <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
             className="flex flex-col items-center gap-3 py-8">
-            {/* Checkmark morphs in with stroke animation */}
             <div className="w-14 h-14 rounded-full flex items-center justify-center"
               style={{ backgroundColor: 'rgba(52,211,153,0.12)', border: '1px solid rgba(52,211,153,0.3)' }}>
               <CheckCircle size={28} style={{ color: '#34D399' }} />
@@ -88,10 +71,10 @@ function RegisterPanel({ onClose }) {
               className="px-4 py-3 rounded-xl text-sm font-semibold outline-none w-full"
               style={{ backgroundColor: '#0d1829', border: '1px solid rgba(0,212,255,0.12)', color: form.domain ? '#e8f4f8' : '#4a6070' }}>
               <option value="">Domain interest</option>
-              <option>Machine Learning & Deep Learning</option>
-              <option>Natural Language Processing & GenAI</option>
+              <option>Machine Learning &amp; Deep Learning</option>
+              <option>Natural Language Processing &amp; GenAI</option>
               <option>Web Development</option>
-              <option>MLOps & AI Infrastructure</option>
+              <option>MLOps &amp; AI Infrastructure</option>
             </select>
             <div className="md:col-span-3 flex flex-col sm:flex-row gap-3">
               <button type="submit"
@@ -193,22 +176,21 @@ export default function Events() {
         <section className="px-6 pb-16">
           <div className="max-w-5xl mx-auto">
             <div className="relative depth-card rounded-3xl overflow-hidden">
-              {/* Spinning gradient border */}
               <div className="absolute inset-0 overflow-hidden rounded-3xl">
                 <div className="absolute -inset-[100%] animate-[spin_4s_linear_infinite]"
                   style={{ background: 'conic-gradient(from 0deg, transparent 60%, rgba(0,212,255,0.4), transparent 60%)' }} />
               </div>
               <div className="relative z-10 p-5 md:p-12 flex flex-col md:flex-row items-stretch md:items-start gap-8 md:gap-10"
                 style={{ backgroundColor: '#0d1829', margin: '1px', borderRadius: 'calc(1.5rem - 1px)' }}>
-
                 <div className="flex-grow">
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold font-mono uppercase tracking-widest mb-6"
                     style={{ backgroundColor: 'rgba(0,212,255,0.1)', color: '#00d4ff', border: '1px solid rgba(0,212,255,0.25)' }}>
                     <Star size={12} className="animate-pulse" /> Featured Flagship
                   </div>
                   <h2 className="text-2xl md:text-4xl font-black font-display mb-3 text-left" style={{ color: '#e8f4f8' }}>{flagship.title}</h2>
-                  <p className="text-sm md:text-base mb-6 text-left" style={{ color: '#4a6070' }}>Our biggest event of the semester featuring expert talks and hands-on AI activities.</p>
-
+                  <p className="text-sm md:text-base mb-6 text-left" style={{ color: '#4a6070' }}>
+                    Our biggest event of the semester featuring expert talks and hands-on AI activities.
+                  </p>
                   <div className="flex flex-wrap gap-4 mb-6">
                     <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#e8f4f8' }}>
                       <Calendar size={16} style={{ color: '#00d4ff' }} /> {flagship.date}
@@ -217,28 +199,27 @@ export default function Events() {
                       <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#e8f4f8' }}>
                         <Users size={16} style={{ color: '#e8a020' }} /> {flagship.seats} Seats Left
                       </div>
-                      {/* Amber depletion bar — ~60% depleted static mock */}
                       <div className="w-36 h-1 rounded-full" style={{ backgroundColor: 'rgba(232,160,32,0.2)' }}>
                         <div className="h-full rounded-full" style={{ width: '40%', backgroundColor: '#e8a020' }} />
                       </div>
                     </div>
                   </div>
-
                   <button onClick={() => setShowRegister(v => !v)}
                     className="btn-glow btn-pulse-border flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-base w-full sm:w-auto"
                     style={{ backgroundColor: '#00d4ff', color: '#050d1a' }}>
                     <Rocket size={18} /> Register Now
                     <ArrowRight size={16} className="btn-arrow-icon" />
                   </button>
-
                   <AnimatePresence>
                     {showRegister && <RegisterPanel onClose={() => setShowRegister(false)} />}
                   </AnimatePresence>
                 </div>
 
                 {/* Flip countdown */}
-                <div className="flex-shrink-0 p-4 sm:p-6 rounded-2xl w-full md:w-auto" style={{ backgroundColor: 'rgba(5,13,26,0.6)', border: '1px solid rgba(0,212,255,0.08)' }}>
-                  <div className="text-xs font-bold font-mono uppercase tracking-widest mb-4 flex items-center justify-center md:justify-start gap-2" style={{ color: '#4a6070' }}>
+                <div className="flex-shrink-0 p-4 sm:p-6 rounded-2xl w-full md:w-auto"
+                  style={{ backgroundColor: 'rgba(5,13,26,0.6)', border: '1px solid rgba(0,212,255,0.08)' }}>
+                  <div className="text-xs font-bold font-mono uppercase tracking-widest mb-4 flex items-center justify-center md:justify-start gap-2"
+                    style={{ color: '#4a6070' }}>
                     <Sparkles size={12} /> Closes In
                   </div>
                   <div className="flex items-center justify-center gap-1.5 sm:gap-3 text-center">
@@ -256,73 +237,121 @@ export default function Events() {
         </section>
       )}
 
-      {/* ── EVENT SCHEDULE WITH FILTERS ── */}
-      <section className="px-6 pb-20 bg-level-0">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-            <h2 className="text-2xl font-black font-display flex items-center gap-2" style={{ color: '#e8f4f8' }}>
-              <Calendar size={22} style={{ color: '#00d4ff' }} /> Event Schedule
-            </h2>
+      {/* ── UPCOMING EVENTS GRID ── */}
+      <section className="px-6 pb-32 bg-[#050810] relative z-20">
+        <div className="max-w-6xl mx-auto">
+
+          {/* Header & Filters */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+            <div>
+              <div className="inline-flex items-center gap-3 mb-4">
+                <div className="h-px w-8 bg-gradient-to-r from-transparent to-cyan-500" />
+                <p className="text-xs font-bold font-mono uppercase tracking-[0.3em] text-cyan-400">{'// schedule'}</p>
+              </div>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black font-display tracking-tight text-white leading-tight">
+                Upcoming <span className="grad-text">Events.</span>
+              </h2>
+            </div>
+
             {/* Tab filter */}
-            <div className="flex flex-wrap gap-2 p-1.5 rounded-xl" style={{ backgroundColor: '#080f1d', border: '1px solid rgba(255,255,255,0.04)' }}>
+            <div className="flex flex-wrap gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md">
               {FILTERS.map(f => (
                 <button key={f} onClick={() => setFilter(f)}
-                  className="px-4 py-2 rounded-lg text-xs font-bold transition-all duration-300"
-                  style={filter === f
-                    ? { backgroundColor: '#00d4ff', color: '#050d1a', boxShadow: '0 0 12px rgba(0,212,255,0.3)' }
-                    : { color: '#4a6070' }}>
+                  className={`px-5 py-2.5 rounded-lg text-xs font-bold transition-all duration-300 ${
+                    filter === f
+                      ? 'bg-cyan-400 text-[#050810] shadow-[0_0_20px_rgba(34,211,238,0.4)]'
+                      : 'text-slate-400 hover:text-white hover:bg-white/5'
+                  }`}>
                   {f}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="flex flex-col gap-3">
-            <AnimatePresence>
+          {/* Events Grid */}
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <AnimatePresence mode="popLayout">
               {displayed.map((e, i) => {
-                const typeColor = TYPE_COLORS[e.type] || '#00d4ff';
+                const typeColor = TYPE_COLORS[e.type] || '#22D3EE';
+                const day  = e.date.split(' ')[1]?.replace(',', '') || e.date.slice(8, 10);
+                const mon  = e.date.split(' ')[0]?.slice(0, 3).toUpperCase() || '';
+                const year = e.date.split(' ')[2] || e.date.slice(0, 4);
                 return (
                   <motion.div key={e.title + filter}
-                    custom={i} variants={listItemVariants}
-                    initial="hidden" animate="visible" exit="exit"
-                    className="group relative glass rounded-2xl p-4 md:p-5 flex flex-row items-center gap-4 cursor-pointer overflow-hidden">
+                    layout
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: i * 0.04 }}
+                    className="group relative flex flex-col bg-[#090e1c] border border-white/[0.07] rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 hover:border-white/[0.16] hover:-translate-y-1.5 hover:shadow-[0_24px_64px_-12px_rgba(0,0,0,0.7)]"
+                  >
+                    {/* Top color accent bar */}
+                    <div className="h-[3px] w-full flex-shrink-0"
+                      style={{ background: `linear-gradient(90deg, ${typeColor}, ${typeColor}40)` }} />
 
-                    {/* Left cyan accent line — grows from 2px to 8px on hover */}
-                    <div className="absolute left-0 top-3 bottom-3 rounded-r-full transition-all duration-150 group-hover:w-1.5"
-                      style={{ width: '2px', backgroundColor: typeColor }} />
-
-                    {/* Date badge in amber */}
-                    <div className="flex-shrink-0 w-11 h-11 md:w-14 md:h-14 rounded-xl flex flex-col items-center justify-center"
-                      style={{ backgroundColor: '#e8a020', color: '#050d1a' }}>
-                      <span className="text-base md:text-lg font-black leading-none">{e.date.split(' ')[1]?.replace(',', '') || e.date.slice(8, 10)}</span>
-                      <span className="text-[8px] md:text-[9px] font-bold font-mono uppercase">{e.date.split(' ')[0]?.slice(0, 3)}</span>
+                    {/* Ghosted number watermark */}
+                    <div className="absolute -right-2 -bottom-4 text-[9rem] font-black font-display leading-none select-none pointer-events-none opacity-[0.03] group-hover:opacity-[0.065] transition-opacity duration-500"
+                      style={{ color: typeColor }}>
+                      {String(i + 1).padStart(2, '0')}
                     </div>
 
-                    <div className="flex-grow min-w-0 pl-1">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mb-1">
-                        <h3 className="text-sm md:text-base font-bold font-display truncate text-left" style={{ color: '#e8f4f8' }}>{e.title}</h3>
-                        {e.featured && <span className="inline-block text-[8px] font-bold px-1.5 py-0.5 rounded w-max" style={{ backgroundColor: 'rgba(232,160,32,0.15)', color: '#e8a020', border: '1px solid rgba(232,160,32,0.2)' }}>⭑ Featured</span>}
-                      </div>
-                      <div className="flex items-center gap-3 text-[9px] md:text-[10px] font-bold font-mono uppercase" style={{ color: '#4a6070' }}>
-                        <span style={{ color: typeColor }}>{e.type}</span>
-                        <span className="flex items-center gap-1"><Users size={10} /> {e.seats} Seats</span>
-                      </div>
-                    </div>
+                    {/* Card body */}
+                    <div className="relative z-10 flex flex-col flex-1 p-6">
 
-                    <div className="flex-shrink-0 w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center transition-colors duration-200 group-hover:bg-[#00d4ff]"
-                      style={{ backgroundColor: '#0d1829', border: '1px solid rgba(0,212,255,0.1)' }}>
-                      <ArrowRight size={12} className="text-muted group-hover:text-[#050d1a] transition-colors" />
+                      {/* Row 1: type badge + featured */}
+                      <div className="flex items-center gap-2 mb-5">
+                        <span className="inline-flex items-center text-[10px] font-black font-mono tracking-[0.2em] uppercase px-3 py-1.5 rounded-lg"
+                          style={{ color: typeColor, background: `${typeColor}14`, border: `1px solid ${typeColor}2a` }}>
+                          {e.type}
+                        </span>
+                        {e.featured && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold font-mono tracking-wider uppercase text-amber-400 bg-amber-400/10 border border-amber-400/25 px-2.5 py-1.5 rounded-lg">
+                            <Star size={9} /> Flagship
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Row 2: title */}
+                      <h3 className="text-[1.05rem] sm:text-[1.15rem] font-bold font-display text-white leading-[1.35] mb-6 flex-1">
+                        {e.title}
+                      </h3>
+
+                      {/* Row 3: date + seats + arrow */}
+                      <div className="flex items-center justify-between gap-3 pt-5 border-t border-white/[0.06]">
+                        <div className="flex items-center gap-3">
+                          <div className="flex flex-col items-center justify-center w-11 h-11 rounded-xl border border-white/10 bg-white/[0.04]">
+                            <span className="text-base font-black font-display text-white leading-none">{day}</span>
+                            <span className="text-[8px] font-bold font-mono uppercase mt-0.5" style={{ color: typeColor }}>{mon}</span>
+                          </div>
+                          <span className="text-xs font-mono text-slate-500">{year}</span>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          <div className="text-right hidden sm:block">
+                            <div className="text-sm font-bold text-white font-display leading-none">{e.seats}</div>
+                            <div className="text-[9px] font-mono text-slate-500 uppercase tracking-wider mt-0.5">seats</div>
+                          </div>
+                          <div className="w-9 h-9 rounded-xl flex items-center justify-center border border-white/10 bg-white/[0.04] group-hover:bg-cyan-400 group-hover:border-cyan-400 transition-all duration-300 flex-shrink-0">
+                            <ArrowRight size={14} className="text-slate-300 group-hover:text-[#050810] transition-colors duration-300" />
+                          </div>
+                        </div>
+                      </div>
+
                     </div>
                   </motion.div>
                 );
               })}
             </AnimatePresence>
-            {displayed.length === 0 && (
-              <div className="py-12 text-center rounded-2xl" style={{ color: '#4a6070', border: '1px dashed rgba(255,255,255,0.06)' }}>
-                No {filter.toLowerCase()}s found.
-              </div>
-            )}
-          </div>
+          </motion.div>
+
+          {displayed.length === 0 && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              className="py-20 text-center flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl bg-white/[0.02]">
+              <Target size={32} className="text-slate-600 mb-4" />
+              <h3 className="text-xl font-bold text-slate-300 mb-2 font-display">No events found</h3>
+              <p className="text-slate-500 font-sans">There are no {filter.toLowerCase()}s scheduled at the moment.</p>
+            </motion.div>
+          )}
         </div>
       </section>
 
@@ -345,14 +374,11 @@ export default function Events() {
               <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 className="group relative depth-card rounded-3xl overflow-hidden min-h-[300px] cursor-pointer hover:-translate-y-2 transition-transform duration-300">
-
-                {/* Background image scales on hover */}
                 <div className="absolute inset-0">
                   <img src={p.img} alt={p.title}
                     className="w-full h-full object-cover opacity-35 group-hover:opacity-55 transition-all duration-500 group-hover:scale-105" />
                   <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #050d1a 40%, transparent)' }} />
                 </div>
-
                 <div className="relative z-10 p-7 h-full flex flex-col justify-end">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="amber-badge">{p.date}</span>
@@ -362,8 +388,6 @@ export default function Events() {
                     </span>
                   </div>
                   <h3 className="text-xl font-bold mb-2 font-display group-hover:text-[#00d4ff] transition-colors" style={{ color: '#e8f4f8' }}>{p.title}</h3>
-
-                  {/* Stat chip slides up from bottom on hover */}
                   <div className="relative h-8 overflow-hidden">
                     <div className="absolute bottom-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-200 flex items-center gap-2 text-sm font-medium"
                       style={{ color: '#e8f4f8' }}>

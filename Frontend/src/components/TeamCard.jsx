@@ -163,6 +163,8 @@ const members = [
 ];
 
 export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }) {
+  const [isRevealed, setIsRevealed] = React.useState(false);
+
   const domainStat = member.stats.find(s => s.label === 'DOMAIN');
   const stackStat = member.stats.find(s => s.label === 'STACK');
   const projectsStat = member.stats.find(s => s.label === 'PROJECTS');
@@ -174,6 +176,7 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
   }
 
   const isHead = member.role.includes('HEAD') || member.role.includes('PRESIDENT') || member.role.includes('VICE PRESIDENT');
+  const photoSrc = member.photo_face || member.photo_body || member.photo_hover;
 
   return (
     /**
@@ -183,7 +186,9 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
      *   (no need to round only the top of the panel — the clip handles it)
      */
     <div
-      className={`group relative overflow-hidden rounded-xl cursor-pointer ${heightClass}`}
+      onClick={() => setIsRevealed(!isRevealed)}
+      onMouseLeave={() => setIsRevealed(false)}
+      className={`group relative overflow-hidden rounded-xl cursor-pointer ${heightClass} transition-all duration-500 ${isRevealed ? 'is-revealed' : ''}`}
       style={{
         background: '#0d1526',
         border: '1px solid rgba(0, 212, 255, 0.10)',
