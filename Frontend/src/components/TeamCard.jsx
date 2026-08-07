@@ -163,7 +163,7 @@ const members = [
 ];
 
 export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }) {
-  const [isRevealed, setIsRevealed] = React.useState(false);
+  const [clicked, setClicked] = React.useState(false);
 
   const domainStat = member.stats.find(s => s.label === 'DOMAIN');
   const stackStat = member.stats.find(s => s.label === 'STACK');
@@ -176,7 +176,6 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
   }
 
   const isHead = member.role.includes('HEAD') || member.role.includes('PRESIDENT') || member.role.includes('VICE PRESIDENT');
-  const photoSrc = member.photo_face || member.photo_body || member.photo_hover;
 
   return (
     /**
@@ -186,9 +185,9 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
      *   (no need to round only the top of the panel — the clip handles it)
      */
     <div
-      onClick={() => setIsRevealed(!isRevealed)}
-      onMouseLeave={() => setIsRevealed(false)}
-      className={`group relative overflow-hidden rounded-xl cursor-pointer ${heightClass} transition-all duration-500 ${isRevealed ? 'is-revealed' : ''}`}
+      onClick={() => setClicked(c => !c)}
+      onMouseLeave={() => setClicked(false)}
+      className={`group relative overflow-hidden rounded-xl cursor-pointer ${heightClass}`}
       style={{
         background: '#0d1526',
         border: '1px solid rgba(0, 212, 255, 0.10)',
@@ -377,7 +376,7 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
            • facing='left'  → person looks left  → photo on RIGHT, stats on LEFT
          ══════════════════════════════════════════════ */}
       <div
-        className="absolute inset-0 z-20 rounded-xl translate-y-full group-hover:translate-y-0 transition-transform duration-[420ms] ease-[cubic-bezier(0.32,0,0.12,1)]"
+        className={`absolute inset-0 z-20 rounded-xl transition-transform duration-[420ms] ease-[cubic-bezier(0.32,0,0.12,1)] ${clicked ? 'translate-y-0' : 'translate-y-full group-hover:translate-y-0'}`}
         style={{ background: '#ffffff' }}
       >
         {/* PHOTO COLUMN — shows photo_face, positioned by `facing` prop */}
@@ -576,7 +575,7 @@ function TeamSection({ list }) {
           <TeamCard
             key={member.id}
             member={member}
-            heightClass="h-[180px] md:h-[380px]"
+            heightClass="h-[220px] md:h-[440px]"
             facing={i % 2 === 0 ? 'right' : 'left'}
           />
         ))}
