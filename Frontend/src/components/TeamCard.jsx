@@ -70,7 +70,7 @@ const members = [
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Web Dev' },
-      { label: 'STACK', value: 'React' },
+      { label: 'STACK', value: 'MERN' },
       { label: 'PROJECTS', value: '8' },
     ],
   },
