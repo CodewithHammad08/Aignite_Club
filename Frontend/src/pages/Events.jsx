@@ -107,9 +107,9 @@ const EVENTS = [
 ];
 
 const PAST = [
-  { title: 'Club Founded & Inaugural', date: '2025', attendees: '200+', outcomes: 'Official Launch • Core Team Formed', img: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=600&auto=format' },
-  { title: 'Hands-on ML Workshop', date: '2026', attendees: '120+', outcomes: '40+ Models Trained • 3 Datasets', img: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=600&auto=format' },
-  { title: 'WebCraft: Web from Scratch', date: '2026', attendees: '80+', outcomes: 'HTML, CSS & JS Basics Learned', img: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=600&auto=format' },
+  { title: 'Club Founded & Inaugural', date: '2025', attendees: '200+', outcomes: 'Official Launch • Core Team Formed', img: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779466919/inaugral-2_bvbhqt.png' },
+  { title: 'Hands-on ML Workshop', date: '2026', attendees: '120+', outcomes: '40+ Models Trained • 3 Datasets', img: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779473314/IMG_4320_mxwqlf.jpg' },
+  { title: 'WebCraft: Web from Scratch', date: '2026', attendees: '80+', outcomes: 'HTML, CSS & JS Basics Learned', img: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779512784/IMG_5266_fgwgj5.jpg' },
   { title: 'Practical Linux & OS: Commands to Automation', date: '2026', attendees: '100+', outcomes: 'CLI Basics & OS Concepts Gained', img: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=600&auto=format' },
 ];
 
@@ -191,28 +191,26 @@ export default function Events() {
                   <p className="text-sm md:text-base mb-6 text-left" style={{ color: '#4a6070' }}>
                     Our biggest event of the semester featuring expert talks and hands-on AI activities.
                   </p>
-                  <div className="flex flex-wrap gap-4 mb-6">
+                  <div className="flex flex-wrap gap-4 mb-8">
                     <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#e8f4f8' }}>
-                      <Calendar size={16} style={{ color: '#00d4ff' }} /> {flagship.date}
+                      <Calendar size={16} style={{ color: '#00d4ff' }} /> Announced Soon
                     </div>
                     <div className="flex flex-col gap-1">
                       <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#e8f4f8' }}>
-                        <Users size={16} style={{ color: '#e8a020' }} /> {flagship.seats} Seats Left
+                        <Users size={16} style={{ color: '#e8a020' }} /> {flagship.seats} Seats Available
                       </div>
                       <div className="w-36 h-1 rounded-full" style={{ backgroundColor: 'rgba(232,160,32,0.2)' }}>
-                        <div className="h-full rounded-full" style={{ width: '40%', backgroundColor: '#e8a020' }} />
+                        <div className="h-full rounded-full" style={{ width: '100%', backgroundColor: '#e8a020' }} />
                       </div>
                     </div>
                   </div>
-                  <button onClick={() => setShowRegister(v => !v)}
-                    className="btn-glow btn-pulse-border flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-base w-full sm:w-auto"
-                    style={{ backgroundColor: '#00d4ff', color: '#050d1a' }}>
-                    <Rocket size={18} /> Register Now
-                    <ArrowRight size={16} className="btn-arrow-icon" />
-                  </button>
-                  <AnimatePresence>
-                    {showRegister && <RegisterPanel onClose={() => setShowRegister(false)} />}
-                  </AnimatePresence>
+                  <div className="flex items-center">
+                    <button disabled
+                      className="flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-base w-full sm:w-auto opacity-70 cursor-not-allowed"
+                      style={{ backgroundColor: 'rgba(0,212,255,0.1)', color: '#00d4ff', border: '1px solid rgba(0,212,255,0.3)' }}>
+                      <Rocket size={18} /> Coming Soon
+                    </button>
+                  </div>
                 </div>
 
                 {/* Flip countdown */}
@@ -257,11 +255,10 @@ export default function Events() {
             <div className="flex flex-wrap gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md">
               {FILTERS.map(f => (
                 <button key={f} onClick={() => setFilter(f)}
-                  className={`px-5 py-2.5 rounded-lg text-xs font-bold transition-all duration-300 ${
-                    filter === f
+                  className={`px-5 py-2.5 rounded-lg text-xs font-bold transition-all duration-300 ${filter === f
                       ? 'bg-cyan-400 text-[#050810] shadow-[0_0_20px_rgba(34,211,238,0.4)]'
                       : 'text-slate-400 hover:text-white hover:bg-white/5'
-                  }`}>
+                    }`}>
                   {f}
                 </button>
               ))}
@@ -273,8 +270,8 @@ export default function Events() {
             <AnimatePresence mode="popLayout">
               {displayed.map((e, i) => {
                 const typeColor = TYPE_COLORS[e.type] || '#22D3EE';
-                const day  = e.date.split(' ')[1]?.replace(',', '') || e.date.slice(8, 10);
-                const mon  = e.date.split(' ')[0]?.slice(0, 3).toUpperCase() || '';
+                const day = e.date.split(' ')[1]?.replace(',', '') || e.date.slice(8, 10);
+                const mon = e.date.split(' ')[0]?.slice(0, 3).toUpperCase() || '';
                 const year = e.date.split(' ')[2] || e.date.slice(0, 4);
                 return (
                   <motion.div key={e.title + filter}
@@ -320,8 +317,7 @@ export default function Events() {
                       <div className="flex items-center justify-between gap-3 pt-5 border-t border-white/[0.06]">
                         <div className="flex items-center gap-3">
                           <div className="flex flex-col items-center justify-center w-11 h-11 rounded-xl border border-white/10 bg-white/[0.04]">
-                            <span className="text-base font-black font-display text-white leading-none">{day}</span>
-                            <span className="text-[8px] font-bold font-mono uppercase mt-0.5" style={{ color: typeColor }}>{mon}</span>
+                            <span className="text-[11px] font-black font-display text-white tracking-widest uppercase">TBD</span>
                           </div>
                           <span className="text-xs font-mono text-slate-500">{year}</span>
                         </div>
@@ -331,8 +327,8 @@ export default function Events() {
                             <div className="text-sm font-bold text-white font-display leading-none">{e.seats}</div>
                             <div className="text-[9px] font-mono text-slate-500 uppercase tracking-wider mt-0.5">seats</div>
                           </div>
-                          <div className="w-9 h-9 rounded-xl flex items-center justify-center border border-white/10 bg-white/[0.04] group-hover:bg-cyan-400 group-hover:border-cyan-400 transition-all duration-300 flex-shrink-0">
-                            <ArrowRight size={14} className="text-slate-300 group-hover:text-[#050810] transition-colors duration-300" />
+                          <div className="flex-shrink-0 px-3 py-2 rounded-lg border border-white/10 bg-white/[0.04] text-[9px] font-bold font-mono text-slate-400 uppercase tracking-widest group-hover:border-cyan-500/30 group-hover:bg-cyan-500/5 group-hover:text-cyan-400 transition-all duration-300">
+                            Coming Soon
                           </div>
                         </div>
                       </div>
@@ -373,11 +369,11 @@ export default function Events() {
             {PAST.map((p, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="group relative depth-card rounded-3xl overflow-hidden min-h-[300px] cursor-pointer hover:-translate-y-2 transition-transform duration-300">
+                className="group relative depth-card rounded-3xl overflow-hidden min-h-[320px] cursor-pointer hover:-translate-y-2 transition-transform duration-300">
                 <div className="absolute inset-0">
                   <img src={p.img} alt={p.title}
-                    className="w-full h-full object-cover opacity-35 group-hover:opacity-55 transition-all duration-500 group-hover:scale-105" />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #050d1a 40%, transparent)' }} />
+                    className="w-full h-full object-cover opacity-50 group-hover:opacity-75 transition-all duration-500 group-hover:scale-105" />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(5,13,26,0.9) 0%, rgba(5,13,26,0.5) 25%, transparent 50%)' }} />
                 </div>
                 <div className="relative z-10 p-7 h-full flex flex-col justify-end">
                   <div className="flex items-center gap-2 mb-3">

@@ -265,148 +265,192 @@ const DeveloperWorkspace = () => {
   );
 };
 
-/* ─── Horizontal Timeline Component ─── */
-const HorizontalTimeline = ({ events }) => {
-  const containerRef = useRef(null);
-  const trackRef = useRef(null);
+/* ─── Vertical Timeline Node ─── */
+function VerticalTimelineNode({ event, index, isLeft }) {
+  const cardRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setVisible(true); },
+      { threshold: 0.2 }
+    );
+    if (cardRef.current) obs.observe(cardRef.current);
+    return () => obs.disconnect();
+  }, []);
+
+  const EventIcon = event.icon;
+
+  return (
+    <div
+      ref={cardRef}
+      className="relative flex items-center w-full"
+      style={{ minHeight: '200px', marginBottom: '3rem' }}
+    >
+      {/* ── Central spine node ── */}
+      <div className="absolute left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
+        {/* Connector line above */}
+        {index > 0 && (
+          <div className="w-px h-12 mb-1" style={{ background: `linear-gradient(to bottom, transparent, ${event.accent}50)` }} />
+        )}
+        {/* Node ring */}
+        <div
+          className="w-12 h-12 rounded-full flex items-center justify-center relative"
+          style={{
+            background: `radial-gradient(circle, ${event.accent}22 0%, transparent 70%)`,
+            border: `2px solid ${event.accent}60`,
+            boxShadow: `0 0 20px ${event.accent}40, 0 0 40px ${event.accent}20`,
+            transition: 'all 0.5s ease',
+          }}
+        >
+          <div className="w-5 h-5 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: event.accent, boxShadow: `0 0 14px ${event.accent}` }}>
+            <EventIcon size={11} style={{ color: '#050d1a' }} />
+          </div>
+        </div>
+        {/* Connector line below */}
+        <div className="w-px h-12 mt-1" style={{ background: `linear-gradient(to bottom, ${event.accent}50, transparent)` }} />
+      </div>
+
+      {/* ── Card content — alternating left / right ── */}
+      <div
+        className={`w-[42%] ${isLeft ? 'mr-auto pr-8 text-right' : 'ml-auto pl-8 text-left'}`}
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible
+            ? 'translateX(0) translateY(0)'
+            : `translateX(${isLeft ? '-40px' : '40px'}) translateY(20px)`,
+          transition: `opacity 0.7s ease ${index * 0.1}s, transform 0.7s ease ${index * 0.1}s`,
+        }}
+      >
+        {/* Image */}
+        <div className="relative rounded-2xl overflow-hidden mb-4 group"
+          style={{ height: '200px', border: `1px solid ${event.accent}25`, boxShadow: `0 8px 32px rgba(0,0,0,0.4)` }}>
+          <img
+            src={event.image}
+            alt={event.alt}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 transition-opacity duration-500"
+            style={{ background: `linear-gradient(to ${isLeft ? 'left' : 'right'}, rgba(6,9,16,0.7) 0%, transparent 60%)` }} />
+          {/* Accent color overlay on hover */}
+          <div className="absolute inset-0 opacity-30 group-hover:opacity-0 transition-opacity duration-500"
+            style={{ backgroundColor: event.accent, mixBlendMode: 'color' }} />
+        </div>
+
+        {/* Chapter label */}
+        <div className={`flex items-center gap-2 mb-2 ${isLeft ? 'justify-end' : 'justify-start'}`}>
+          <span className="text-[10px] font-mono uppercase tracking-[0.25em]"
+            style={{ color: event.accent }}>
+            Chapter {String(index + 1).padStart(2, '0')} · {event.stat}
+          </span>
+        </div>
+
+        {/* Title */}
+        <h3 className="text-xl md:text-2xl font-black font-display text-white mb-2 leading-tight">
+          {event.title}
+        </h3>
+
+        {/* Desc */}
+        <p className="text-sm text-slate-400 leading-relaxed">
+          {event.desc}
+        </p>
+      </div>
+
+      {/* ── Horizontal connector from card to node ── */}
+      <div
+        className={`absolute top-1/2 -translate-y-1/2 h-px ${isLeft ? 'right-[50%]' : 'left-[50%]'}`}
+        style={{
+          width: 'calc(8% - 24px)',
+          background: `linear-gradient(${isLeft ? 'to left' : 'to right'}, transparent, ${event.accent}50)`,
+        }}
+      />
+    </div>
+  );
+}
+
+/* ─── Vertical Timeline Section ─── */
+const VerticalTimeline = ({ events }) => {
+  const lineRef = useRef(null);
+  const sectionRef = useRef(null);
+  const [lineHeight, setLineHeight] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (!containerRef.current || !trackRef.current) return;
-      const { top, height } = containerRef.current.getBoundingClientRect();
-      const stickyHeight = window.innerHeight;
-      
-      const maxScroll = height - stickyHeight;
-      let progress = (0 - top) / maxScroll;
-      
-      progress = Math.max(0, Math.min(1, progress));
-      
-      const trackWidth = trackRef.current.scrollWidth;
-      const viewportWidth = window.innerWidth;
-      const maxTranslate = trackWidth - viewportWidth;
-      
-      if (maxTranslate > 0) {
-        trackRef.current.style.transform = `translate3d(${-progress * maxTranslate}px, 0, 0)`;
-      }
+      if (!sectionRef.current || !lineRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const sectionTop = rect.top;
+      const sectionHeight = rect.height;
+      const viewH = window.innerHeight;
+
+      // progress: 0 when section enters viewport top, 1 when it leaves bottom
+      const progress = Math.max(0, Math.min(1, (-sectionTop + viewH * 0.3) / (sectionHeight * 0.9)));
+      setLineHeight(progress * 100);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll, { passive: true });
     handleScroll();
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <section ref={containerRef} style={{ height: `${events.length * 80 + 100}vh` }} className="relative bg-[#060910]">
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center border-y border-white/5">
-        
-        {/* Ambient background glow */}
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-b from-[#080f1d] to-transparent opacity-50" />
-          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px]"
-            style={{ background: 'radial-gradient(circle, rgba(34,211,238,0.04) 0%, transparent 70%)' }} />
-        </div>
-
-        {/* The Horizontal Scrolling Track */}
-        <div ref={trackRef} className="relative flex items-center h-full w-max will-change-transform z-10 px-[5vw] md:px-[10vw]">
-            
-            {/* 1. Intro Panel (Part of the track, scrolls away) */}
-            <div className="w-[85vw] md:w-[60vw] lg:w-[45vw] flex-shrink-0 flex flex-col justify-center pr-12 md:pr-32">
-                <div className="inline-flex items-center gap-3 mb-6">
-                  <div className="h-px w-12 bg-gradient-to-r from-transparent to-cyan-500/50" />
-                  <p className="text-xs font-bold font-mono uppercase tracking-[0.3em] text-cyan-400">{'// our_journey'}</p>
-                </div>
-                <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight text-white drop-shadow-2xl mb-8 leading-[1.1]">
-                  Not just a club.<br /><span className="grad-text">A launchpad.</span>
-                </h2>
-                <p className="text-base md:text-lg text-slate-400 font-sans leading-relaxed mb-10 max-w-md">
-                  Every workshop, every session, every line of code is a step towards building the next generation of tech leaders.
-                </p>
-                
-                <div className="flex items-center gap-4 text-xs font-mono text-slate-500 uppercase tracking-widest">
-                  <span>Scroll to explore</span>
-                  <div className="w-24 h-px bg-white/10 relative overflow-hidden">
-                     <div className="absolute inset-y-0 left-0 bg-cyan-400 w-1/3 animate-pulse" />
-                  </div>
-                  <ArrowRight size={14} className="text-cyan-500" />
-                </div>
-            </div>
-
-            {/* The infinite horizontal line (Starts slightly past the intro) */}
-            <div className="absolute left-[85vw] md:left-[60vw] lg:left-[45vw] right-0 top-1/2 -translate-y-1/2 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-0" />
-
-            {/* Timeline Events */}
-            {events.map((h, i) => {
-              const isEven = i % 2 === 0;
-              const EventIcon = h.icon;
-              
-              return (
-                <div key={i} className="relative grid grid-rows-2 h-full w-[85vw] sm:w-[400px] md:w-[450px] mr-16 md:mr-32 shrink-0 group items-center z-10">
-                    
-                    {/* Node on the central line */}
-                    <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-30">
-                        <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-[#060910] border border-white/20 flex items-center justify-center transition-all duration-500 group-hover:scale-125 group-hover:border-white/50">
-                            <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full" style={{ backgroundColor: h.accent, boxShadow: `0 0 12px ${h.accent}` }} />
-                        </div>
-                    </div>
-                    
-                    {/* Watermark */}
-                    <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-[12rem] md:text-[18rem] font-black font-display opacity-[0.02] pointer-events-none select-none transition-opacity duration-700 group-hover:opacity-[0.05] z-0"
-                         style={{ color: 'transparent', WebkitTextStroke: `2px ${h.accent}` }}>
-                      0{i + 1}
-                    </div>
-
-                    {isEven ? (
-                        <>
-                            {/* Row 1: Image, anchored to bottom (sits on the line) */}
-                            <div className="w-full h-[35vh] md:h-[320px] self-end pb-8 md:pb-12 z-20">
-                                <div className="absolute bottom-[2rem] md:bottom-[3rem] left-1/2 -translate-x-1/2 w-px h-8 md:h-12 bg-gradient-to-t from-white/20 to-transparent transition-all duration-500 group-hover:h-10 md:group-hover:h-16 group-hover:bg-white/40" />
-                                <div className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 group-hover:border-white/20 transition-all duration-700 shadow-2xl group-hover:-translate-y-2">
-                                    <img src={h.image} alt={h.alt} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
-                                    <div className="absolute inset-0 opacity-40 group-hover:opacity-0 transition-opacity duration-700" style={{ backgroundColor: h.accent, mixBlendMode: 'color' }} />
-                                </div>
-                            </div>
-                            
-                            {/* Row 2: Text, anchored to top (hangs from the line) */}
-                            <div className="w-full self-start pt-8 md:pt-12 text-center z-20 transition-transform duration-500 group-hover:translate-y-2">
-                                <div className="flex items-center justify-center gap-2 md:gap-3 mb-3">
-                                    <EventIcon size={14} style={{ color: h.accent }} />
-                                    <span className="text-[10px] md:text-xs font-mono uppercase tracking-widest text-slate-400">Chapter 0{i+1} • {h.stat}</span>
-                                </div>
-                                <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">{h.title}</h3>
-                                <p className="text-xs md:text-sm text-slate-400 leading-relaxed max-w-sm mx-auto">{h.desc}</p>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            {/* Row 1: Text, anchored to bottom (sits on the line) */}
-                            <div className="w-full self-end pb-8 md:pb-12 text-center z-20 transition-transform duration-500 group-hover:-translate-y-2">
-                                <div className="flex items-center justify-center gap-2 md:gap-3 mb-3">
-                                    <EventIcon size={14} style={{ color: h.accent }} />
-                                    <span className="text-[10px] md:text-xs font-mono uppercase tracking-widest text-slate-400">Chapter 0{i+1} • {h.stat}</span>
-                                </div>
-                                <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">{h.title}</h3>
-                                <p className="text-xs md:text-sm text-slate-400 leading-relaxed max-w-sm mx-auto">{h.desc}</p>
-                            </div>
-                            
-                            {/* Row 2: Image, anchored to top (hangs from the line) */}
-                            <div className="w-full h-[35vh] md:h-[320px] self-start pt-8 md:pt-12 z-20">
-                                <div className="absolute top-[2rem] md:top-[3rem] left-1/2 -translate-x-1/2 w-px h-8 md:h-12 bg-gradient-to-b from-white/20 to-transparent transition-all duration-500 group-hover:h-10 md:group-hover:h-16 group-hover:bg-white/40" />
-                                <div className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 group-hover:border-white/20 transition-all duration-700 shadow-2xl group-hover:translate-y-2">
-                                    <img src={h.image} alt={h.alt} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
-                                    <div className="absolute inset-0 opacity-40 group-hover:opacity-0 transition-opacity duration-700" style={{ backgroundColor: h.accent, mixBlendMode: 'color' }} />
-                                </div>
-                            </div>
-                        </>
-                    )}
-                </div>
-              );
-            })}
-        </div>
+    <section ref={sectionRef} className="relative py-24 px-4 md:px-8 bg-[#060910] overflow-hidden">
+      {/* Ambient glows */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full blur-[200px] opacity-[0.03]"
+          style={{ backgroundColor: '#22D3EE' }} />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full blur-[150px] opacity-[0.03]"
+          style={{ backgroundColor: '#818CF8' }} />
       </div>
+
+      <div className="glow-divider absolute top-0 left-0 right-0" />
+
+      {/* Section header */}
+      <div className="text-center mb-20 relative z-10">
+        <div className="inline-flex items-center gap-3 mb-5">
+          <div className="h-px w-12 bg-gradient-to-r from-transparent to-cyan-500/50" />
+          <p className="text-xs font-bold font-mono uppercase tracking-[0.3em] text-cyan-400">{'// our_journey'}</p>
+          <div className="h-px w-12 bg-gradient-to-l from-transparent to-cyan-500/50" />
+        </div>
+        <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight text-white leading-[1.1] mb-5">
+          Not just a club.<br /><span className="grad-text">A launchpad.</span>
+        </h2>
+        <p className="text-base md:text-lg text-slate-400 max-w-lg mx-auto leading-relaxed font-sans">
+          Every workshop, every session, every line of code — a step towards the next generation of tech leaders.
+        </p>
+      </div>
+
+      {/* Timeline body */}
+      <div className="relative max-w-5xl mx-auto">
+
+        {/* Vertical spine — grows on scroll */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px z-10"
+          style={{ background: 'rgba(255,255,255,0.05)' }}>
+          {/* Animated fill line */}
+          <div
+            ref={lineRef}
+            className="absolute top-0 left-0 w-full rounded-full transition-none"
+            style={{
+              height: `${lineHeight}%`,
+              background: 'linear-gradient(to bottom, #22D3EE, #818CF8, #34D399)',
+              boxShadow: '0 0 10px rgba(34,211,238,0.4)',
+              transition: 'height 0.1s linear',
+            }}
+          />
+        </div>
+
+        {/* Event nodes */}
+        {events.map((event, i) => (
+          <VerticalTimelineNode
+            key={i}
+            event={event}
+            index={i}
+            isLeft={i % 2 === 0}
+          />
+        ))}
+      </div>
+      <div className="glow-divider absolute bottom-0 left-0 right-0" />
     </section>
   );
 };
@@ -640,7 +684,7 @@ const RECENT_EVENTS = [
     desc: 'An intensive session on Machine Learning fundamentals and practical AI implementation from scratch.',
     stat: '2026',
     accent: '#22D3EE',
-    image: 'https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_800/v1779473312/IMG_7193_p5zhmg.jpg',
+    image: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787161991/IMG_7150_1_idld2c.jpg',
     alt: 'Students coding during hands-on machine learning workshop'
   },
   {
@@ -687,8 +731,12 @@ const TECH_TAGS = ['AI/ML', 'DEEP LEARNING', 'PYTORCH', 'TENSORFLOW', 'LLMS', 'M
 
 const FACULTY = [
   {
-    code: 'SK', title: 'FACULTY COORDINATOR', name: 'Sanam Kazi', role: 'FACULTY COORDINATOR',
+    code: 'SN', title: 'FACULTY COORDINATOR', name: 'Sana Nalband', role: 'FACULTY COORDINATOR',
     tagline: 'Fostering academic engagement, supporting student development programs, and driving growth in technical research.',
+  },
+  {
+    code: 'J', title: 'FACULTY COORDINATOR', name: 'Jyoti', role: 'FACULTY COORDINATOR',
+    tagline: 'Empowering students with knowledge, guiding innovative projects, and nurturing a strong technical community.',
   },
   {
     code: 'SK', title: 'AIML HOD', name: 'Supriya Khaitan', role: 'AIML HOD',
@@ -902,8 +950,8 @@ export default function Home({ go }) {
       {/* ═══════ DEVELOPER WORKSPACE (Replaces Open Source) ═══════ */}
       <DeveloperWorkspace />
 
-      {/* ═══════ EVENTS TIMELINE (Cinematic Story Layout) ═══════ */}
-      <HorizontalTimeline events={RECENT_EVENTS} />
+      {/* ═══════ EVENTS TIMELINE (Vertical Story Layout) ═══════ */}
+      <VerticalTimeline events={RECENT_EVENTS} />
 
       {/* ═══════ BEHIND THE CLUB (Faculty) ═══════ */}
       <section className="relative px-5 sm:px-8 py-20 sm:py-28 bg-[#060910]">
@@ -913,7 +961,7 @@ export default function Home({ go }) {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full blur-[180px] opacity-[0.025] pointer-events-none"
           style={{ backgroundColor: '#FBBF24' }} />
 
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full max-w-[1400px] mx-auto">
 
           {/* Header */}
           <div className="text-center mb-12 sm:mb-16">
@@ -933,7 +981,7 @@ export default function Home({ go }) {
           </div>
 
           {/* Faculty cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 max-w-4xl mx-auto gap-4 sm:gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 w-full gap-6 sm:gap-8 xl:gap-10">
             {FACULTY.map((f, i) => (
               <div key={i} data-animate="fade-up" data-delay={i * 120}
                 className="relative overflow-hidden rounded-2xl sm:rounded-3xl group cursor-default transition-all duration-500 hover:-translate-y-2"

@@ -3,10 +3,10 @@ import { Github, Linkedin, Instagram, Mail } from '../Icons';
 import logo from '../assets/logo.png';
 
 const SOCIALS = [
-  { Icon: Instagram, href: 'https://instagram.com', label: 'Instagram', color: '#E1306C' },
-  { Icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn', color: '#0A66C2' },
-  { Icon: Github, href: 'https://github.com', label: 'GitHub', color: '#e2e8f0' },
-  { Icon: Mail, href: 'mailto:aignite@bvdu.edu', label: 'Email', color: '#22d3ee' },
+  { Icon: Instagram, href: 'https://www.instagram.com/aignite.bvdu/', label: 'Instagram', color: '#E1306C' },
+  { Icon: Linkedin, href: 'https://www.linkedin.com/company/aignite-student-chapter-bvdu-det-nm', label: 'LinkedIn', color: '#0A66C2' },
+  { Icon: Github, href: 'https://github.com/AIgnite-BVDUDET', label: 'GitHub', color: '#e2e8f0' },
+  { Icon: Mail, href: 'mailto:aigniteclub.bvdu@gmail.com', label: 'Email', color: '#22d3ee' },
 ];
 
 const FOCUS = [

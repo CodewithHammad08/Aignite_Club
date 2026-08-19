@@ -46,10 +46,10 @@ const TeamIcon = ({ active }) => (
 );
 
 const NAV = [
-  { id: 'home',   label: 'Home',   Icon: HomeIcon },
-  { id: 'about',  label: 'About',  Icon: AboutIcon },
+  { id: 'home', label: 'Home', Icon: HomeIcon },
+  { id: 'about', label: 'About', Icon: AboutIcon },
   { id: 'events', label: 'Events', Icon: EventsIcon },
-  { id: 'team',   label: 'Team',   Icon: TeamIcon },
+  { id: 'team', label: 'Team', Icon: TeamIcon },
 ];
 
 export default function Navbar({ page, go }) {
@@ -86,32 +86,32 @@ export default function Navbar({ page, go }) {
         style={
           scrolled
             ? {
-                backgroundColor: 'rgba(5,13,26,0.85)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                borderBottom: '1px solid rgba(0,212,255,0.08)',
-                boxShadow: '0 4px 20px rgba(0,212,255,0.04)',
-              }
+              backgroundColor: 'rgba(5,13,26,0.85)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              borderBottom: '1px solid rgba(0,212,255,0.08)',
+              boxShadow: '0 4px 20px rgba(0,212,255,0.04)',
+            }
             : {
-                backgroundColor: 'rgba(5,13,26,0.22)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-                borderBottom: '1px solid rgba(0,212,255,0.04)',
-                boxShadow: '0 2px 10px rgba(0,212,255,0.02)',
-              }
+              backgroundColor: 'rgba(5,13,26,0.22)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              borderBottom: '1px solid rgba(0,212,255,0.04)',
+              boxShadow: '0 2px 10px rgba(0,212,255,0.02)',
+            }
         }
       >
-        <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-center md:justify-between">
+        <div className="w-full px-6 md:px-12 h-20 flex items-center justify-between">
           {/* Logo with shape-conforming glow pulse */}
           <button
             onClick={() => go('home')}
-            className="flex items-center group"
+            className="flex items-center group ml-6 md:ml-4"
             aria-label="Go home"
           >
             <img
               src={logo}
               alt="Aignite"
-              className="w-[280px] md:w-[340px] h-[54px] object-contain relative z-10"
+              className="ml-18 mt-3 w-auto h-[64px] md:h-[74px] object-contain object-left relative z-10"
               style={{ animation: 'logoPulse 2s ease-in-out infinite' }}
             />
           </button>
@@ -123,7 +123,7 @@ export default function Navbar({ page, go }) {
                 key={n.id}
                 ref={(el) => { navRefs.current[n.id] = el; }}
                 onClick={() => go(n.id)}
-                className="relative px-5 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-colors duration-200"
+                className="relative px-5 py-2.5 rounded-xl text-base font-bold tracking-wide transition-colors duration-200"
                 style={{
                   color: page === n.id ? '#e8f4f8' : '#4a6070',
                 }}
@@ -157,19 +157,17 @@ export default function Navbar({ page, go }) {
           </div>
 
           {/* CTA */}
-          <a
-            href="https://forms.google.com"
-            target="_blank"
-            rel="noreferrer"
-            className="hidden md:inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all hover:scale-[1.03]"
+          <button
+            disabled
+            className="hidden md:inline-flex items-center gap-2 px-7 py-2.5 rounded-xl text-base font-bold tracking-wide opacity-50 cursor-not-allowed"
             style={{
-              backgroundColor: '#00d4ff',
-              color: '#050d1a',
-              boxShadow: '0 0 20px rgba(0,212,255,0.25)',
+              backgroundColor: '#2a3b4c',
+              color: '#8a9fac',
+              boxShadow: 'none',
             }}
           >
             Join Us
-          </a>
+          </button>
         </div>
       </nav>
 
