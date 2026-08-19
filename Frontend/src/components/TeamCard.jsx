@@ -598,7 +598,6 @@ export const eventMembers = [
     tagline: 'Orchestrating high-impact campus tech experiences',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962686/42fa127ca8414cbab33ab74c25da9b46_uoltja.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Operations' },
@@ -615,7 +614,6 @@ export const eventMembers = [
     tagline: 'Connecting logistics and community partnerships',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962707/1c5ba42423a740308e5168749a1fb46a_o7thkb.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Logistics' },
@@ -632,7 +630,6 @@ export const eventMembers = [
     tagline: 'Bridging event conceptualization and delivery',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962712/542229ec34274109bc4965f7bafb859e_t1otk9.png',
     photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779965116/ChatGPT_Image_May_28__2026__04_13_32_PM-removebg-preview_rov5rr.png',
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Coordination' },
@@ -650,7 +647,6 @@ export const eventMembers = [
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962702/3591387ea6df4e94ab8a816dc742559d_my2c40.png',
     photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779964114/c6e15e6d2fcb42d79d662321b5430f09_juzlrm.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Resource Mgmt' },
@@ -667,7 +663,6 @@ export const eventMembers = [
     tagline: 'Supervising volunteer workforces during bootcamps',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779963116/69005e85331641c29adf5aa94580735a_mjlwah.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Management' },
@@ -684,7 +679,6 @@ export const eventMembers = [
     tagline: 'Connecting with participants and external speakers',
     photo_face: null,
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Outreach' },
@@ -711,7 +705,6 @@ export const prMembers = [
     tagline: 'Elevating the public identity of Aignite globally',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962698/31fc5c31bb8545b6ab09f6e205915753_auakcf.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Publicity' },
@@ -728,7 +721,6 @@ export const prMembers = [
     tagline: 'Forging deep industry alliances and sponsorships',
     photo_face: null,
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Partnership' },
@@ -745,7 +737,6 @@ export const prMembers = [
     tagline: 'Pitching events to prospective club collaborators',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779903807/Ujjwal_xj1uu2.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Outreach' },
@@ -762,7 +753,6 @@ export const prMembers = [
     tagline: 'Nurturing long-term external club relations',
     photo_face: null,
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Relations' },
@@ -789,7 +779,6 @@ export const designMembers = [
     tagline: 'Curating the overall visual brand guidelines of Aignite',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779902362/Mahesh_po1ioi.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'UI/UX' },
@@ -806,7 +795,6 @@ export const designMembers = [
     tagline: 'Overseeing UI prototyping and production graphic assets',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962710/e0a624153e494043b3a17a739ae117b3_vkv4pg.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Graphics' },
@@ -823,7 +811,6 @@ export const designMembers = [
     tagline: 'Designing web dashboards and interactive prototypes',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962686/7e3385ac4fd944259204cc814a27d8b6_syhbda.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'UI/UX' },
@@ -840,7 +827,6 @@ export const designMembers = [
     tagline: 'Designing event posters and promotional visual content',
     photo_face: null,
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Graphics' },
@@ -868,7 +854,6 @@ export const contentMembers = [
     tagline: 'Shaping the digital narrative and brand voice of Aignite',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779902365/Tanvi_rusbiy.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Social Media' },
@@ -885,7 +870,6 @@ export const contentMembers = [
     tagline: 'Crafting viral reels and engaging social content',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962700/450672edf15f408da194cf7bd845f99d_njcf86.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Content' },
@@ -902,7 +886,6 @@ export const contentMembers = [
     tagline: 'Expanding Aignite footprint across all social platforms',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962687/f4ac26cb62634d8f8252f7a7c4b3603f_esdd1n.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Strategy' },
@@ -919,7 +902,6 @@ export const contentMembers = [
     tagline: 'Recording high-definition event highlights and coverage',
     photo_face: null,
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Video' },
@@ -936,7 +918,6 @@ export const contentMembers = [
     tagline: 'Capturing impactful moments across all club activities',
     photo_face: null,
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Photo' },
@@ -957,7 +938,6 @@ export const disciplineMembers = [
     tagline: 'Maintaining order, integrity and professionalism within Aignite',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962708/230af789c1d04843ab21a90041b3869c_esgmtd.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Management' },
@@ -974,7 +954,6 @@ export const disciplineMembers = [
     tagline: 'Enforcing club standards and fostering a respectful environment',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962689/6a33da7d07904ca4a18bff568ae0194f_shovcr.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Compliance' },
@@ -991,7 +970,6 @@ export const disciplineMembers = [
     tagline: 'Coordinating fair conduct at all Aignite events',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779904627/Umar_1_fwalmw.png',
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Coordination' },
@@ -1008,7 +986,6 @@ export const disciplineMembers = [
     tagline: 'Upholding Aignite values and event code of conduct',
     photo_face: null,
     photo_body: null,
-    github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Ethics' },

@@ -24,6 +24,25 @@ const LEADS = [
   },
 ];
 
+const SPECIAL_HEADS = [
+  {
+    id: 'SH', name: 'Shreyash', initials: 'SH', role: 'SPONSORSHIP HEAD', nationality: 'INDIAN',
+    tagline: 'Driving strategic partnerships and securing resources',
+    photo_face: null,
+    photo_body: null,
+    stats: [{ label: 'DOMAIN', value: 'Sponsorship' }, { label: 'STACK', value: 'Outreach' }, { label: 'DEALS', value: 'Active' }],
+    linkedin: '#',
+  },
+  {
+    id: 'FH', name: 'Sharavani', initials: 'SH', role: 'FINANCE HEAD', nationality: 'INDIAN',
+    tagline: 'Managing funds, budgets, and financial strategy',
+    photo_face: null,
+    photo_body: null,
+    stats: [{ label: 'DOMAIN', value: 'Finance' }, { label: 'STACK', value: 'Management' }, { label: 'FUNDS', value: 'Active' }],
+    linkedin: '#',
+  },
+];
+
 const DEPARTMENTS = [
   { id: 'tech', label: 'Tech', icon: Code, color: '#3B82F6' },
   { id: 'event', label: 'Events', icon: Calendar, color: '#22D3EE' },
@@ -231,6 +250,25 @@ export default function Team() {
             {activeDept === 'design' && <DesignTeam />}
             {activeDept === 'social' && <ContentTeam />}
             {activeDept === 'discipline' && <DisciplineTeam />}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════
+          §3.5  CORE COMMITTEE HEADS (Sponsorship & Finance)
+      ══════════════════════════════════════════════ */}
+      <section className="relative px-3 sm:px-6 pb-24 bg-level-0">
+        <div className="max-w-4xl mx-auto pt-4">
+          <div data-animate="fade-up" className="flex items-center gap-3 mb-6">
+            <div className="w-5 h-px" style={{ backgroundColor: '#00d4ff' }} />
+            <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-muted">Core Committee Heads</span>
+          </div>
+          <div className="grid grid-cols-2 gap-4 sm:gap-6">
+            {SPECIAL_HEADS.map((h, i) => (
+              <div key={i} data-animate={i === 0 ? 'fade-right' : 'fade-left'} data-delay={i * 150}>
+                <TeamCard member={h} heightClass="h-[180px] md:h-[280px]" facing={i % 2 === 0 ? 'right' : 'left'} />
+              </div>
+            ))}
           </div>
         </div>
       </section>
