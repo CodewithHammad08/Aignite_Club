@@ -731,16 +731,19 @@ const TECH_TAGS = ['AI/ML', 'DEEP LEARNING', 'PYTORCH', 'TENSORFLOW', 'LLMS', 'M
 
 const FACULTY = [
   {
-    code: 'SN', title: 'FACULTY COORDINATOR', name: 'Sana Nalband', role: 'FACULTY COORDINATOR',
+    code: 'SN', title: 'FACULTY COORDINATOR', name: 'Prof. Sana Nalband', role: 'FACULTY COORDINATOR',
     tagline: 'Fostering academic engagement, supporting student development programs, and driving growth in technical research.',
+    photo: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787237570/sana-no-bg_lhted9.png',
   },
   {
-    code: 'J', title: 'FACULTY COORDINATOR', name: 'Jyoti', role: 'FACULTY COORDINATOR',
+    code: 'JS', title: 'FACULTY COORDINATOR', name: 'Prof. Jyoti Sachan', role: 'FACULTY COORDINATOR',
     tagline: 'Empowering students with knowledge, guiding innovative projects, and nurturing a strong technical community.',
+    photo: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787237568/jyotii-no-bg_hncuue.png',
   },
   {
-    code: 'SK', title: 'AIML HOD', name: 'Supriya Khaitan', role: 'AIML HOD',
-    tagline: 'Leading the department towards innovation, research excellence, and pioneering next-generation machine learning projects.',
+    code: 'SK', title: 'AIML HOD', name: 'Dr. Supriya Khaitan', role: 'AIML HOD',
+    tagline: 'Leading with innovation, mentoring young minds, and inspiring the next generation to build the future of AI.',
+    photo: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787236815/2595frt_SupriyaKhaitan-no-bg_fuddpe.png',
   },
 ];
 
@@ -1004,25 +1007,39 @@ export default function Home({ go }) {
                   {f.code}
                 </div>
 
-                <div className="relative z-10 p-6 sm:p-8 flex flex-col min-h-[220px] justify-between">
+                {/* Faculty Photo */}
+                {f.photo && (
+                  <div className="absolute bottom-0 right-0 w-[55%] sm:w-[50%] h-[95%] pointer-events-none" style={{ zIndex: 5 }}>
+                    <img
+                      src={f.photo.replace('/image/upload/', '/image/upload/f_auto,q_100,w_400/')}
+                      alt={f.name}
+                      loading="lazy"
+                      className="w-full h-full object-contain object-bottom opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{ filter: 'drop-shadow(-8px 5px 20px rgba(0,0,0,0.6))' }}
+                    />
+                  </div>
+                )}
+
+                {/* Text Content Container - constrained width to avoid image overlap */}
+                <div className="relative z-10 p-6 sm:p-8 flex flex-col min-h-[250px] justify-between w-[58%] sm:w-[62%]">
                   <div>
                     {/* Role badge */}
-                    <div className="inline-flex items-center gap-1.5 text-[9px] font-black font-mono tracking-[0.2em] uppercase px-2.5 py-1 rounded-md mb-5"
+                    <div className="inline-flex items-center gap-1.5 text-[9px] font-black font-mono tracking-[0.2em] uppercase px-2.5 py-1 rounded-md mb-6"
                       style={{ color: '#F59E0B', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.18)' }}>
                       {f.title}
                     </div>
 
-                    {/* Name */}
-                    <h3 className="text-xl sm:text-2xl font-black font-display text-white uppercase tracking-tight mb-1 leading-tight">
+                    {/* Name with premium styling */}
+                    <h3 className="text-xl sm:text-[1.35rem] font-black font-display uppercase tracking-tight mb-2 leading-snug text-transparent bg-clip-text bg-gradient-to-r from-amber-50 via-white to-slate-300 drop-shadow-sm">
                       {f.name}
                     </h3>
-                    <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-5">{f.role}</div>
+                    <div className="text-[11px] font-bold font-mono text-amber-500/70 uppercase tracking-[0.25em] mb-6">{f.role}</div>
                   </div>
 
                   {/* Quote block */}
-                  <blockquote className="relative pl-4 border-l-2 border-amber-500/30">
-                    <div className="absolute -top-1 -left-1.5 text-amber-400/40 font-serif text-2xl leading-none select-none">"</div>
-                    <p className="text-xs sm:text-sm text-slate-400 italic leading-relaxed line-clamp-3 font-sans">
+                  <blockquote className="relative pl-4 border-l-2 border-amber-500/40">
+                    <div className="absolute -top-1.5 -left-2 text-amber-400/30 font-serif text-3xl leading-none select-none">"</div>
+                    <p className="text-[13px] sm:text-sm text-slate-300 font-medium italic leading-relaxed line-clamp-4 font-sans">
                       {f.tagline}
                     </p>
                   </blockquote>

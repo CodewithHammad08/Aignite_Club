@@ -8,8 +8,8 @@ const LEADS = [
   {
     id: '01', name: 'Sanskriti Singh', initials: 'SS', role: 'PRESIDENT', nationality: 'INDIAN',
     tagline: 'Leading Aignite to new horizons',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962703/ed5674e2364b4e48afd39e340b631383_dgxcsf.png',
-    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779964112/71b08c5a731347c5af5ffa5255d57797_nolt6f.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232632/sanskriti_main-no-bg_chgqoh.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787231929/sanskriti_hover-no-bg_op7njh.png',
     photo_body: null,
     stats: [{ label: 'DOMAIN', value: 'Management' }, { label: 'STACK', value: 'Strategy' }, { label: 'PROJECTS', value: '12' }],
     linkedin: '#', github: '#',
@@ -17,7 +17,7 @@ const LEADS = [
   {
     id: '02', name: 'Osman Sanjar', initials: 'OS', role: 'VICE PRESIDENT', nationality: 'INDIAN',
     tagline: 'Operations and community leader',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962698/96b383d64c474058aa9f6b003340bc2f_udt6ue.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787231927/osman-no-bg_llc8ly.png',
     photo_body: null,
     stats: [{ label: 'DOMAIN', value: 'Operations' }, { label: 'STACK', value: 'Planning' }, { label: 'PROJECTS', value: '10' }],
     linkedin: '#', github: '#',
@@ -28,7 +28,8 @@ const SPECIAL_HEADS = [
   {
     id: 'SH', name: 'Shreyash', initials: 'SH', role: 'SPONSORSHIP HEAD', nationality: 'INDIAN',
     tagline: 'Driving strategic partnerships and securing resources',
-    photo_face: null,
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787236375/0d44176b51af46f39f49970ab48170f5-no-bg_xyzuur.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787236375/0d44176b51af46f39f49970ab48170f5-no-bg_xyzuur.png',
     photo_body: null,
     stats: [{ label: 'DOMAIN', value: 'Sponsorship' }, { label: 'STACK', value: 'Outreach' }, { label: 'DEALS', value: 'Active' }],
     linkedin: '#',

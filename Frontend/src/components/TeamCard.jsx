@@ -15,10 +15,10 @@ import React from 'react';
 const MONO = '"JetBrains Mono", "Fira Code", monospace';
 
 // ─── Cloudinary Optimization Helper ───
-const optimizeCloudinaryUrl = (url, width = 500) => {
+const optimizeCloudinaryUrl = (url, width = 900) => {
   if (!url || typeof url !== 'string') return url;
   if (!url.includes('cloudinary.com')) return url;
-  return url.replace('/image/upload/', `/image/upload/f_auto,q_auto,w_${width}/`);
+  return url.replace('/image/upload/', `/image/upload/f_auto,q_100,w_${width}/`);
 };
 
 // ─── Real Aignite Tech Team data — swap photo_face / photo_body when photos are ready ───
@@ -30,7 +30,8 @@ const members = [
     role: 'HEAD · TECH',
     position: 'FULL STACK',
     tagline: 'Crafting pixel-perfect web experiences',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962686/0ea58604f004420596a95c519d619074_upxhub.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787236041/ChatGPT_Image_Aug_20_2026_07_48_11_PM-no-bg_jgyhlq.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787236041/ChatGPT_Image_Aug_20_2026_07_48_11_PM-no-bg_jgyhlq.png',
     photo_body: null,
     github: 'https://github.com',
     linkedin: 'https://linkedin.com',
@@ -47,7 +48,7 @@ const members = [
     role: 'CO-HEAD · TECH',
     position: 'DEVELOPER',
     tagline: 'Scaling servers and securing deployments',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962680/10d695be444c4a8bb4ec948d614a82d7_swlkqp.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232634/parth-no-bg_janw05.png',
     photo_body: null,
     github: 'https://github.com',
     linkedin: 'https://linkedin.com',
@@ -75,30 +76,13 @@ const members = [
     ],
   },
   {
-    id: '06',
-    name: 'Ramanan D.',
-    initials: 'RD',
-    role: 'MEMBER · TECH',
-    position: 'BACKEND',
-    tagline: 'Optimizing databases and microservices at scale',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962676/38280cb673cd480daafbb7c338e1d52f_ajla1j.png',
-    photo_body: null,
-    github: 'https://github.com',
-    linkedin: 'https://linkedin.com',
-    stats: [
-      { label: 'DOMAIN', value: 'Backend' },
-      { label: 'STACK', value: 'Python' },
-      { label: 'PROJECTS', value: '9' },
-    ],
-  },
-  {
     id: '07',
     name: 'Ushank Rajeshshirke',
     initials: 'UR',
     role: 'MEMBER · TECH',
     position: 'APP DEV',
     tagline: 'Building beautiful cross-platform applications',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962689/68ba22a8cd0241a88046ade68cb1d8a5_iivmgw.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232742/ushank-no-bg_ibwx7s.png',
     photo_body: null,
     github: 'https://github.com',
     linkedin: 'https://linkedin.com',
@@ -115,7 +99,7 @@ const members = [
     role: 'MEMBER · TECH',
     position: 'DEVELOPER',
     tagline: 'Transforming logic into interactive web designs',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779902365/Soham_y2wad2.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232796/soham-no-bg_eadice.png',
     photo_body: null,
     github: 'https://github.com',
     linkedin: 'https://linkedin.com',
@@ -132,7 +116,7 @@ const members = [
     role: 'MEMBER · TECH',
     position: 'FRONTEND',
     tagline: 'Designing interactive and responsive UIs',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779902366/Tejas_odfana.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787235092/ChatGPT_Image_Aug_20_2026_07_39_17_PM-no-bg_wqe2ww.png',
     photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779964120/a8b0d3cd7fec415bbaee98bbee0325da_wsgqnc.png',
     photo_body: null,
     github: 'https://github.com',
@@ -150,7 +134,7 @@ const members = [
     role: 'MEMBER · TECH',
     position: 'AI ENGINEER',
     tagline: 'Training neural networks to solve real-world problems',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779902363/Manogya_ftcvfy.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232640/manogyaa-no-bg_biuzpv.png',
     photo_body: null,
     github: 'https://github.com',
     linkedin: 'https://linkedin.com',
@@ -164,6 +148,7 @@ const members = [
 
 export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }) {
   const [clicked, setClicked] = React.useState(false);
+  const [imgLoaded, setImgLoaded] = React.useState(false);
 
   const domainStat = member.stats.find(s => s.label === 'DOMAIN');
   const stackStat = member.stats.find(s => s.label === 'STACK');
@@ -191,6 +176,10 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
       style={{
         background: '#0d1526',
         border: '1px solid rgba(0, 212, 255, 0.10)',
+        /* Promote to own composited layer — prevents neighbouring repaints */
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
       }}
     >
 
@@ -242,15 +231,28 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
             }}
           />
 
-          {/* LAYER B — Portrait image (object-contain, size reduced on mobile for heads) */}
+          {/* LAYER B — Portrait image */}
+          {/* Shimmer skeleton shown while image is loading */}
+          {!imgLoaded && (
+            <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 2 }}>
+              <div className="absolute inset-0" style={{
+                background: 'linear-gradient(90deg, #0d1526 0%, #152035 40%, #1a2a45 50%, #152035 60%, #0d1526 100%)',
+                backgroundSize: '200% 100%',
+                animation: 'shimmer 1.6s infinite',
+              }} />
+            </div>
+          )}
           <img
             src={optimizeCloudinaryUrl(member.photo_face, 500)}
             alt={member.name}
-            className={`absolute inset-0 w-full object-contain ${isHead ? 'h-[78%] top-[11%] md:h-full md:top-0' : 'h-full'
-              }`}
+            loading="lazy"
+            decoding="async"
+            onLoad={() => setImgLoaded(true)}
+            className={`absolute inset-0 w-full object-contain transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'} ${isHead ? 'h-[78%] top-[11%] md:h-full md:top-0' : 'h-full'}`}
             style={{
               objectPosition: 'center center',
               filter: 'brightness(0.96) contrast(1.05)',
+              zIndex: 3,
             }}
           />
 
@@ -377,7 +379,10 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
          ══════════════════════════════════════════════ */}
       <div
         className={`absolute inset-0 z-20 rounded-xl transition-transform duration-[420ms] ease-[cubic-bezier(0.32,0,0.12,1)] ${clicked ? 'translate-y-0' : 'translate-y-full group-hover:translate-y-0'}`}
-        style={{ background: '#ffffff' }}
+        style={{
+          background: '#ffffff',
+          willChange: 'transform',
+        }}
       >
         {/* PHOTO COLUMN — shows photo_face, positioned by `facing` prop */}
         {member.photo_face && (
@@ -390,10 +395,17 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
             }}
           >
             <img
-              src={optimizeCloudinaryUrl(member.photo_hover || member.photo_body || member.photo_face, 300)}
+              src={(() => {
+                const url = member.photo_hover || member.photo_body || member.photo_face;
+                if (!url || typeof url !== 'string') return url;
+                if (!url.includes('cloudinary.com')) return url;
+                return url.replace('/image/upload/', '/image/upload/f_auto,q_100,w_800/');
+              })()}
               alt={member.name}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover"
-              style={{ objectPosition: 'center top' }}
+              style={{ objectPosition: 'center top', imageRendering: 'auto' }}
             />
             {/* Fade edge toward the stats side */}
             <div
@@ -597,6 +609,7 @@ export const eventMembers = [
     position: 'ORGANIZER',
     tagline: 'Orchestrating high-impact campus tech experiences',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962686/42fa127ca8414cbab33ab74c25da9b46_uoltja.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232631/prince-no-bg_hmicpq.png',
     photo_body: null,
     linkedin: 'https://linkedin.com',
     stats: [
@@ -613,6 +626,7 @@ export const eventMembers = [
     position: 'COORDINATOR',
     tagline: 'Connecting logistics and community partnerships',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962707/1c5ba42423a740308e5168749a1fb46a_o7thkb.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232629/disha-no-bg_eu0kpf.png',
     photo_body: null,
     linkedin: 'https://linkedin.com',
     stats: [
@@ -661,7 +675,8 @@ export const eventMembers = [
     role: 'MEMBER · EVENTS',
     position: 'COORDINATOR',
     tagline: 'Supervising volunteer workforces during bootcamps',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779963116/69005e85331641c29adf5aa94580735a_mjlwah.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787234319/69005e85331641c29adf5aa94580735a_mjlwah-no-bg_lxnqv3.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787234319/69005e85331641c29adf5aa94580735a_mjlwah-no-bg_lxnqv3.png',
     photo_body: null,
     linkedin: 'https://linkedin.com',
     stats: [
@@ -697,26 +712,10 @@ export function EventTeam() {
 // ─────────────────────────────────────────────────────────────────────────────
 export const prMembers = [
   {
-    id: '17',
-    name: 'Ansh Dixit',
-    initials: 'AD',
-    role: 'HEAD · PR',
-    position: 'PUBLIC RELATIONS',
-    tagline: 'Elevating the public identity of Aignite globally',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962698/31fc5c31bb8545b6ab09f6e205915753_auakcf.png',
-    photo_body: null,
-    linkedin: 'https://linkedin.com',
-    stats: [
-      { label: 'DOMAIN', value: 'Publicity' },
-      { label: 'STACK', value: 'Strategy' },
-      { label: 'CAMPAIGNS', value: '6+' },
-    ],
-  },
-  {
     id: '18',
-    name: 'Gunjan Khairat',
+    name: 'Gunjan Kharat',
     initials: 'GK',
-    role: 'MEMBER · PR',
+    role: 'HEAD · PR',
     position: 'PUBLIC RELATIONS',
     tagline: 'Forging deep industry alliances and sponsorships',
     photo_face: null,
@@ -771,29 +770,13 @@ export function PRTeam() {
 // ─────────────────────────────────────────────────────────────────────────────
 export const designMembers = [
   {
-    id: '24',
-    name: 'Mahesh Golam',
-    initials: 'MG',
-    role: 'HEAD · DESIGN',
-    position: 'DESIGNER',
-    tagline: 'Curating the overall visual brand guidelines of Aignite',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779902362/Mahesh_po1ioi.png',
-    photo_body: null,
-    linkedin: 'https://linkedin.com',
-    stats: [
-      { label: 'DOMAIN', value: 'UI/UX' },
-      { label: 'STACK', value: 'Figma' },
-      { label: 'DESIGNS', value: '30+' },
-    ],
-  },
-  {
     id: '25',
     name: 'Aniket Mishra',
     initials: 'AM',
     role: 'CO-HEAD · DESIGN',
     position: 'DESIGNER',
     tagline: 'Overseeing UI prototyping and production graphic assets',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962710/e0a624153e494043b3a17a739ae117b3_vkv4pg.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787229479/Aniket_y1w5uw.png',
     photo_body: null,
     linkedin: 'https://linkedin.com',
     stats: [
@@ -809,29 +792,14 @@ export const designMembers = [
     role: 'MEMBER · DESIGN',
     position: 'UI/UX',
     tagline: 'Designing web dashboards and interactive prototypes',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962686/7e3385ac4fd944259204cc814a27d8b6_syhbda.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787234358/7e3385ac4fd944259204cc814a27d8b6_syhbda-no-bg_nokuvn.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787234358/7e3385ac4fd944259204cc814a27d8b6_syhbda-no-bg_nokuvn.png',
     photo_body: null,
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'UI/UX' },
       { label: 'STACK', value: 'Figma' },
       { label: 'DESIGNS', value: '10' },
-    ],
-  },
-  {
-    id: '27',
-    name: 'Ayush',
-    initials: 'AY',
-    role: 'MEMBER · DESIGN',
-    position: 'GRAPHICS',
-    tagline: 'Designing event posters and promotional visual content',
-    photo_face: null,
-    photo_body: null,
-    linkedin: 'https://linkedin.com',
-    stats: [
-      { label: 'DOMAIN', value: 'Graphics' },
-      { label: 'STACK', value: 'Photoshop' },
-      { label: 'DESIGNS', value: '12' },
     ],
   },
 ];
@@ -853,6 +821,7 @@ export const contentMembers = [
     position: 'SOCIAL MEDIA',
     tagline: 'Shaping the digital narrative and brand voice of Aignite',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779902365/Tanvi_rusbiy.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232634/tanvi-no-bg_qqjlgr.png',
     photo_body: null,
     linkedin: 'https://linkedin.com',
     stats: [
@@ -869,6 +838,7 @@ export const contentMembers = [
     position: 'CONTENT CREATOR',
     tagline: 'Crafting viral reels and engaging social content',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962700/450672edf15f408da194cf7bd845f99d_njcf86.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232629/moiz-no-bg_tp7o57.png',
     photo_body: null,
     linkedin: 'https://linkedin.com',
     stats: [
@@ -885,6 +855,7 @@ export const contentMembers = [
     position: 'CONTENT CREATOR',
     tagline: 'Expanding Aignite footprint across all social platforms',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962687/f4ac26cb62634d8f8252f7a7c4b3603f_esdd1n.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232636/yash_gosavi-no-bg_rgzoqz.png',
     photo_body: null,
     linkedin: 'https://linkedin.com',
     stats: [
@@ -909,22 +880,6 @@ export const contentMembers = [
       { label: 'PROJECTS', value: '8' },
     ],
   },
-  {
-    id: '36',
-    name: 'Harsh',
-    initials: 'HR',
-    role: 'MEMBER · SOCIAL MEDIA',
-    position: 'PHOTOGRAPHER',
-    tagline: 'Capturing impactful moments across all club activities',
-    photo_face: null,
-    photo_body: null,
-    linkedin: 'https://linkedin.com',
-    stats: [
-      { label: 'DOMAIN', value: 'Photo' },
-      { label: 'STACK', value: 'Lightroom' },
-      { label: 'PROJECTS', value: '10' },
-    ],
-  },
 ];
 
 // Discipline Team members
@@ -937,6 +892,7 @@ export const disciplineMembers = [
     position: 'DISCIPLINE',
     tagline: 'Maintaining order, integrity and professionalism within Aignite',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962708/230af789c1d04843ab21a90041b3869c_esgmtd.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232628/amey-no-bg_rricp5.png',
     photo_body: null,
     linkedin: 'https://linkedin.com',
     stats: [
@@ -953,6 +909,7 @@ export const disciplineMembers = [
     position: 'DISCIPLINE',
     tagline: 'Enforcing club standards and fostering a respectful environment',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962689/6a33da7d07904ca4a18bff568ae0194f_shovcr.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232629/IMG_8520-no-bg_y1tenn.png',
     photo_body: null,
     linkedin: 'https://linkedin.com',
     stats: [
@@ -968,29 +925,14 @@ export const disciplineMembers = [
     role: 'MEMBER · DISCIPLINE',
     position: 'COORDINATOR',
     tagline: 'Coordinating fair conduct at all Aignite events',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779904627/Umar_1_fwalmw.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787235090/ChatGPT_Image_Aug_20_2026_07_38_01_PM-no-bg_kpm5jk.png',
+    photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787235090/ChatGPT_Image_Aug_20_2026_07_38_01_PM-no-bg_kpm5jk.png',
     photo_body: null,
     linkedin: 'https://linkedin.com',
     stats: [
       { label: 'DOMAIN', value: 'Coordination' },
       { label: 'STACK', value: 'Mediation' },
       { label: 'PROJECTS', value: '5' },
-    ],
-  },
-  {
-    id: '40',
-    name: 'Pranav',
-    initials: 'PR',
-    role: 'MEMBER · DISCIPLINE',
-    position: 'COORDINATOR',
-    tagline: 'Upholding Aignite values and event code of conduct',
-    photo_face: null,
-    photo_body: null,
-    linkedin: 'https://linkedin.com',
-    stats: [
-      { label: 'DOMAIN', value: 'Ethics' },
-      { label: 'STACK', value: 'Leadership' },
-      { label: 'PROJECTS', value: '4' },
     ],
   },
 ];

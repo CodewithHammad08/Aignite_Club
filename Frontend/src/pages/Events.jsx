@@ -255,7 +255,7 @@ export default function Events() {
             <div className="flex flex-wrap gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md">
               {FILTERS.map(f => (
                 <button key={f} onClick={() => setFilter(f)}
-                  className={`px-5 py-2.5 rounded-lg text-xs font-bold transition-all duration-300 ${filter === f
+                  className={`px-5 py-2.5 rounded-lg text-xs font-bold transition-[background-color,color,box-shadow] duration-200 ${filter === f
                       ? 'bg-cyan-400 text-[#050810] shadow-[0_0_20px_rgba(34,211,238,0.4)]'
                       : 'text-slate-400 hover:text-white hover:bg-white/5'
                     }`}>
@@ -280,7 +280,7 @@ export default function Events() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.96 }}
                     transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: i * 0.04 }}
-                    className="group relative flex flex-col bg-[#090e1c] border border-white/[0.07] rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 hover:border-white/[0.16] hover:-translate-y-1.5 hover:shadow-[0_24px_64px_-12px_rgba(0,0,0,0.7)]"
+                    className="group relative flex flex-col bg-[#090e1c] border border-white/[0.07] rounded-2xl overflow-hidden cursor-pointer transition-[transform,border-color,box-shadow] duration-300 hover:border-white/[0.16] hover:-translate-y-1.5 hover:shadow-[0_24px_64px_-12px_rgba(0,0,0,0.7)]"
                   >
                     {/* Top color accent bar */}
                     <div className="h-[3px] w-full flex-shrink-0"

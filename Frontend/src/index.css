@@ -66,8 +66,8 @@
 
   body {
     font-family: "Outfit", system-ui, sans-serif;
-    font-size: var(--text-base);      /* 15px — slightly tighter than 16px default */
-    line-height: 1.65;                /* Generous leading for readability           */
+    font-size: var(--text-base);
+    line-height: 1.65;
     font-weight: 400;
     background-color: #050d1a;
     color: #e8f4f8;
@@ -76,6 +76,30 @@
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    /* Prevent scroll-chained paint during page interactions */
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+  }
+
+  /* ── Performance: GPU layer promotion for all animated cards ── */
+  /* Cards that animate on hover get their own composited layer   */
+  .group {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* Contain layout/style within cards so hover doesn't reflow siblings */
+  [class*="rounded-xl"][class*="overflow-hidden"],
+  [class*="rounded-2xl"][class*="overflow-hidden"],
+  [class*="rounded-3xl"][class*="overflow-hidden"] {
+    contain: layout style;
+  }
+
+  /* Use default high-quality image rendering (auto) for photos */
+  img {
+    image-rendering: auto;
   }
 
   /* ── Heading scale (Space Grotesk) ── */
@@ -928,6 +952,12 @@
   @keyframes spinRev {
     from { transform: translate(-50%, -50%) rotate(0deg); }
     to   { transform: translate(-50%, -50%) rotate(-360deg); }
+  }
+
+  /* ── CARD IMAGE SHIMMER ── */
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
 
 }

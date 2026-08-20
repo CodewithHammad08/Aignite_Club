@@ -82,7 +82,7 @@ export default function Navbar({ page, go }) {
     <>
       {/* ── Desktop Navigation ── */}
       <nav
-        className="fixed top-0 w-full z-50 transition-all duration-300"
+        className="fixed top-0 w-full z-50 transition-[background-color,border-color,box-shadow] duration-300"
         style={
           scrolled
             ? {
@@ -91,6 +91,8 @@ export default function Navbar({ page, go }) {
               WebkitBackdropFilter: 'blur(12px)',
               borderBottom: '1px solid rgba(0,212,255,0.08)',
               boxShadow: '0 4px 20px rgba(0,212,255,0.04)',
+              willChange: 'background-color, box-shadow',
+              transform: 'translateZ(0)',
             }
             : {
               backgroundColor: 'rgba(5,13,26,0.22)',
@@ -98,6 +100,7 @@ export default function Navbar({ page, go }) {
               WebkitBackdropFilter: 'blur(8px)',
               borderBottom: '1px solid rgba(0,212,255,0.04)',
               boxShadow: '0 2px 10px rgba(0,212,255,0.02)',
+              transform: 'translateZ(0)',
             }
         }
       >
