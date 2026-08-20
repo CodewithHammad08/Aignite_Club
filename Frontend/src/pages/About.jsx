@@ -77,7 +77,13 @@ const EVENTS = [
     color: '#818CF8',
     icon: Code,
     tags: ['CLI Commands', 'OS Basics', 'Prof. Shubham N.'],
-    photos: [null, null, null, null, null],
+    photos: [
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787247248/WhatsApp_Image_2026-08-20_at_20.15.48_xb2bsg.jpg',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787247248/WhatsApp_Image_2026-08-20_at_20.15.482_wyofoz.jpg',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787247248/WhatsApp_Image_2026-08-20_at_20.15.43_xwirun.jpg',
+      'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787247248/WhatsApp_Image_2026-08-20_at_20.15.45_mvlghd.jpg',
+      null
+    ],
     placeholders: ['#3730a3', '#4338ca', '#4f46e5', '#2e2687', '#1e1b4b'],
   },
 ];

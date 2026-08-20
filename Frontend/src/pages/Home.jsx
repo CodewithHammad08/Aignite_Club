@@ -702,7 +702,7 @@ const RECENT_EVENTS = [
     desc: 'An expert speaker session by Prof. Shubham Nerkar covering CLI commands, OS concepts, and CLI automation.',
     stat: '2026',
     accent: '#818CF8',
-    image: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=800&auto=format&fit=crop',
+    image: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787247248/WhatsApp_Image_2026-08-20_at_20.15.48_xb2bsg.jpg',
     alt: 'Practical Linux terminal and operating system concepts workshop'
   },
   {

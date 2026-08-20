@@ -110,7 +110,7 @@ const PAST = [
   { title: 'Club Founded & Inaugural', date: '2025', attendees: '200+', outcomes: 'Official Launch • Core Team Formed', img: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779466919/inaugral-2_bvbhqt.png' },
   { title: 'Hands-on ML Workshop', date: '2026', attendees: '120+', outcomes: '40+ Models Trained • 3 Datasets', img: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779473314/IMG_4320_mxwqlf.jpg' },
   { title: 'WebCraft: Web from Scratch', date: '2026', attendees: '80+', outcomes: 'HTML, CSS & JS Basics Learned', img: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779512784/IMG_5266_fgwgj5.jpg' },
-  { title: 'Practical Linux & OS: Commands to Automation', date: '2026', attendees: '100+', outcomes: 'CLI Basics & OS Concepts Gained', img: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=600&auto=format' },
+  { title: 'Practical Linux & OS: Commands to Automation', date: '2026', attendees: '100+', outcomes: 'CLI Basics & OS Concepts Gained', img: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787247248/WhatsApp_Image_2026-08-20_at_20.15.482_wyofoz.jpg' },
 ];
 
 const FILTERS = ['All', 'Session', 'Workshop', 'Event', 'Speaker'];
