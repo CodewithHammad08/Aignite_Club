@@ -288,14 +288,14 @@ function VerticalTimelineNode({ event, index, isLeft }) {
       style={{ minHeight: '200px', marginBottom: '3rem' }}
     >
       {/* ── Central spine node ── */}
-      <div className="absolute left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
+      <div className="absolute left-6 md:left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
         {/* Connector line above */}
         {index > 0 && (
           <div className="w-px h-12 mb-1" style={{ background: `linear-gradient(to bottom, transparent, ${event.accent}50)` }} />
         )}
         {/* Node ring */}
         <div
-          className="w-12 h-12 rounded-full flex items-center justify-center relative"
+          className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center relative"
           style={{
             background: `radial-gradient(circle, ${event.accent}22 0%, transparent 70%)`,
             border: `2px solid ${event.accent}60`,
@@ -303,7 +303,7 @@ function VerticalTimelineNode({ event, index, isLeft }) {
             transition: 'all 0.5s ease',
           }}
         >
-          <div className="w-5 h-5 rounded-full flex items-center justify-center"
+          <div className="w-4 h-4 md:w-5 md:h-5 rounded-full flex items-center justify-center"
             style={{ backgroundColor: event.accent, boxShadow: `0 0 14px ${event.accent}` }}>
             <EventIcon size={11} style={{ color: '#050d1a' }} />
           </div>
@@ -312,14 +312,12 @@ function VerticalTimelineNode({ event, index, isLeft }) {
         <div className="w-px h-12 mt-1" style={{ background: `linear-gradient(to bottom, ${event.accent}50, transparent)` }} />
       </div>
 
-      {/* ── Card content — alternating left / right ── */}
+      {/* ── Card content — alternating left / right on desktop, right on mobile ── */}
       <div
-        className={`w-[42%] ${isLeft ? 'mr-auto pr-8 text-right' : 'ml-auto pl-8 text-left'}`}
+        className={`w-[calc(100%-4.5rem)] ml-[4.5rem] md:w-[42%] ${isLeft ? 'md:mr-auto md:ml-0 md:pr-8 text-left md:text-right' : 'md:ml-auto md:mr-0 md:pl-8 text-left'}`}
         style={{
           opacity: visible ? 1 : 0,
-          transform: visible
-            ? 'translateX(0) translateY(0)'
-            : `translateX(${isLeft ? '-40px' : '40px'}) translateY(20px)`,
+          transform: visible ? 'translateY(0)' : 'translateY(30px)',
           transition: `opacity 0.7s ease ${index * 0.1}s, transform 0.7s ease ${index * 0.1}s`,
         }}
       >
@@ -332,7 +330,11 @@ function VerticalTimelineNode({ event, index, isLeft }) {
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             loading="lazy"
           />
-          <div className="absolute inset-0 transition-opacity duration-500"
+          {/* Mobile Overlay */}
+          <div className={`absolute inset-0 transition-opacity duration-500 md:hidden`}
+            style={{ background: `linear-gradient(to top, rgba(6,9,16,0.9) 0%, transparent 80%)` }} />
+          {/* Desktop Overlay */}
+          <div className={`absolute inset-0 transition-opacity duration-500 hidden md:block`}
             style={{ background: `linear-gradient(to ${isLeft ? 'left' : 'right'}, rgba(6,9,16,0.7) 0%, transparent 60%)` }} />
           {/* Accent color overlay on hover */}
           <div className="absolute inset-0 opacity-30 group-hover:opacity-0 transition-opacity duration-500"
@@ -340,8 +342,8 @@ function VerticalTimelineNode({ event, index, isLeft }) {
         </div>
 
         {/* Chapter label */}
-        <div className={`flex items-center gap-2 mb-2 ${isLeft ? 'justify-end' : 'justify-start'}`}>
-          <span className="text-[10px] font-mono uppercase tracking-[0.25em]"
+        <div className={`flex items-center gap-2 mb-2 justify-start ${isLeft ? 'md:justify-end' : 'md:justify-start'}`}>
+          <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.25em]"
             style={{ color: event.accent }}>
             Chapter {String(index + 1).padStart(2, '0')} · {event.stat}
           </span>
@@ -360,7 +362,7 @@ function VerticalTimelineNode({ event, index, isLeft }) {
 
       {/* ── Horizontal connector from card to node ── */}
       <div
-        className={`absolute top-1/2 -translate-y-1/2 h-px ${isLeft ? 'right-[50%]' : 'left-[50%]'}`}
+        className={`absolute top-1/2 -translate-y-1/2 h-px hidden md:block ${isLeft ? 'right-[50%]' : 'left-[50%]'}`}
         style={{
           width: 'calc(8% - 24px)',
           background: `linear-gradient(${isLeft ? 'to left' : 'to right'}, transparent, ${event.accent}50)`,
@@ -395,7 +397,7 @@ const VerticalTimeline = ({ events }) => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative py-24 px-4 md:px-8 bg-[#060910] overflow-hidden">
+    <section ref={sectionRef} className="relative py-16 md:py-24 px-4 md:px-8 bg-[#060910] overflow-hidden">
       {/* Ambient glows */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full blur-[200px] opacity-[0.03]"
@@ -407,16 +409,16 @@ const VerticalTimeline = ({ events }) => {
       <div className="glow-divider absolute top-0 left-0 right-0" />
 
       {/* Section header */}
-      <div className="text-center mb-20 relative z-10">
+      <div className="text-center mb-12 md:mb-20 relative z-10">
         <div className="inline-flex items-center gap-3 mb-5">
-          <div className="h-px w-12 bg-gradient-to-r from-transparent to-cyan-500/50" />
-          <p className="text-xs font-bold font-mono uppercase tracking-[0.3em] text-cyan-400">{'// our_journey'}</p>
-          <div className="h-px w-12 bg-gradient-to-l from-transparent to-cyan-500/50" />
+          <div className="h-px w-8 md:w-12 bg-gradient-to-r from-transparent to-cyan-500/50" />
+          <p className="text-[10px] md:text-xs font-bold font-mono uppercase tracking-[0.3em] text-cyan-400">{'// our_journey'}</p>
+          <div className="h-px w-8 md:w-12 bg-gradient-to-l from-transparent to-cyan-500/50" />
         </div>
-        <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight text-white leading-[1.1] mb-5">
+        <h2 className="text-3xl md:text-6xl font-black font-display tracking-tight text-white leading-[1.1] mb-5">
           Not just a club.<br /><span className="grad-text">A launchpad.</span>
         </h2>
-        <p className="text-base md:text-lg text-slate-400 max-w-lg mx-auto leading-relaxed font-sans">
+        <p className="text-sm md:text-lg text-slate-400 max-w-lg mx-auto leading-relaxed font-sans px-4">
           Every workshop, every session, every line of code — a step towards the next generation of tech leaders.
         </p>
       </div>
@@ -425,7 +427,7 @@ const VerticalTimeline = ({ events }) => {
       <div className="relative max-w-5xl mx-auto">
 
         {/* Vertical spine — grows on scroll */}
-        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px z-10"
+        <div className="absolute left-6 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-px z-10"
           style={{ background: 'rgba(255,255,255,0.05)' }}>
           {/* Animated fill line */}
           <div
@@ -957,7 +959,7 @@ export default function Home({ go }) {
       <VerticalTimeline events={RECENT_EVENTS} />
 
       {/* ═══════ BEHIND THE CLUB (Faculty) ═══════ */}
-      <section className="relative px-5 sm:px-8 py-20 sm:py-28 bg-[#060910]">
+      <section className="relative px-5 sm:px-8 py-20 sm:py-28 bg-[#060910] overflow-hidden">
         <div className="glow-divider absolute top-0 left-0 right-0" />
 
         {/* Ambient amber glow */}

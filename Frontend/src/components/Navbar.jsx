@@ -114,7 +114,7 @@ export default function Navbar({ page, go }) {
             <img
               src={logo}
               alt="Aignite"
-              className="ml-18 mt-3 w-auto h-[64px] md:h-[74px] object-contain object-left relative z-10"
+              className="mt-3 w-auto h-[64px] md:h-[74px] object-contain object-left relative z-10"
               style={{ animation: 'logoPulse 2s ease-in-out infinite' }}
             />
           </button>
