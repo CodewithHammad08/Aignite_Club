@@ -877,7 +877,7 @@ export default function Home({ go }) {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-8 w-full sm:w-auto" data-animate="fade-up" data-delay="400">
-              <a href="https://forms.google.com" target="_blank" rel="noreferrer"
+              <a href="https://forms.gle/N7REpM97syUUhkzt8" target="_blank" rel="noreferrer"
                 className="hero-cta-primary group relative flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-bold text-base text-white overflow-hidden">
                 <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-2xl" />
                 <span className="relative z-10 flex items-center gap-2">Join Aignite <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" /></span>
@@ -1202,7 +1202,7 @@ export default function Home({ go }) {
             <button onClick={() => go('team')} className="brand-cta-btn group inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-base">
               Meet the team <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </button>
-            <a href="https://forms.google.com" target="_blank" rel="noreferrer"
+            <a href="https://forms.gle/N7REpM97syUUhkzt8" target="_blank" rel="noreferrer"
               className="brand-cta-secondary group inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-base text-white">
               <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-2xl" />
               <span className="relative z-10 flex items-center gap-2">Join Us <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" /></span>

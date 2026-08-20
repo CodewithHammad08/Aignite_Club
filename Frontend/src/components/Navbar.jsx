@@ -160,17 +160,19 @@ export default function Navbar({ page, go }) {
           </div>
 
           {/* CTA */}
-          <button
-            disabled
-            className="hidden md:inline-flex items-center gap-2 px-7 py-2.5 rounded-xl text-base font-bold tracking-wide opacity-50 cursor-not-allowed"
+          <a
+            href="https://forms.gle/N7REpM97syUUhkzt8"
+            target="_blank"
+            rel="noreferrer"
+            className="hidden md:inline-flex items-center gap-2 px-7 py-2.5 rounded-xl text-base font-bold tracking-wide transition-colors duration-200 hover:bg-[#00d4ff]/20"
             style={{
-              backgroundColor: '#2a3b4c',
-              color: '#8a9fac',
-              boxShadow: 'none',
+              backgroundColor: 'rgba(0, 212, 255, 0.1)',
+              color: '#00d4ff',
+              border: '1px solid rgba(0, 212, 255, 0.2)',
             }}
           >
             Join Us
-          </button>
+          </a>
         </div>
       </nav>
 
