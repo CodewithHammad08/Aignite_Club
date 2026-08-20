@@ -104,17 +104,17 @@ export default function Navbar({ page, go }) {
             }
         }
       >
-        <div className="w-full px-6 md:px-12 h-20 flex items-center justify-between">
+        <div className="w-full px-6 md:px-12 h-20 flex items-center justify-center md:justify-between">
           {/* Logo with shape-conforming glow pulse */}
           <button
             onClick={() => go('home')}
-            className="flex items-center group ml-6 md:ml-4"
+            className="flex items-center justify-center group mx-auto md:mx-0 md:ml-4"
             aria-label="Go home"
           >
             <img
               src={logo}
               alt="Aignite"
-              className="mt-3 w-auto h-[64px] md:h-[74px] object-contain object-left relative z-10"
+              className="mt-3 w-auto h-[64px] md:h-[74px] object-contain object-center md:object-left relative z-10"
               style={{ animation: 'logoPulse 2s ease-in-out infinite' }}
             />
           </button>
