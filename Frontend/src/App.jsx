@@ -47,6 +47,28 @@ export default function App() {
   // Activate custom cursor globally (desktop only, respects reduced-motion)
   useCursorEffect();
 
+  // Dynamic SEO handler for client-side routing
+  React.useEffect(() => {
+    const seo = {
+      home: { title: 'AIgnite — AI & Tech Club', desc: 'AIgnite — The official AI & Tech Club of Bharati Vidyapeeth Deemed University. We build, ship, and learn together.' },
+      about: { title: 'About Us — AIgnite', desc: 'Learn about AIgnite, our mission, and how we empower students to build the future of technology.' },
+      events: { title: 'Events & Workshops — AIgnite', desc: 'Join AIgnite for our upcoming hackathons, hands-on tech workshops, and expert speaker sessions.' },
+      team: { title: 'Core Team — AIgnite', desc: 'Meet the AIgnite Core Team. The students and faculty driving innovation at Bharati Vidyapeeth.' },
+    };
+    
+    const currentSeo = seo[page] || seo.home;
+    document.title = currentSeo.title;
+    
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', currentSeo.desc);
+    
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', currentSeo.title);
+    
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', currentSeo.desc);
+  }, [page]);
+
   const go = (p) => {
     setPage(p);
     window.scrollTo({ top: 0, behavior: 'smooth' });
