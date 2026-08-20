@@ -17,7 +17,7 @@ const LEADS = [
   {
     id: '02', name: 'Osman Sanjar', initials: 'OS', role: 'VICE PRESIDENT', nationality: 'INDIAN',
     tagline: 'Orchestrating seamless operations and leading impactful initiatives.',
-    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787231927/osman-no-bg_llc8ly.png',
+    photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232630/osman-no-bg_qqrv8a.png',
     photo_body: null,
     stats: [{ label: 'DOMAIN', value: 'Operations' }, { label: 'FOCUS', value: 'Coordination' }],
     linkedin: 'https://www.linkedin.com/in/osman-sanjar-02a796321/', github: '#',
@@ -296,7 +296,7 @@ export default function Team() {
         </div>
 
         <div className="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12 lg:gap-20">
-          
+
           {/* Left: Typography & Story */}
           <div className="flex-1 text-center md:text-left">
             <div data-animate="fade-up" className="inline-flex items-center gap-3 mb-6">
@@ -305,11 +305,11 @@ export default function Team() {
                 {'// the_next_chapter'}
               </p>
             </div>
-            
+
             <h2 data-animate="fade-up" data-delay="100" className="text-4xl md:text-5xl lg:text-6xl font-black font-display tracking-tight text-white mb-6 leading-[1.1]">
               Think you belong<br />on this <span className="grad-text">page?</span>
             </h2>
-            
+
             <p data-animate="fade-up" data-delay="200" className="text-base md:text-lg text-slate-400 leading-relaxed font-sans mb-10 max-w-lg mx-auto md:mx-0">
               We are constantly looking for curious minds, restless builders, and passionate designers. If you want to stop attending workshops and start organizing them, your seat is empty.
             </p>
@@ -327,14 +327,14 @@ export default function Team() {
           {/* Right: Visual Storytelling Grid */}
           <div className="flex-1 relative w-full" data-animate="fade-left" data-delay="300">
             <div className="relative w-full aspect-square max-w-[400px] mx-auto">
-              
+
               {/* Floating glass panels */}
               <div className="absolute top-[10%] right-[10%] w-[60%] aspect-[4/3] rounded-2xl border border-white/10 bg-[#0a0e17]/80 backdrop-blur-xl overflow-hidden shadow-2xl z-20 animate-float" style={{ animationDelay: '0s' }}>
                 <img src="https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_500/v1779473312/IMG_7193_p5zhmg.jpg" alt="Team collaborating" className="w-full h-full object-cover opacity-60 mix-blend-luminosity" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e17] via-transparent to-transparent" />
                 <div className="absolute bottom-3 left-4 text-[10px] font-mono text-cyan-400 uppercase tracking-widest">Late Night Builds</div>
               </div>
-              
+
               <div className="absolute bottom-[10%] left-[5%] w-[55%] aspect-square rounded-2xl border border-white/10 bg-[#0a0e17]/80 backdrop-blur-xl overflow-hidden shadow-2xl z-30 animate-float" style={{ animationDelay: '1.5s' }}>
                 <img src="https://res.cloudinary.com/dnd7yjtig/image/upload/f_auto,q_auto,w_500/v1779466919/inaugral-1_xkrt47.png" alt="Team celebrating" className="w-full h-full object-cover opacity-60 mix-blend-luminosity" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e17] via-transparent to-transparent" />
@@ -346,7 +346,7 @@ export default function Team() {
               <div className="absolute top-[45%] left-[60%] w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee] z-10" />
             </div>
           </div>
-          
+
         </div>
       </section>
 
