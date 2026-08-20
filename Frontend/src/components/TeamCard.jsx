@@ -10,7 +10,7 @@
 //               Drop real photos in /public/team/ and swap the null values below.
 
 import React from 'react';
-
+import { Linkedin, Github } from '../Icons';
 // ─── Monospace font stack used throughout the stats panel ───
 const MONO = '"JetBrains Mono", "Fira Code", monospace';
 
@@ -34,7 +34,7 @@ const members = [
     photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787236041/ChatGPT_Image_Aug_20_2026_07_48_11_PM-no-bg_jgyhlq.png',
     photo_body: null,
     github: 'https://github.com',
-    linkedin: 'https://linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/prathamesh-khaire/',
     stats: [
       { label: 'DOMAIN', value: 'Web Dev' },
       { label: 'STACK', value: 'React' },
@@ -51,7 +51,7 @@ const members = [
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232634/parth-no-bg_janw05.png',
     photo_body: null,
     github: 'https://github.com',
-    linkedin: 'https://linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/parth-kumar-jat-35b537224/',
     stats: [
       { label: 'DOMAIN', value: 'DevOps' },
       { label: 'STACK', value: 'Node' },
@@ -68,7 +68,7 @@ const members = [
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779968193/hammad_bkfode.png',
     photo_body: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779968335/hammad-hover_thhncg.png',
     github: 'https://github.com',
-    linkedin: 'https://linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/hammad-dalvi08',
     stats: [
       { label: 'DOMAIN', value: 'Web Dev' },
       { label: 'STACK', value: 'MERN' },
@@ -102,7 +102,7 @@ const members = [
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232796/soham-no-bg_eadice.png',
     photo_body: null,
     github: 'https://github.com',
-    linkedin: 'https://linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/soham-ramane-269b8b2a4/',
     stats: [
       { label: 'DOMAIN', value: 'Web Dev' },
       { label: 'STACK', value: 'JS' },
@@ -120,7 +120,7 @@ const members = [
     photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779964120/a8b0d3cd7fec415bbaee98bbee0325da_wsgqnc.png',
     photo_body: null,
     github: 'https://github.com',
-    linkedin: 'https://linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/tejas-gunjal-b64794321',
     stats: [
       { label: 'DOMAIN', value: 'UI/UX' },
       { label: 'STACK', value: 'React' },
@@ -137,7 +137,7 @@ const members = [
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232640/manogyaa-no-bg_biuzpv.png',
     photo_body: null,
     github: 'https://github.com',
-    linkedin: 'https://linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/manognya-donakonda-5908b1376/',
     stats: [
       { label: 'DOMAIN', value: 'AI/ML' },
       { label: 'STACK', value: 'PyTorch' },
@@ -351,13 +351,39 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
           #{member.id}
         </div>
         <div
-          className="text-xs sm:text-sm md:text-lg font-black uppercase text-white tracking-wide leading-none truncate w-full"
+          className="text-xs sm:text-sm md:text-lg font-black uppercase text-white tracking-wide leading-none truncate w-full flex items-center gap-2"
           style={{
             fontFamily: '"Arial Black", Arial, sans-serif',
           }}
           title={member.name}
         >
-          {member.name}
+          <a
+            href={member.linkedin && member.linkedin !== '#' ? member.linkedin : undefined}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`hover:text-[#00d4ff] transition-colors truncate ${!member.linkedin || member.linkedin === '#' ? 'pointer-events-none' : ''}`}
+          >
+            {member.name}
+          </a>
+          
+          <div className="flex gap-1.5 items-center flex-shrink-0">
+            {member.linkedin && member.linkedin !== '#' ? (
+              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="opacity-70 hover:text-[#00d4ff] hover:opacity-100 transition-all">
+                <Linkedin size={14} />
+              </a>
+            ) : (
+              <div className="opacity-30 pointer-events-none"><Linkedin size={14} /></div>
+            )}
+            {(member.role.includes('TECH') || member.role.includes('PRESIDENT')) && (
+              member.github && member.github !== '#' ? (
+                <a href={member.github} target="_blank" rel="noopener noreferrer" className="opacity-70 hover:text-white hover:opacity-100 transition-all">
+                  <Github size={14} />
+                </a>
+              ) : (
+                <div className="opacity-30 pointer-events-none"><Github size={14} /></div>
+              )
+            )}
+          </div>
         </div>
         <div
           className="text-[8px] md:text-[10px] font-mono uppercase text-white/60 mt-1"
@@ -505,14 +531,40 @@ export function TeamCard({ member, heightClass = "h-[340px]", facing = 'right' }
                 #{member.id}
               </div>
               <div
-                className="text-[11px] sm:text-sm md:text-base font-black font-display text-black/95 uppercase leading-none truncate w-full"
+                className="text-[11px] sm:text-sm md:text-base font-black font-display text-black/95 uppercase leading-none truncate w-full flex items-center gap-1.5"
                 style={{
                   fontFamily: '"Arial Black", Arial, sans-serif',
                   letterSpacing: '0.3px',
                 }}
                 title={member.name}
               >
-                {member.name}
+                <a
+                  href={member.linkedin && member.linkedin !== '#' ? member.linkedin : undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`hover:text-[#0077b5] transition-colors truncate ${!member.linkedin || member.linkedin === '#' ? 'pointer-events-none' : ''}`}
+                >
+                  {member.name}
+                </a>
+
+                <div className="flex gap-1.5 items-center flex-shrink-0">
+                  {member.linkedin && member.linkedin !== '#' ? (
+                    <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-[#0077b5] opacity-80 hover:opacity-100 transition-all">
+                      <Linkedin size={14} />
+                    </a>
+                  ) : (
+                    <div className="text-black/30 pointer-events-none"><Linkedin size={14} /></div>
+                  )}
+                  {(member.role.includes('TECH') || member.role.includes('PRESIDENT')) && (
+                    member.github && member.github !== '#' ? (
+                      <a href={member.github} target="_blank" rel="noopener noreferrer" className="text-black/70 hover:text-black hover:opacity-100 transition-all">
+                        <Github size={14} />
+                      </a>
+                    ) : (
+                      <div className="text-black/20 pointer-events-none"><Github size={14} /></div>
+                    )
+                  )}
+                </div>
               </div>
               <div
                 className="text-[8px] md:text-[10px] text-black/50 tracking-wider mt-1 font-mono uppercase truncate"
@@ -611,7 +663,7 @@ export const eventMembers = [
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962686/42fa127ca8414cbab33ab74c25da9b46_uoltja.png',
     photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232631/prince-no-bg_hmicpq.png',
     photo_body: null,
-    linkedin: 'https://linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/prince-kumar-879247322/',
     stats: [
       { label: 'DOMAIN', value: 'Operations' },
       { label: 'STACK', value: 'Planning' },
@@ -661,7 +713,7 @@ export const eventMembers = [
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779962702/3591387ea6df4e94ab8a816dc742559d_my2c40.png',
     photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1779964114/c6e15e6d2fcb42d79d662321b5430f09_juzlrm.png',
     photo_body: null,
-    linkedin: 'https://linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/jasn-rathore-884644256/',
     stats: [
       { label: 'DOMAIN', value: 'Resource Mgmt' },
       { label: 'STACK', value: 'Planning' },
@@ -678,7 +730,7 @@ export const eventMembers = [
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787234319/69005e85331641c29adf5aa94580735a_mjlwah-no-bg_lxnqv3.png',
     photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787234319/69005e85331641c29adf5aa94580735a_mjlwah-no-bg_lxnqv3.png',
     photo_body: null,
-    linkedin: 'https://linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/parth-sonawane-989098322/',
     stats: [
       { label: 'DOMAIN', value: 'Management' },
       { label: 'STACK', value: 'Leadership' },
@@ -720,7 +772,7 @@ export const prMembers = [
     tagline: 'Forging deep industry alliances and sponsorships',
     photo_face: null,
     photo_body: null,
-    linkedin: 'https://linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/gunjan-kharat-244097322/',
     stats: [
       { label: 'DOMAIN', value: 'Partnership' },
       { label: 'STACK', value: 'Outreach' },
@@ -752,7 +804,7 @@ export const prMembers = [
     tagline: 'Nurturing long-term external club relations',
     photo_face: null,
     photo_body: null,
-    linkedin: 'https://linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/yusuf-mukadam-77b481376/',
     stats: [
       { label: 'DOMAIN', value: 'Relations' },
       { label: 'STACK', value: 'Management' },
@@ -778,7 +830,7 @@ export const designMembers = [
     tagline: 'Overseeing UI prototyping and production graphic assets',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787229479/Aniket_y1w5uw.png',
     photo_body: null,
-    linkedin: 'https://linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/aniketmishra3535/',
     stats: [
       { label: 'DOMAIN', value: 'Graphics' },
       { label: 'STACK', value: 'Illustrator' },

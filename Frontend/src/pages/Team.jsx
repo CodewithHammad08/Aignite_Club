@@ -12,7 +12,7 @@ const LEADS = [
     photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787231929/sanskriti_hover-no-bg_op7njh.png',
     photo_body: null,
     stats: [{ label: 'DOMAIN', value: 'Management' }, { label: 'STACK', value: 'Strategy' }, { label: 'PROJECTS', value: '12' }],
-    linkedin: '#', github: '#',
+    linkedin: 'https://www.linkedin.com/in/itirksnasingh/', github: '#',
   },
   {
     id: '02', name: 'Osman Sanjar', initials: 'OS', role: 'VICE PRESIDENT', nationality: 'INDIAN',
@@ -20,7 +20,7 @@ const LEADS = [
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787231927/osman-no-bg_llc8ly.png',
     photo_body: null,
     stats: [{ label: 'DOMAIN', value: 'Operations' }, { label: 'STACK', value: 'Planning' }, { label: 'PROJECTS', value: '10' }],
-    linkedin: '#', github: '#',
+    linkedin: 'https://www.linkedin.com/in/osman-sanjar-02a796321/', github: '#',
   },
 ];
 
@@ -166,8 +166,16 @@ export default function Team() {
             <div key={i} data-animate={i === 0 ? 'fade-right' : 'fade-left'} data-delay={i * 150}>
               <TeamCard member={l} heightClass="h-[260px] md:h-[380px]" facing={i % 2 === 0 ? 'right' : 'left'} />
               <div className="flex gap-3 mt-3 px-1">
-                <a href={l.linkedin} className="text-muted hover:text-neon transition-colors"><Linkedin size={18} /></a>
-                <a href={l.github} className="text-muted hover:text-offwhite transition-colors"><Github size={18} /></a>
+                {l.linkedin && l.linkedin !== '#' ? (
+                  <a href={l.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-neon transition-colors"><Linkedin size={18} /></a>
+                ) : (
+                  <div className="text-muted/30 pointer-events-none"><Linkedin size={18} /></div>
+                )}
+                {l.github && l.github !== '#' ? (
+                  <a href={l.github} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-offwhite transition-colors"><Github size={18} /></a>
+                ) : (
+                  <div className="text-muted/30 pointer-events-none"><Github size={18} /></div>
+                )}
               </div>
             </div>
           ))}
