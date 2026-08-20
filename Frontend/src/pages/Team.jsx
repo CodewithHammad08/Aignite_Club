@@ -7,19 +7,19 @@ import TechTeam, { TeamCard, EventTeam, PRTeam, DesignTeam, ContentTeam, Discipl
 const LEADS = [
   {
     id: '01', name: 'Sanskriti Singh', initials: 'SS', role: 'PRESIDENT', nationality: 'INDIAN',
-    tagline: 'Leading Aignite to new horizons',
+    tagline: 'Fostering an inclusive and driven tech community at Aignite.',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787232632/sanskriti_main-no-bg_chgqoh.png',
     photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787231929/sanskriti_hover-no-bg_op7njh.png',
     photo_body: null,
-    stats: [{ label: 'DOMAIN', value: 'Management' }, { label: 'STACK', value: 'Strategy' }, { label: 'PROJECTS', value: '12' }],
+    stats: [{ label: 'DOMAIN', value: 'Leadership' }, { label: 'FOCUS', value: 'Community' }],
     linkedin: 'https://www.linkedin.com/in/itirksnasingh/', github: '#',
   },
   {
     id: '02', name: 'Osman Sanjar', initials: 'OS', role: 'VICE PRESIDENT', nationality: 'INDIAN',
-    tagline: 'Operations and community leader',
+    tagline: 'Orchestrating seamless operations and leading impactful initiatives.',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787231927/osman-no-bg_llc8ly.png',
     photo_body: null,
-    stats: [{ label: 'DOMAIN', value: 'Operations' }, { label: 'STACK', value: 'Planning' }, { label: 'PROJECTS', value: '10' }],
+    stats: [{ label: 'DOMAIN', value: 'Operations' }, { label: 'FOCUS', value: 'Coordination' }],
     linkedin: 'https://www.linkedin.com/in/osman-sanjar-02a796321/', github: '#',
   },
 ];
