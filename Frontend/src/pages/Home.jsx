@@ -158,7 +158,7 @@ const DeveloperWorkspace = () => {
                           View Repository
                         </button>
                         <button className="flex-1 px-4 py-2.5 rounded-lg bg-white text-black hover:bg-slate-200 text-sm font-semibold transition-colors">
-                          Contribute
+                          Coming Soon
                         </button>
                       </div>
                     </div>
