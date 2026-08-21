@@ -22,25 +22,22 @@ const LEADS = [
     stats: [{ label: 'DOMAIN', value: 'Operations' }, { label: 'FOCUS', value: 'Coordination' }],
     linkedin: 'https://www.linkedin.com/in/osman-sanjar-02a796321/', github: '#',
   },
-];
-
-const SPECIAL_HEADS = [
   {
-    id: 'SH', name: 'Shreyash', initials: 'SH', role: 'SPONSORSHIP HEAD', nationality: 'INDIAN',
-    tagline: 'Driving strategic partnerships and securing resources',
+    id: '03', name: 'Shreyash', initials: 'SH', role: 'SPONSORSHIP HEAD', nationality: 'INDIAN',
+    tagline: 'Driving strategic partnerships and securing resources.',
     photo_face: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787236375/0d44176b51af46f39f49970ab48170f5-no-bg_xyzuur.png',
     photo_hover: 'https://res.cloudinary.com/dnd7yjtig/image/upload/v1787236375/0d44176b51af46f39f49970ab48170f5-no-bg_xyzuur.png',
     photo_body: null,
-    stats: [{ label: 'DOMAIN', value: 'Sponsorship' }, { label: 'STACK', value: 'Outreach' }, { label: 'DEALS', value: 'Active' }],
-    linkedin: '#',
+    stats: [{ label: 'DOMAIN', value: 'Sponsorship' }, { label: 'FOCUS', value: 'Outreach' }],
+    linkedin: '#', github: '#',
   },
   {
-    id: 'FH', name: 'Sharavani', initials: 'SH', role: 'FINANCE HEAD', nationality: 'INDIAN',
-    tagline: 'Managing funds, budgets, and financial strategy',
+    id: '04', name: 'Sharavani', initials: 'SH', role: 'FINANCE HEAD', nationality: 'INDIAN',
+    tagline: 'Managing funds, budgets, and financial strategy.',
     photo_face: null,
     photo_body: null,
-    stats: [{ label: 'DOMAIN', value: 'Finance' }, { label: 'STACK', value: 'Management' }, { label: 'FUNDS', value: 'Active' }],
-    linkedin: '#',
+    stats: [{ label: 'DOMAIN', value: 'Finance' }, { label: 'FOCUS', value: 'Management' }],
+    linkedin: '#', github: '#',
   },
 ];
 
@@ -161,10 +158,40 @@ export default function Team() {
           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto grid grid-cols-2 gap-3">
-          {LEADS.map((l, i) => (
-            <div key={i} data-animate={i === 0 ? 'fade-right' : 'fade-left'} data-delay={i * 150}>
-              <TeamCard member={l} heightClass="h-[260px] md:h-[380px]" facing={i % 2 === 0 ? 'right' : 'left'} />
+        {/* Main Leadership: President & VP */}
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-6">
+          {LEADS.slice(0, 2).map((l, i) => (
+            <div key={i} data-animate={i % 2 === 0 ? 'fade-right' : 'fade-left'} data-delay={i * 150}>
+              <TeamCard
+                member={l}
+                heightClass="h-[280px] sm:h-[320px] md:h-[380px]"
+                facing={i % 2 === 0 ? 'right' : 'left'}
+              />
+              <div className="flex gap-3 mt-3 px-1">
+                {l.linkedin && l.linkedin !== '#' ? (
+                  <a href={l.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-neon transition-colors"><Linkedin size={18} /></a>
+                ) : (
+                  <div className="text-muted/30 pointer-events-none"><Linkedin size={18} /></div>
+                )}
+                {l.github && l.github !== '#' ? (
+                  <a href={l.github} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-offwhite transition-colors"><Github size={18} /></a>
+                ) : (
+                  <div className="text-muted/30 pointer-events-none"><Github size={18} /></div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Secondary Leadership: Sponsorship & Finance Heads (Narrower Width) */}
+        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+          {LEADS.slice(2).map((l, i) => (
+            <div key={i} data-animate={i % 2 === 0 ? 'fade-right' : 'fade-left'} data-delay={i * 150}>
+              <TeamCard
+                member={l}
+                heightClass="h-[220px] sm:h-[260px] md:h-[300px]"
+                facing={i % 2 === 0 ? 'right' : 'left'}
+              />
               <div className="flex gap-3 mt-3 px-1">
                 {l.linkedin && l.linkedin !== '#' ? (
                   <a href={l.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-neon transition-colors"><Linkedin size={18} /></a>
@@ -259,25 +286,6 @@ export default function Team() {
             {activeDept === 'design' && <DesignTeam />}
             {activeDept === 'social' && <ContentTeam />}
             {activeDept === 'discipline' && <DisciplineTeam />}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════
-          §3.5  CORE COMMITTEE HEADS (Sponsorship & Finance)
-      ══════════════════════════════════════════════ */}
-      <section className="relative px-3 sm:px-6 pb-24 bg-level-0">
-        <div className="max-w-4xl mx-auto pt-4">
-          <div data-animate="fade-up" className="flex items-center gap-3 mb-6">
-            <div className="w-5 h-px" style={{ backgroundColor: '#00d4ff' }} />
-            <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-muted">Core Committee Heads</span>
-          </div>
-          <div className="grid grid-cols-2 gap-4 sm:gap-6">
-            {SPECIAL_HEADS.map((h, i) => (
-              <div key={i} data-animate={i === 0 ? 'fade-right' : 'fade-left'} data-delay={i * 150}>
-                <TeamCard member={h} heightClass="h-[180px] md:h-[280px]" facing={i % 2 === 0 ? 'right' : 'left'} />
-              </div>
-            ))}
           </div>
         </div>
       </section>
