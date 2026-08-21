@@ -50,10 +50,10 @@ export default function App() {
   // Dynamic SEO handler for client-side routing
   React.useEffect(() => {
     const seo = {
-      home: { title: 'AIgnite — AI & Tech Club', desc: 'AIgnite — The official AI & Tech Club of Bharati Vidyapeeth Deemed University. We build, ship, and learn together.' },
-      about: { title: 'About Us — AIgnite', desc: 'Learn about AIgnite, our mission, and how we empower students to build the future of technology.' },
-      events: { title: 'Events & Workshops — AIgnite', desc: 'Join AIgnite for our upcoming hackathons, hands-on tech workshops, and expert speaker sessions.' },
-      team: { title: 'Core Team — AIgnite', desc: 'Meet the AIgnite Core Team. The students and faculty driving innovation at Bharati Vidyapeeth.' },
+      home: { title: 'AIgnite — AI & Tech Club | Bharati Vidyapeeth Deemed University', desc: 'AIgnite — The official AI & Tech Club of Bharati Vidyapeeth Deemed University (BVDU). We build, ship, and learn together.' },
+      about: { title: 'About Us — AIgnite | Bharati Vidyapeeth AI & Tech Club', desc: 'Learn about AIgnite, our mission, leadership, and how we empower Bharati Vidyapeeth students to build real technology.' },
+      events: { title: 'Events & Workshops — AIgnite | Bharati Vidyapeeth (BVDU)', desc: 'Explore upcoming hackathons, AI workshops, WebCraft, and speaker sessions organized by AIgnite Club at Bharati Vidyapeeth.' },
+      team: { title: 'Core Team — AIgnite | Bharati Vidyapeeth Deemed University', desc: 'Meet the AIgnite Core Team, President, Vice President, Department Heads, and faculty coordinators at Bharati Vidyapeeth.' },
     };
     
     const currentSeo = seo[page] || seo.home;
